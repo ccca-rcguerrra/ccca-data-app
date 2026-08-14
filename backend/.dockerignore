@@ -1,0 +1,36 @@
+# Build output (reconstruído dentro do Docker via multi-stage)
+dist
+node_modules
+build
+
+# Git e IDE
+.git
+.gitignore
+.idea
+.vscode
+.cursor
+
+# Testes e cobertura
+test
+coverage
+*.spec.ts
+*.e2e-spec.ts
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+credentials/
+files/credentials/
+
+# Documentação e miscelânea
+*.md
+.prettierrc
+eslint.config.mjs
+redis.conf
+samples.ts
+
+# Arquivos de deploy (não pertencem à imagem)
+deploy
+scripts
+docker

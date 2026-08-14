@@ -1,0 +1,183 @@
+version: "3.5"
+
+services:
+
+  mapbiomas-alertas-workspace-redis-staging:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-staging
+    hostname: mapbiomas-alertas-workspace-redis-staging
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+  mapbiomas-alertas-workspace-redis-production:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-production
+    hostname: mapbiomas-alertas-workspace-redis-production
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+  mapbiomas-alertas-workspace-redis-bra-prod:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-bra-prod
+    hostname: mapbiomas-alertas-workspace-redis-bra-prod
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+  mapbiomas-alertas-workspace-redis-bol-prod:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-bol-prod
+    hostname: mapbiomas-alertas-workspace-redis-bol-prod
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+  mapbiomas-alertas-workspace-redis-col-prod:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-col-prod
+    hostname: mapbiomas-alertas-workspace-redis-col-prod
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+  mapbiomas-alertas-workspace-redis-idn-prod:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-idn-prod
+    hostname: mapbiomas-alertas-workspace-redis-idn-prod
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+  mapbiomas-alertas-workspace-redis-per-prod:
+    image: bitnami/redis:7.2.2
+    container_name: mapbiomas-alertas-workspace-redis-per-prod
+    hostname: mapbiomas-alertas-workspace-redis-per-prod
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    ports:
+      - "6379"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+networks:
+  mapbiomas-alertas-workspace:
+    name: mapbiomas-alertas-workspace
+    driver: bridge

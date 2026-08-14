@@ -1,0 +1,16 @@
+
+services:
+  mapbiomas-alertas-workspace-redis:
+    image: bitnami/redis:latest
+    container_name: mapbiomas-alertas-workspace-redis
+    hostname: mapbiomas-alertas-workspace-redis
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    
+    ports:
+      - 6379:6379

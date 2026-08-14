@@ -1,0 +1,23 @@
+services:
+  mapbiomas-alertas-workspace-frontend:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    image: mapbiomas-alertas-workspace-frontend
+    container_name: mapbiomas-alertas-workspace-frontend-staging
+    hostname: mapbiomas-alertas-workspace-frontend-staging
+    restart: always
+    env_file: ./docker-compose.staging.env
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - mapbiomas-alertas-workspace
+    ports:
+      - 8084:80
+
+networks:
+  mapbiomas-alertas-workspace:
+    name: mapbiomas-alertas-workspace
+    driver: bridge

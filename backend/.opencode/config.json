@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "rules": {
+    "sources": [".agents/"],
+    "context": [
+      ".agents/context/quickstart.md",
+      ".agents/context/map.md",
+      ".agents/context/stack.md",
+      ".agents/context/conventions.md"
+    ],
+    "rules": [
+      ".agents/rules/modules.md",
+      ".agents/rules/entities.md",
+      ".agents/rules/auth.md",
+      ".agents/rules/api-design.md",
+      ".agents/rules/websocket.md",
+      ".agents/rules/cli.md",
+      ".agents/rules/scheduler.md",
+      ".agents/rules/queues.md",
+      ".agents/rules/events.md"
+    ],
+    "templates": [".agents/templates/"]
+  }
+}

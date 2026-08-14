@@ -1,0 +1,92 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { TeamDto } from './team.dto';
+import { UserRole } from '../../model/model.enums';
+
+export class UserDto {
+  @ApiProperty({
+    description: 'Unique user ID',
+    example: 1,
+    type: Number,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'Full name of the user',
+    example: 'João Silva',
+    type: String,
+  })
+  name: string;
+
+  @ApiProperty({
+    description: 'User email',
+    example: 'joao.silva@example.com',
+    type: String,
+  })
+  email: string;
+
+  @ApiProperty({
+    description: 'User photo URL',
+    example: 'https://example.com/photo.jpg',
+    type: String,
+    nullable: true,
+    required: false,
+  })
+  photo: string | null;
+
+  @ApiProperty({
+    description: 'User institution',
+    example: 'University of Example',
+    type: String,
+    nullable: true,
+    required: false,
+  })
+  institution: string | null;
+
+  @ApiProperty({
+    description: 'User account status',
+    example: 1,
+    type: Number,
+  })
+  status: number;
+
+  @ApiProperty({
+    description: 'Account creation date',
+    example: '2024-01-01T00:00:00.000Z',
+    type: Date,
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    description: 'Date of last account update',
+    example: '2024-01-01T00:00:00.000Z',
+    type: Date,
+  })
+  updatedAt: Date;
+
+  @ApiProperty({
+    description: 'Teams associated with the user',
+    type: [TeamDto],
+  })
+  teams: TeamDto[];
+
+  @ApiProperty({
+    description: 'Papéis do usuário no sistema',
+    example: ['analyst_junior'],
+    enum: UserRole,
+    isArray: true,
+  })
+  roles: UserRole[];
+}
+
+export class GetUserResponseDto {
+  @ApiProperty({
+    description: 'User data',
+    type: UserDto,
+  })
+  data: UserDto;
+
+  constructor(data: UserDto) {
+    this.data = data;
+  }
+}
+

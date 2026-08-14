@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "rules": {
+    "sources": [".agents/"],
+    "context": [
+      ".agents/context/quickstart.md",
+      ".agents/context/map.md",
+      ".agents/context/stack.md",
+      ".agents/context/conventions.md"
+    ],
+    "rules": [
+      ".agents/rules/pages.md",
+      ".agents/rules/stores.md",
+      ".agents/rules/services.md",
+      ".agents/rules/components.md"
+    ],
+    "templates": [".agents/templates/"]
+  }
+}

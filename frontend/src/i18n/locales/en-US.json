@@ -1,0 +1,347 @@
+{
+  "app": {
+    "title": "Workspace",
+    "welcome": "Welcome to Dashboard",
+    "description": "Workspace starter template"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "page": "Page",
+    "of": "of",
+    "previousPage": "Go to previous page",
+    "nextPage": "Go to next page",
+    "rowsPerPage": "Rows per page",
+    "confirm": "Confirm",
+    "saving": "Saving...",
+    "refresh": "Refresh",
+    "ok": "OK",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred.",
+      "goHome": "Back to home",
+      "tryAgain": "Try again"
+    }
+  },
+  "comments": {
+    "empty": "No comments yet",
+    "delete": "Delete comment",
+    "noUsers": "No users found",
+    "placeholder": "Add a comment...",
+    "unavailable": "Comments unavailable",
+    "post": "Post Comment"
+  },
+  "header": {
+    "userMenuAria": "User menu: {{name}}",
+    "userRole": "Role"
+  },
+  "language": {
+    "switch": "Switch Language",
+    "english": "English"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "teams": "Teams",
+    "semaspa": "SEMASPA",
+    "autefs": "AUTEFs",
+    "forestGuides": "Forest Guides"
+  },
+  "layout": {
+    "header": {
+      "searchPlaceholder": "Search...",
+      "expandSidebar": "Expand sidebar",
+      "collapseSidebar": "Collapse sidebar",
+      "switchToLightMode": "Switch to light mode",
+      "switchToDarkMode": "Switch to dark mode",
+      "profile": "Profile",
+      "logout": "Log out"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "empty": "No notifications",
+      "markAsRead": "Mark as read",
+      "view": "View"
+    },
+    "sidebar": {
+      "navLabel": "Navigation"
+    }
+  },
+  "auth": {
+    "pageTitle": "Login",
+    "title": "Welcome",
+    "description": "Sign in to access your workspace.",
+    "email": "Email",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Your password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signInSuccessful": "Sign in successful!",
+    "forgotPassword": "Forgot your password?",
+    "forgotPasswordTitle": "Check your email",
+    "forgotPasswordDescription": "Enter your email address to receive reset instructions.",
+    "sendResetLink": "Send reset link",
+    "resetPasswordTitle": "Reset password",
+    "resetPasswordDescription": "Enter your new password.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "resetPassword": "Reset password",
+    "resetSuccess": "Password reset successfully!",
+    "goToLogin": "Back to login",
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "generic": "Authentication error",
+      "passwordMismatch": "Passwords do not match"
+    }
+  },
+  "users": {
+    "title": "Users",
+    "description": "Manage workspace users",
+    "management": {
+      "create": "New user",
+      "edit": "Edit user",
+      "delete": "Delete user",
+      "noResults": "No users found",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "teams": "Teams",
+        "actions": "Actions"
+      }
+    }
+  },
+  "teams": {
+    "title": "Teams",
+    "description": "Manage workspace teams",
+    "management": {
+      "create": "New team",
+      "edit": "Edit team",
+      "delete": "Delete team",
+      "noResults": "No teams found",
+      "columns": {
+        "name": "Name",
+        "members": "Members",
+        "territories": "Territories",
+        "actions": "Actions"
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome to Workspace",
+    "description": "Your workspace is ready."
+  },
+  "semaspa": {
+    "autefs": {
+      "list": {
+        "title": "AUTEFs",
+        "subtitle": "Browse SEMAS-PA forest exploitation authorizations.",
+        "total": "{{count}} total",
+        "totalRows": "{{count}} row(s)",
+        "noResults": "No AUTEFs found"
+      },
+      "filters": {
+        "searchPlaceholder": "Search number or process...",
+        "cityPlaceholder": "City",
+        "statePlaceholder": "UF",
+        "yearPlaceholder": "Year",
+        "clear": "Clear",
+        "advanced": "Advanced filters",
+        "apply": "Apply filters",
+        "any": "Any",
+        "yes": "Yes",
+        "no": "No",
+        "issueMonth": "Issue month",
+        "processNumber": "Process number",
+        "issuedFrom": "Issued from",
+        "issuedTo": "Issued to",
+        "taxId": "Tax ID (CPF/CNPJ)",
+        "personName": "Person name",
+        "isOverExtracted": "Over-extracted only",
+        "hasForestGuide": "Has forest guide",
+        "movedRatioMin": "Moved ratio min",
+        "movedRatioMax": "Moved ratio max",
+        "speciesProductId": "Species product ID",
+        "scientificName": "Scientific name",
+        "commonName": "Common name"
+      },
+      "table": {
+        "number": "Number",
+        "processNumber": "Process",
+        "city": "City",
+        "state": "State",
+        "issueYear": "Year",
+        "totalAreaHa": "Area (ha)",
+        "issuedAt": "Issued at",
+        "flags": "Flags"
+      },
+      "detail": {
+        "back": "Back to list",
+        "notFound": "AUTEF not found",
+        "title": "AUTEF {{number}}",
+        "untitled": "AUTEF #{{id}}",
+        "processNumber": "Process",
+        "cityState": "Location",
+        "totalAreaHa": "Total area",
+        "issuedAt": "Issued at",
+        "issueYear": "Issue year",
+        "hectares": "{{value}} ha"
+      },
+      "tabs": {
+        "species": "Species & balances",
+        "volumeBalances": "Volume balances",
+        "forestGuides": "Forest guides",
+        "harvestUnits": "Harvest units",
+        "roles": "Roles"
+      },
+      "species": {
+        "scientificName": "Scientific name",
+        "commonName": "Common name",
+        "productName": "Product",
+        "volume": "Original",
+        "unit": "Unit",
+        "authorized": "Authorized",
+        "moved": "Moved",
+        "ratio": "% Moved",
+        "progress": "Progress",
+        "noResults": "No species found"
+      },
+      "volumeBalances": {
+        "species": "Species",
+        "authorized": "Authorized",
+        "moved": "Moved",
+        "ratio": "Ratio",
+        "excess": "Excess",
+        "overExtracted": "Over-extracted",
+        "unitConflict": "Unit conflict",
+        "noResults": "No volume balances found"
+      },
+      "forestGuides": {
+        "number": "Number",
+        "status": "Status",
+        "type": "Type",
+        "issuedAt": "Issued at",
+        "plates": "Plates",
+        "view": "View",
+        "noResults": "No forest guides found"
+      },
+      "harvestUnits": {
+        "propertyName": "Property",
+        "holder": "Holder",
+        "city": "City",
+        "propertyAreaHa": "Property area",
+        "unitAreaHa": "Unit area",
+        "netAreaHa": "Net area",
+        "volumeM3": "Volume (m³)",
+        "mapTitle": "Harvest units map",
+        "noGeometry": "No geometries available for map display",
+        "noResults": "No harvest units found"
+      },
+      "roles": {
+        "person": "Person",
+        "role": "Role",
+        "source": "Source",
+        "taxId": "Tax ID",
+        "owner": "Owner",
+        "analyst": "Analyst",
+        "technicalResponsible": "Technical responsible",
+        "other": "Other roles",
+        "noResults": "No roles found"
+      },
+      "errors": {
+        "title": "Failed to load AUTEFs",
+        "message": "An unexpected error occurred while loading data.",
+        "detailTitle": "Failed to load AUTEF"
+      }
+    },
+    "forestGuides": {
+      "list": {
+        "title": "Forest Guides",
+        "subtitle": "Browse SEMAS-PA forest guides (GF).",
+        "total": "{{count}} total",
+        "totalRows": "{{count}} row(s)",
+        "noResults": "No forest guides found"
+      },
+      "filters": {
+        "searchPlaceholder": "Search number...",
+        "statusPlaceholder": "Status",
+        "typePlaceholder": "Type",
+        "autefIdPlaceholder": "AUTEF ID",
+        "taxId": "Tax ID",
+        "personName": "Person name",
+        "plate": "Plate",
+        "issuedFrom": "Issued from",
+        "issuedTo": "Issued to",
+        "clear": "Clear",
+        "advanced": "Advanced filters",
+        "apply": "Apply filters"
+      },
+      "table": {
+        "number": "Number",
+        "status": "Status",
+        "type": "Type",
+        "issuedAt": "Issued at",
+        "plates": "Plates"
+      },
+      "detail": {
+        "back": "Back to list",
+        "notFound": "Forest guide not found",
+        "title": "GF {{number}}",
+        "untitled": "GF #{{id}}",
+        "status": "Status",
+        "type": "Type",
+        "issuedAt": "Issued at",
+        "plates": "Plates",
+        "permits": "Permit refs"
+      },
+      "tabs": {
+        "species": "Species",
+        "roles": "Roles",
+        "autefs": "Related AUTEFs"
+      },
+      "species": {
+        "scientificName": "Scientific name",
+        "commonName": "Common name",
+        "productName": "Product",
+        "volume": "Volume",
+        "value": "Value",
+        "noResults": "No species found"
+      },
+      "roles": {
+        "person": "Person",
+        "role": "Role",
+        "source": "Source",
+        "origin": "Origin",
+        "destination": "Destination",
+        "noResults": "No roles found"
+      },
+      "autefs": {
+        "number": "Number",
+        "processNumber": "Process",
+        "city": "City",
+        "issuedAt": "Issued at",
+        "noResults": "No related AUTEFs found"
+      },
+      "sheet": {
+        "title": "Forest guide details",
+        "description": "Detailed information about the forest guide",
+        "openAutef": "Open AUTEF"
+      },
+      "errors": {
+        "title": "Failed to load forest guides",
+        "message": "An unexpected error occurred while loading data.",
+        "detailTitle": "Failed to load forest guide"
+      }
+    }
+  }
+}

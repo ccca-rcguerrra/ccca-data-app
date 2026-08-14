@@ -1,0 +1,102 @@
+// Map styles
+.map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-placeholder {
+  width: 100%;
+  height: 400px;
+  background-color: #e9ecef;
+  border: 2px dashed #6c757d;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 1rem 0;
+}
+
+// MapLibre GL specific styles
+.maplibregl-map {
+  width: 100%;
+  height: 100%;
+}
+
+.maplibregl-popup {
+  max-width: 300px;
+}
+
+.maplibregl-popup-content {
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.maplibregl-ctrl-group {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.maplibregl-ctrl-zoom-in,
+.maplibregl-ctrl-zoom-out {
+  border-radius: 8px;
+}
+
+/* Draw controls: stronger active/inactive contrast */
+.maplibregl-map .mapbox-gl-draw_ctrl-draw-btn {
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.maplibregl-map .mapbox-gl-draw_ctrl-draw-btn:hover {
+  background-color: #eef2ff;
+}
+
+/* Active state is driven solely by the `.active` class (toggled in JS on every
+   mode change). The `.mode-draw_*` map classes are NOT used here: MapboxDraw
+   only flushes them to the DOM on a map mouse event, which lagged the highlight. */
+.maplibregl-map .mapbox-gl-draw_ctrl-draw-btn.active {
+  background-color: #9ca3af !important;
+  box-shadow: inset 0 0 0 2px #4b5563;
+}
+
+/* Custom draw tools: same stroke weight and size as each other (matches default polygon/line look) */
+.maplibregl-map .mapbox-gl-draw_rectangle {
+  background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23404040\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"%3E%3Crect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\" ry=\"2\"/%3E%3C/svg%3E') !important;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.maplibregl-map .mapbox-gl-draw_polygon {
+  background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23404040\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"%3E%3Cpath d=\"M12.83 2.38a2 2 0 0 0-1.66 0L5.09 6.1A2 2 0 0 0 4 7.82v6.36a2 2 0 0 0 1.09 1.72l6.08 3.72a2 2 0 0 0 1.66 0l6.08-3.72A2 2 0 0 0 20 14.18V7.82a2 2 0 0 0-1.09-1.72z\"/%3E%3C/svg%3E') !important;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.maplibregl-map .mapbox-gl-draw_circle {
+  background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23404040\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"%3E%3Ccircle cx=\"12\" cy=\"12\" r=\"8\"/%3E%3C/svg%3E') !important;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.maplibregl-map .mapbox-gl-draw_ctrl-draw-btn.active {
+  transform: translateY(-1px);
+}
+
+/* Vertex editing: use the same cursor over an existing vertex and over a
+   midpoint (the about-to-be-created vertex). MapboxDraw natively gives them
+   different cursors (move/pointer vs. cell), driven by the feature-* classes it
+   sets on the container; we override both states with !important to win over
+   its more specific mouse-*-qualified selectors. */
+.maplibregl-map.mode-direct_select.feature-vertex .maplibregl-canvas-container.maplibregl-interactive,
+.maplibregl-map.mode-direct_select.feature-midpoint .maplibregl-canvas-container.maplibregl-interactive {
+  cursor: move !important;
+}

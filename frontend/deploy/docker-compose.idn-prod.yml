@@ -1,0 +1,24 @@
+version: "3.5"
+
+services:
+  mapbiomas-alertas-workspace-frontend:
+    image: registry.gitlab.com/mapbiomas/alertas/workspace/alertas-workspace-frontend:idn-prod
+    container_name: mapbiomas-alertas-workspace-frontend-idn-prod
+    hostname: mapbiomas-alertas-workspace-frontend-idn-prod
+    restart: always
+
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    networks:
+      - mapbiomas-alertas-workspace
+
+    ports:
+      - "${MB_ALERTA_WS_FRONTEND_PORT}"
+
+networks:
+  mapbiomas-alertas-workspace:
+    name: mapbiomas-alertas-workspace
+    driver: bridge

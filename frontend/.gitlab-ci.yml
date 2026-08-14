@@ -1,0 +1,363 @@
+image: docker:27
+
+stages:
+  - build-deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+
+# ── BUILD & DEPLOY ────────────────────────────────────────────────────────────
+
+build-deploy:staging:
+  stage: build-deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+    PROJECT_NAME: $STG_PROJECT_NAME
+    MB_ALERTA_WS_FRONTEND_PORT: $STG_MB_ALERTA_WS_FRONTEND_PORT
+    MB_ALERTA_WS_HOST_IP: $STG_MB_ALERTA_WS_HOST_IP
+    MB_ALERTA_WS_HOST_SSH_USER: $STG_MB_ALERTA_WS_HOST_SSH_USER
+    MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY: $STG_MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY
+
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+    - docker buildx create --use --name ci-builder
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      if [ -f "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY" ]; then
+        SSH_PRIVATE_KEY="$(cat "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY")"
+      else
+        SSH_PRIVATE_KEY="$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY"
+      fi
+      SSH_PRIVATE_KEY="$(printf '%s' "$SSH_PRIVATE_KEY" | sed "s/^'//; s/'$//")"
+      printf '%b\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$MB_ALERTA_WS_HOST_IP" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      docker buildx build \
+        --provenance=false \
+        --build-arg VITE_API_BASE_URL="$STG_VITE_API_BASE_URL" \
+        --build-arg VITE_WS_URL="$STG_VITE_WS_URL" \
+        --build-arg VITE_APP_TITLE="$STG_VITE_APP_TITLE" \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --cache-to "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:staging" \
+        --output type=image,push=true,oci-mediatypes=false \
+        .
+    - export DOCKER_HOST="ssh://${MB_ALERTA_WS_HOST_SSH_USER}@${MB_ALERTA_WS_HOST_IP}"
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.staging.yml pull
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.staging.yml up -d mapbiomas-alertas-workspace-frontend
+
+  environment:
+    name: staging
+    url: http://$MB_ALERTA_WS_HOST_IP
+
+  only:
+    - staging
+
+build-deploy:bra-prod:
+  stage: build-deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+    PROJECT_NAME: $BRA_PROD_PROJECT_NAME
+    MB_ALERTA_WS_FRONTEND_PORT: $BRA_PROD_MB_ALERTA_WS_FRONTEND_PORT
+    MB_ALERTA_WS_HOST_IP: $BRA_PROD_MB_ALERTA_WS_HOST_IP
+    MB_ALERTA_WS_HOST_SSH_USER: $BRA_PROD_MB_ALERTA_WS_HOST_SSH_USER
+    MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY: $BRA_PROD_MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY
+
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+    - docker buildx create --use --name ci-builder
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      if [ -f "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY" ]; then
+        SSH_PRIVATE_KEY="$(cat "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY")"
+      else
+        SSH_PRIVATE_KEY="$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY"
+      fi
+      SSH_PRIVATE_KEY="$(printf '%s' "$SSH_PRIVATE_KEY" | sed "s/^'//; s/'$//")"
+      printf '%b\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$MB_ALERTA_WS_HOST_IP" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      docker buildx build \
+        --provenance=false \
+        --build-arg VITE_API_BASE_URL="$BRA_PROD_VITE_API_BASE_URL" \
+        --build-arg VITE_WS_URL="$BRA_PROD_VITE_WS_URL" \
+        --build-arg VITE_APP_TITLE="$BRA_PROD_VITE_APP_TITLE" \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --cache-to "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:bra-prod" \
+        --output type=image,push=true,oci-mediatypes=false \
+        .
+    - export DOCKER_HOST="ssh://${MB_ALERTA_WS_HOST_SSH_USER}@${MB_ALERTA_WS_HOST_IP}"
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.bra-prod.yml pull
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.bra-prod.yml up -d mapbiomas-alertas-workspace-frontend
+
+  environment:
+    name: bra-prod
+    url: http://$MB_ALERTA_WS_HOST_IP
+
+  only:
+    - bra-prod
+    - production
+
+build-deploy:per-prod:
+  stage: build-deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - job: build-deploy:bra-prod
+      optional: true
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+    PROJECT_NAME: $PER_PROD_PROJECT_NAME
+    MB_ALERTA_WS_FRONTEND_PORT: $PER_PROD_MB_ALERTA_WS_FRONTEND_PORT
+    MB_ALERTA_WS_HOST_IP: $PER_PROD_MB_ALERTA_WS_HOST_IP
+    MB_ALERTA_WS_HOST_SSH_USER: $PER_PROD_MB_ALERTA_WS_HOST_SSH_USER
+    MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY: $PER_PROD_MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY
+
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+    - docker buildx create --use --name ci-builder
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      if [ -f "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY" ]; then
+        SSH_PRIVATE_KEY="$(cat "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY")"
+      else
+        SSH_PRIVATE_KEY="$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY"
+      fi
+      SSH_PRIVATE_KEY="$(printf '%s' "$SSH_PRIVATE_KEY" | sed "s/^'//; s/'$//")"
+      printf '%b\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$MB_ALERTA_WS_HOST_IP" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      docker buildx build \
+        --provenance=false \
+        --build-arg VITE_API_BASE_URL="$PER_PROD_VITE_API_BASE_URL" \
+        --build-arg VITE_WS_URL="$PER_PROD_VITE_WS_URL" \
+        --build-arg VITE_APP_TITLE="$PER_PROD_VITE_APP_TITLE" \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --cache-to "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:per-prod" \
+        --output type=image,push=true,oci-mediatypes=false \
+        .
+    - export DOCKER_HOST="ssh://${MB_ALERTA_WS_HOST_SSH_USER}@${MB_ALERTA_WS_HOST_IP}"
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.per-prod.yml pull
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.per-prod.yml up -d mapbiomas-alertas-workspace-frontend
+
+  environment:
+    name: per-prod
+    url: http://$MB_ALERTA_WS_HOST_IP
+
+  only:
+    - per-prod
+    - production
+
+build-deploy:col-prod:
+  stage: build-deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - job: build-deploy:per-prod
+      optional: true
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+    PROJECT_NAME: $COL_PROD_PROJECT_NAME
+    MB_ALERTA_WS_FRONTEND_PORT: $COL_PROD_MB_ALERTA_WS_FRONTEND_PORT
+    MB_ALERTA_WS_HOST_IP: $COL_PROD_MB_ALERTA_WS_HOST_IP
+    MB_ALERTA_WS_HOST_SSH_USER: $COL_PROD_MB_ALERTA_WS_HOST_SSH_USER
+    MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY: $COL_PROD_MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY
+
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+    - docker buildx create --use --name ci-builder
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      if [ -f "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY" ]; then
+        SSH_PRIVATE_KEY="$(cat "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY")"
+      else
+        SSH_PRIVATE_KEY="$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY"
+      fi
+      SSH_PRIVATE_KEY="$(printf '%s' "$SSH_PRIVATE_KEY" | sed "s/^'//; s/'$//")"
+      printf '%b\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$MB_ALERTA_WS_HOST_IP" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      docker buildx build \
+        --provenance=false \
+        --build-arg VITE_API_BASE_URL="$COL_PROD_VITE_API_BASE_URL" \
+        --build-arg VITE_WS_URL="$COL_PROD_VITE_WS_URL" \
+        --build-arg VITE_APP_TITLE="$COL_PROD_VITE_APP_TITLE" \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --cache-to "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:col-prod" \
+        --output type=image,push=true,oci-mediatypes=false \
+        .
+    - export DOCKER_HOST="ssh://${MB_ALERTA_WS_HOST_SSH_USER}@${MB_ALERTA_WS_HOST_IP}"
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.col-prod.yml pull
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.col-prod.yml up -d mapbiomas-alertas-workspace-frontend
+
+  environment:
+    name: col-prod
+    url: http://$MB_ALERTA_WS_HOST_IP
+
+  only:
+    - col-prod
+    - production
+
+build-deploy:bol-prod:
+  stage: build-deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - job: build-deploy:col-prod
+      optional: true
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+    PROJECT_NAME: $BOL_PROD_PROJECT_NAME
+    MB_ALERTA_WS_FRONTEND_PORT: $BOL_PROD_MB_ALERTA_WS_FRONTEND_PORT
+    MB_ALERTA_WS_HOST_IP: $BOL_PROD_MB_ALERTA_WS_HOST_IP
+    MB_ALERTA_WS_HOST_SSH_USER: $BOL_PROD_MB_ALERTA_WS_HOST_SSH_USER
+    MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY: $BOL_PROD_MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY
+
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+    - docker buildx create --use --name ci-builder
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      if [ -f "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY" ]; then
+        SSH_PRIVATE_KEY="$(cat "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY")"
+      else
+        SSH_PRIVATE_KEY="$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY"
+      fi
+      SSH_PRIVATE_KEY="$(printf '%s' "$SSH_PRIVATE_KEY" | sed "s/^'//; s/'$//")"
+      printf '%b\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$MB_ALERTA_WS_HOST_IP" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      docker buildx build \
+        --provenance=false \
+        --build-arg VITE_API_BASE_URL="$BOL_PROD_VITE_API_BASE_URL" \
+        --build-arg VITE_WS_URL="$BOL_PROD_VITE_WS_URL" \
+        --build-arg VITE_APP_TITLE="$BOL_PROD_VITE_APP_TITLE" \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --cache-to "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:bol-prod" \
+        --output type=image,push=true,oci-mediatypes=false \
+        .
+    - export DOCKER_HOST="ssh://${MB_ALERTA_WS_HOST_SSH_USER}@${MB_ALERTA_WS_HOST_IP}"
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.bol-prod.yml pull
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.bol-prod.yml up -d mapbiomas-alertas-workspace-frontend
+
+  environment:
+    name: bol-prod
+    url: http://$MB_ALERTA_WS_HOST_IP
+
+  only:
+    - bol-prod
+    - production
+
+build-deploy:idn-prod:
+  stage: build-deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - job: build-deploy:bol-prod
+      optional: true
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+    PROJECT_NAME: $IDN_PROD_PROJECT_NAME
+    MB_ALERTA_WS_FRONTEND_PORT: $IDN_PROD_MB_ALERTA_WS_FRONTEND_PORT
+    MB_ALERTA_WS_HOST_IP: $IDN_PROD_MB_ALERTA_WS_HOST_IP
+    MB_ALERTA_WS_HOST_SSH_USER: $IDN_PROD_MB_ALERTA_WS_HOST_SSH_USER
+    MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY: $IDN_PROD_MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY
+
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+    - docker buildx create --use --name ci-builder
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      if [ -f "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY" ]; then
+        SSH_PRIVATE_KEY="$(cat "$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY")"
+      else
+        SSH_PRIVATE_KEY="$MB_ALERTA_WS_HOST_SSH_PRIVATE_KEY"
+      fi
+      SSH_PRIVATE_KEY="$(printf '%s' "$SSH_PRIVATE_KEY" | sed "s/^'//; s/'$//")"
+      printf '%b\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$MB_ALERTA_WS_HOST_IP" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      docker buildx build \
+        --provenance=false \
+        --build-arg VITE_API_BASE_URL="$IDN_PROD_VITE_API_BASE_URL" \
+        --build-arg VITE_WS_URL="$IDN_PROD_VITE_WS_URL" \
+        --build-arg VITE_APP_TITLE="$IDN_PROD_VITE_APP_TITLE" \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --cache-to "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:idn-prod" \
+        --output type=image,push=true,oci-mediatypes=false \
+        .
+    - export DOCKER_HOST="ssh://${MB_ALERTA_WS_HOST_SSH_USER}@${MB_ALERTA_WS_HOST_IP}"
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.idn-prod.yml pull
+    - docker compose -p $PROJECT_NAME -f deploy/docker-compose.idn-prod.yml up -d mapbiomas-alertas-workspace-frontend
+
+  environment:
+    name: idn-prod
+    url: http://$MB_ALERTA_WS_HOST_IP
+
+  only:
+    - idn-prod
+    - production
