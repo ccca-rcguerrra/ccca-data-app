@@ -448,12 +448,16 @@ export const AppSidebar = ({ isCollapsed = false, onToggle, onHover, isManuallyC
       {...props}
     >
       <SidebarHeader>
-        <div className={`relative flex items-center justify-center transition-all duration-200 ${isCollapsedState ? 'flex-col gap-1 px-0 py-1' : 'gap-2 px-2 py-2'} group-data-[collapsible=icon]:justify-center`}>
+        <div className={`relative flex items-center justify-center overflow-hidden transition-all duration-200 ${isCollapsedState ? 'px-0 py-2' : 'gap-2 px-2 py-3'} group-data-[collapsible=icon]:justify-center`}>
           <img
-              src={isCollapsedState ? "/images/logo.png" : "/images/logo-full.png"}
-              alt="CCCA Data"
-              className="object-contain transition-all duration-200"
-              style={{ height: 'auto', width: isCollapsedState ? '70px' : '155px', maxWidth: isCollapsedState ? '80%' : '100%', marginLeft: '0px' }}
+              src="/images/ccca-logo.png"
+              alt="CCCA"
+              draggable={false}
+              className={
+                isCollapsedState
+                  ? 'h-8 w-8 object-cover object-left'
+                  : 'h-10 w-auto max-w-[155px] object-contain'
+              }
             />
         </div>
         {/* Team menu temporarily disabled - set CONFIG.ENABLE_TEAM_MENU to true to enable */}

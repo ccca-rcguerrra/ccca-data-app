@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs';
 import { LazyTabsContent } from '@/components/ui/lazy-tabs-content';
 import { ROUTES } from '@/constants/routes.constants';
 import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
+
 import {
   useAutefDetailController,
   type AutefDetailController,
@@ -16,10 +17,11 @@ import { AutefSpeciesTable } from './components/autef-species-table';
 import { AutefForestGuidesTable } from './components/autef-forest-guides-table';
 import { AutefHarvestUnitsPanel } from './components/autef-harvest-units-panel';
 import { AutefRolesCards } from './components/autef-roles-cards';
+import { VolumeBalanceGauge } from './components/volume-balance-gauge';
 
 function AutefDetailSummary({ controller }: { controller: AutefDetailController }) {
   const { t } = useTranslation();
-  const { autef, isLoadingAutef } = controller.api;
+  const { autef, isLoadingAutef, mergedSpeciesRows } = controller.api;
 
   if (isLoadingAutef) {
     return (
@@ -48,30 +50,64 @@ function AutefDetailSummary({ controller }: { controller: AutefDetailController 
         })
       : '—';
 
+  const peakMovedRatio = mergedSpeciesRows.reduce<number | null>((peak, row) => {
+    const ratio = row.balance?.movedRatio;
+    if (ratio == null || Number.isNaN(ratio)) return peak;
+    if (peak == null) return ratio;
+    return Math.max(peak, ratio);
+  }, null);
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
-        {autef.title ? (
-          <p className="text-sm text-muted-foreground mt-1">{autef.title}</p>
-        ) : null}
+        <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
+          {t('semaspa.autefs.detail.eyebrow')}
+        </p>
+        <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-mono text-xl font-semibold tracking-tight text-foreground">
+              {title}
+            </h2>
+            {autef.title ? (
+              <p className="text-sm text-muted-foreground mt-1">{autef.title}</p>
+            ) : null}
+          </div>
+          {peakMovedRatio != null ? (
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">
+                {t('semaspa.autefs.detail.peakMoved')}
+              </span>
+              <VolumeBalanceGauge ratio={peakMovedRatio} />
+            </div>
+          ) : null}
+        </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-border pt-3 text-sm">
         <div>
-          <p className="text-muted-foreground">{t('semaspa.autefs.detail.processNumber')}</p>
-          <p className="font-medium">{autef.processNumber ?? '—'}</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.autefs.detail.processNumber')}
+          </p>
+          <p className="font-mono text-[13px] font-medium tabular-nums">
+            {autef.processNumber ?? '—'}
+          </p>
         </div>
         <div>
-          <p className="text-muted-foreground">{t('semaspa.autefs.detail.cityState')}</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.autefs.detail.cityState')}
+          </p>
           <p className="font-medium">{location}</p>
         </div>
         <div>
-          <p className="text-muted-foreground">{t('semaspa.autefs.detail.totalAreaHa')}</p>
-          <p className="font-medium">{area}</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.autefs.detail.totalAreaHa')}
+          </p>
+          <p className="font-medium tabular-nums">{area}</p>
         </div>
         <div>
-          <p className="text-muted-foreground">{t('semaspa.autefs.detail.issuedAt')}</p>
-          <p className="font-medium">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.autefs.detail.issuedAt')}
+          </p>
+          <p className="font-medium tabular-nums">
             {autef.issuedAt
               ? formatISODateLocal(autef.issuedAt) || EMPTY_DATE_LABEL
               : EMPTY_DATE_LABEL}
@@ -110,11 +146,11 @@ export function AutefDetailPage() {
     return (
       <div className="flex items-center justify-center w-full h-full p-6">
         <div
-          className="flex flex-col items-center gap-3 rounded-lg border border-[var(--color-error-500)] bg-[var(--color-error-bg)] p-6 max-w-md"
+          className="flex flex-col items-center gap-3 rounded-lg border border-status-over/40 bg-status-over/10 p-6 max-w-md"
           role="alert"
         >
-          <AlertCircle className="h-8 w-8 text-[var(--color-error-500)] shrink-0" />
-          <h2 className="text-base font-bold text-[var(--color-error-500)]">
+          <AlertCircle className="h-8 w-8 text-status-over shrink-0" />
+          <h2 className="text-base font-bold text-status-over">
             {t('semaspa.autefs.errors.detailTitle')}
           </h2>
           <p className="text-sm text-center text-foreground">

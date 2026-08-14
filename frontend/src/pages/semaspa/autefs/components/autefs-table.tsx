@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/shadcn/badge';
+import { Button } from '@/components/ui/shadcn/button';
 import {
   Table,
   TableBody,
@@ -12,6 +13,7 @@ import {
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
 import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
+
 import type { AutefsListController } from '../hooks/use-autefs-list-controller';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
@@ -31,9 +33,9 @@ function formatArea(value: number | null): string {
 export function AutefsTable({ controller }: AutefsTableProps) {
   const { t } = useTranslation();
   const {
-    api: { rows, pagination, isLoading, totalPages, showOverExtractedBadge },
+    api: { rows, pagination, isLoading, totalPages, showOverExtractedBadge, hasActiveFilters },
     store: { state },
-    handlers: { handlePageChange, handlePageSizeChange, handleRowClick },
+    handlers: { handlePageChange, handlePageSizeChange, handleRowClick, handleClearFilters },
   } = controller;
 
   const currentPage = pagination?.page ?? state.currentPage;
@@ -44,7 +46,7 @@ export function AutefsTable({ controller }: AutefsTableProps) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
-        <div className="overflow-hidden rounded-lg border m-4 border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border m-4">
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow>
@@ -75,8 +77,19 @@ export function AutefsTable({ controller }: AutefsTableProps) {
 
               {!isLoading && rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={colCount} className="h-24 text-center text-muted-foreground">
-                    {t('semaspa.autefs.list.noResults')}
+                  <TableCell colSpan={colCount} className="h-32">
+                    <div className="flex flex-col items-center justify-center gap-2 text-center">
+                      <p className="text-sm text-muted-foreground">
+                        {hasActiveFilters
+                          ? t('semaspa.autefs.list.noResultsWithFilters')
+                          : t('semaspa.autefs.list.noResults')}
+                      </p>
+                      {hasActiveFilters ? (
+                        <Button variant="outline" size="sm" onClick={handleClearFilters}>
+                          {t('semaspa.autefs.filters.clear')}
+                        </Button>
+                      ) : null}
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : null}
@@ -84,16 +97,18 @@ export function AutefsTable({ controller }: AutefsTableProps) {
               {rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-muted/50"
                   onClick={() => handleRowClick(row.id)}
                 >
-                  <TableCell className="font-medium">{row.number ?? '—'}</TableCell>
-                  <TableCell>{row.processNumber ?? '—'}</TableCell>
+                  <TableCell className="font-mono text-[13px] font-medium">
+                    {row.number ?? '—'}
+                  </TableCell>
+                  <TableCell className="font-mono text-[13px]">{row.processNumber ?? '—'}</TableCell>
                   <TableCell>{row.city ?? '—'}</TableCell>
-                  <TableCell>{row.state ?? '—'}</TableCell>
-                  <TableCell>{row.issueYear ?? '—'}</TableCell>
-                  <TableCell className="text-right">{formatArea(row.totalAreaHa)}</TableCell>
-                  <TableCell>
+                  <TableCell className="tabular-nums">{row.state ?? '—'}</TableCell>
+                  <TableCell className="tabular-nums">{row.issueYear ?? '—'}</TableCell>
+                  <TableCell className="text-right tabular-nums">{formatArea(row.totalAreaHa)}</TableCell>
+                  <TableCell className="tabular-nums">
                     {row.issuedAt
                       ? formatISODateLocal(row.issuedAt) || EMPTY_DATE_LABEL
                       : EMPTY_DATE_LABEL}

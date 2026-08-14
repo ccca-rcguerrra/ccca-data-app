@@ -159,6 +159,13 @@ export function useAutefsListController() {
     storeActions.clearFilters();
   }, [storeActions]);
 
+  const handleOverExtractedToggle = useCallback(
+    (value: boolean) => {
+      storeActions.setOverExtractedFilter(value);
+    },
+    [storeActions],
+  );
+
   const handlePageSizeChange = useCallback(
     (size: number) => {
       storeActions.setPageSize(size);
@@ -203,6 +210,7 @@ export function useAutefsListController() {
       handleApplyAdvancedFilters,
       handleToggleAdvanced,
       handleClearFilters,
+      handleOverExtractedToggle,
       handlePageSizeChange,
       handlePageChange,
       handleRowClick,

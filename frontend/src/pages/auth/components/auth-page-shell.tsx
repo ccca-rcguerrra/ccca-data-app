@@ -62,15 +62,14 @@ export function AuthPageShell({ children, footer }: AuthPageShellProps) {
           <CardHeader className="space-y-0 p-0 text-center">
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-2">
-                <img
-                  src="/images/logo-full.png"
-                  alt={t('auth.login.logoAlt')}
-                  className="h-16 w-auto max-w-full object-contain"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src =
-                      '/images/logo.png';
-                  }}
-                />
+                <div className="flex items-center rounded-lg bg-primary px-3 py-2">
+                  <img
+                    src="/images/ccca-logo.png"
+                    alt={t('auth.login.logoAlt')}
+                    className="h-10 w-auto max-w-[220px] object-contain"
+                    draggable={false}
+                  />
+                </div>
                 <CountryFlag countryCode={initiative?.countryCode} countryName={initiative?.country} />
               </div>
               <span className="mt-1.5 text-sm font-medium text-slate-500">

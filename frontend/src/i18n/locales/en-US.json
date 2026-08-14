@@ -148,7 +148,8 @@
         "subtitle": "Browse SEMAS-PA forest exploitation authorizations.",
         "total": "{{count}} total",
         "totalRows": "{{count}} row(s)",
-        "noResults": "No AUTEFs found"
+        "noResults": "No AUTEFs found",
+        "noResultsWithFilters": "No AUTEFs match the current filters."
       },
       "filters": {
         "searchPlaceholder": "Search number or process...",
@@ -188,8 +189,10 @@
       "detail": {
         "back": "Back to list",
         "notFound": "AUTEF not found",
+        "eyebrow": "AUTEF · SEMAS-PA",
         "title": "AUTEF {{number}}",
         "untitled": "AUTEF #{{id}}",
+        "peakMoved": "Peak moved",
         "processNumber": "Process",
         "cityState": "Location",
         "totalAreaHa": "Total area",

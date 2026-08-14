@@ -33,6 +33,8 @@
   --color-ring: var(--ring);
   --color-brand-yellow: var(--brand-yellow);
   --color-brand-yellow-foreground: var(--brand-yellow-foreground);
+  --color-status-ok: var(--status-ok);
+  --color-status-over: var(--status-over);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -90,6 +92,8 @@
   --accent: #eef1ef;
   --accent-foreground: #0f1a16;
   --destructive: oklch(0.577 0.245 27.325);
+  --status-ok: #0e4b3b;
+  --status-over: #c2413b;
   --border: #e4e8e5;
   --input: #e4e8e5;
   --ring: #0e4b3b;
@@ -167,6 +171,8 @@
   --accent: #171d1a;
   --accent-foreground: #f7f8f8;
   --destructive: oklch(0.704 0.191 22.216);
+  --status-ok: #3fa983;
+  --status-over: #e0675a;
   --border: #232a26;
   --input: #2b332e;
   --ring: #3fa983;

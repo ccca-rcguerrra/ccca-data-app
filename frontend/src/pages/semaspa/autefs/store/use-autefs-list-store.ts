@@ -39,6 +39,7 @@ export interface AutefsListStateActions {
   setQuickFilters: (filters: Partial<AutefsQuickFilters>) => void;
   setAdvancedInputs: (filters: Partial<AutefsAdvancedFilters>) => void;
   applyAdvancedFilters: () => void;
+  setOverExtractedFilter: (value: boolean) => void;
   setAdvancedOpen: (open: boolean) => void;
   clearFilters: () => void;
   reset: () => void;
@@ -104,6 +105,13 @@ export const useAutefsListStore = create<AutefsListState>((set, get) => ({
     });
   },
 
+  setOverExtractedFilter: (value) =>
+    set((state) => ({
+      advancedInputs: { ...state.advancedInputs, isOverExtracted: value },
+      advancedApplied: { ...state.advancedApplied, isOverExtracted: value },
+      currentPage: 1,
+    })),
+
   setAdvancedOpen: (open) => set({ advancedOpen: open }),
 
   clearFilters: () =>
@@ -137,6 +145,7 @@ export const useAutefsListActions = (): AutefsListStateActions =>
       setQuickFilters: s.setQuickFilters,
       setAdvancedInputs: s.setAdvancedInputs,
       applyAdvancedFilters: s.applyAdvancedFilters,
+      setOverExtractedFilter: s.setOverExtractedFilter,
       setAdvancedOpen: s.setAdvancedOpen,
       clearFilters: s.clearFilters,
       reset: s.reset,

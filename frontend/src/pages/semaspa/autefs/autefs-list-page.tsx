@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/shadcn/button';
-import { Checkbox } from '@/components/ui/shadcn/checkbox';
 import {
   Collapsible,
   CollapsibleContent,
@@ -25,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/shadcn/select';
+import { cn } from '@/lib/utils';
+
 import { AutefsTable } from './components/autefs-table';
 import {
   useAutefsListController,
@@ -44,6 +45,7 @@ function AutefsListPageHeader({ controller }: { controller: AutefsListController
       handleApplyAdvancedFilters,
       handleToggleAdvanced,
       handleClearFilters,
+      handleOverExtractedToggle,
     },
   } = controller;
 
@@ -118,41 +120,57 @@ function AutefsListPageHeader({ controller }: { controller: AutefsListController
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-[200px] min-w-[160px]">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-border bg-card p-1.5">
+            <div className="relative w-[200px] min-w-[160px]">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t('semaspa.autefs.filters.searchPlaceholder')}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="h-9 border-border bg-background pl-10 shadow-none"
+                disabled={busy}
+              />
+            </div>
+
             <Input
-              placeholder={t('semaspa.autefs.filters.searchPlaceholder')}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="pl-10 h-9"
+              placeholder={t('semaspa.autefs.filters.cityPlaceholder')}
+              value={cityValue}
+              onChange={(e) => setCityValue(e.target.value)}
+              className="h-9 w-[140px] border-border bg-background shadow-none"
+              disabled={busy}
+            />
+
+            <Input
+              placeholder={t('semaspa.autefs.filters.statePlaceholder')}
+              value={stateValue}
+              onChange={(e) => setStateValue(e.target.value)}
+              className="h-9 w-[80px] border-border bg-background shadow-none"
+              disabled={busy}
+            />
+
+            <Input
+              placeholder={t('semaspa.autefs.filters.yearPlaceholder')}
+              value={yearValue}
+              onChange={(e) => setYearValue(e.target.value)}
+              className="h-9 w-[90px] border-border bg-background shadow-none"
+              inputMode="numeric"
               disabled={busy}
             />
           </div>
 
-          <Input
-            placeholder={t('semaspa.autefs.filters.cityPlaceholder')}
-            value={cityValue}
-            onChange={(e) => setCityValue(e.target.value)}
-            className="h-9 w-[140px]"
+          <button
+            type="button"
             disabled={busy}
-          />
-
-          <Input
-            placeholder={t('semaspa.autefs.filters.statePlaceholder')}
-            value={stateValue}
-            onChange={(e) => setStateValue(e.target.value)}
-            className="h-9 w-[80px]"
-            disabled={busy}
-          />
-
-          <Input
-            placeholder={t('semaspa.autefs.filters.yearPlaceholder')}
-            value={yearValue}
-            onChange={(e) => setYearValue(e.target.value)}
-            className="h-9 w-[90px]"
-            inputMode="numeric"
-            disabled={busy}
-          />
+            onClick={() => handleOverExtractedToggle(!state.advancedApplied.isOverExtracted)}
+            className={cn(
+              'h-9 rounded-full border px-3 text-xs font-medium transition-colors',
+              state.advancedApplied.isOverExtracted
+                ? 'border-brand-yellow bg-brand-yellow text-brand-yellow-foreground'
+                : 'border-border bg-transparent text-foreground hover:bg-muted',
+            )}
+          >
+            {t('semaspa.autefs.filters.isOverExtracted')}
+          </button>
 
           <Button
             variant="outline"
@@ -189,7 +207,7 @@ function AutefsListPageHeader({ controller }: { controller: AutefsListController
       </div>
 
       <Collapsible open={state.advancedOpen} onOpenChange={handleToggleAdvanced}>
-        <CollapsibleContent className="space-y-4 rounded-lg border border-border bg-muted/20 p-4">
+        <CollapsibleContent className="space-y-4 rounded-lg border border-border bg-card p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="autef-month">{t('semaspa.autefs.filters.issueMonth')}</Label>
@@ -351,18 +369,7 @@ function AutefsListPageHeader({ controller }: { controller: AutefsListController
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <label className="inline-flex items-center gap-2 text-sm">
-              <Checkbox
-                checked={inputs.isOverExtracted}
-                onCheckedChange={(checked) =>
-                  handleAdvancedInputChange({ isOverExtracted: checked === true })
-                }
-                disabled={busy}
-              />
-              {t('semaspa.autefs.filters.isOverExtracted')}
-            </label>
-
+          <div className="flex flex-wrap items-center justify-end gap-3">
             <div className="flex items-center gap-2">
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-9">
@@ -388,11 +395,11 @@ export function AutefsListPage() {
     return (
       <div className="flex items-center justify-center w-full h-full p-6">
         <div
-          className="flex flex-col items-center gap-3 rounded-lg border border-[var(--color-error-500)] bg-[var(--color-error-bg)] p-6 max-w-md"
+          className="flex flex-col items-center gap-3 rounded-lg border border-status-over/40 bg-status-over/10 p-6 max-w-md"
           role="alert"
         >
-          <AlertCircle className="h-8 w-8 text-[var(--color-error-500)] shrink-0" />
-          <h2 className="text-base font-bold text-[var(--color-error-500)]">
+          <AlertCircle className="h-8 w-8 text-status-over shrink-0" />
+          <h2 className="text-base font-bold text-status-over">
             {t('semaspa.autefs.errors.title')}
           </h2>
           <p className="text-sm text-center text-foreground">

@@ -11,12 +11,13 @@ import {
 } from '@/components/ui/shadcn/table';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
+
 import type { AutefDetailController } from '../hooks/use-autef-detail-controller';
 import {
-  formatRatio,
   formatSpeciesProductLabel,
   formatVolume,
 } from '../utils/format';
+import { VolumeBalanceGauge } from './volume-balance-gauge';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100];
 
@@ -45,7 +46,7 @@ export function AutefSpeciesTable({ controller }: Props) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
-        <div className="overflow-hidden rounded-lg border m-4 border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border m-4">
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow>
@@ -54,15 +55,14 @@ export function AutefSpeciesTable({ controller }: Props) {
                 <TableHead className="text-right">{t('semaspa.autefs.species.volume')}</TableHead>
                 <TableHead className="text-right">{t('semaspa.autefs.species.authorized')}</TableHead>
                 <TableHead className="text-right">{t('semaspa.autefs.species.moved')}</TableHead>
-                <TableHead className="text-right">{t('semaspa.autefs.species.ratio')}</TableHead>
-                <TableHead className="w-[120px]">{t('semaspa.autefs.species.progress')}</TableHead>
+                <TableHead className="w-[180px]">{t('semaspa.autefs.species.progress')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoadingSpecies && mergedSpeciesRows.length === 0
                 ? Array.from({ length: 6 }).map((_, i) => (
                     <TableRow key={i}>
-                      {Array.from({ length: 7 }).map((__, j) => (
+                      {Array.from({ length: 6 }).map((__, j) => (
                         <TableCell key={j}>
                           <Skeleton className="h-4 w-24" />
                         </TableCell>
@@ -73,7 +73,7 @@ export function AutefSpeciesTable({ controller }: Props) {
 
               {!isLoadingSpecies && mergedSpeciesRows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                     {t('semaspa.autefs.species.noResults')}
                   </TableCell>
                 </TableRow>
@@ -83,16 +83,12 @@ export function AutefSpeciesTable({ controller }: Props) {
                 const product = speciesProductsMap[row.speciesProductId];
                 const balance = row.balance;
                 const ratio = balance?.movedRatio ?? null;
-                const progressPct =
-                  ratio != null && !Number.isNaN(ratio)
-                    ? Math.min(100, Math.max(0, ratio * 100))
-                    : null;
 
                 return (
                   <TableRow key={row.key}>
                     <TableCell className="font-medium">
                       <div className="flex flex-col gap-1">
-                        <span>{product?.scientificName ?? '—'}</span>
+                        <span className="italic">{product?.scientificName ?? '—'}</span>
                         <div className="flex flex-wrap gap-1">
                           {balance?.isOverExtracted ? (
                             <Badge variant="destructive">
@@ -116,34 +112,20 @@ export function AutefSpeciesTable({ controller }: Props) {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right tabular-nums">
                       {formatVolume(row.original?.volume ?? null, row.original?.unit ?? null)}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right tabular-nums">
                       {formatVolume(
                         balance?.authorizedVolume ?? null,
                         balance?.authorizedUnit ?? null,
                       )}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right tabular-nums">
                       {formatVolume(balance?.movedVolume ?? null, balance?.movedUnit ?? null)}
                     </TableCell>
-                    <TableCell className="text-right">{formatRatio(ratio)}</TableCell>
                     <TableCell>
-                      {progressPct != null ? (
-                        <div className="w-full rounded-full bg-muted h-1.5">
-                          <div
-                            className={`h-1.5 rounded-full ${
-                              balance?.isOverExtracted
-                                ? 'bg-[var(--color-error-500)]'
-                                : 'bg-[var(--color-success-500,#22c55e)]'
-                            }`}
-                            style={{ width: `${progressPct}%` }}
-                          />
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">—</span>
-                      )}
+                      <VolumeBalanceGauge ratio={ratio} />
                     </TableCell>
                   </TableRow>
                 );
