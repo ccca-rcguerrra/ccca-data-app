@@ -77,7 +77,7 @@ function LoginForm({
             autoFocus
             required
             disabled={isLoading}
-            className="h-10 rounded-lg border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 shadow-none placeholder:text-slate-500 focus-visible:border-[#006681] focus-visible:ring-[#006681]/15"
+            className="h-10 rounded-lg border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 shadow-none placeholder:text-slate-500 focus-visible:border-primary focus-visible:ring-primary/15"
           />
         </div>
       </div>
@@ -100,7 +100,7 @@ function LoginForm({
             autoComplete="current-password"
             required
             disabled={isLoading}
-            className="h-10 rounded-lg border-slate-300 bg-white pl-10 pr-10 text-sm text-slate-900 shadow-none placeholder:text-slate-500 focus-visible:border-[#006681] focus-visible:ring-[#006681]/15"
+            className="h-10 rounded-lg border-slate-300 bg-white pl-10 pr-10 text-sm text-slate-900 shadow-none placeholder:text-slate-500 focus-visible:border-primary focus-visible:ring-primary/15"
           />
           <Button
             type="button"
@@ -127,7 +127,7 @@ function LoginForm({
         <Button
           type="button"
           variant="link"
-          className="h-auto p-0 text-xs font-medium text-blue-600 hover:text-blue-700"
+          className="h-auto p-0 text-xs font-medium text-primary hover:text-primary/80"
           asChild
         >
           <Link to={ROUTES.auth.forgotPassword}>
@@ -137,7 +137,7 @@ function LoginForm({
       </div>
       <Button
         type="submit"
-        className="h-10 w-full rounded-lg bg-[#087236] text-sm font-semibold shadow-[0_10px_18px_rgba(8,114,54,0.18)] hover:bg-[#06632f]"
+        className="h-10 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-[0_10px_18px_rgba(14,75,59,0.18)] hover:bg-primary/90"
         disabled={isLoading}
       >
         <Lock className="size-4" />
@@ -164,7 +164,7 @@ function LoginForm({
       */}
       <p className="pt-2 text-center text-xs text-slate-500">
         {t('auth.login.noAccount')}{' '}
-        <span className="font-medium text-blue-600">
+        <span className="font-medium text-primary">
           {t('auth.login.contactAdmin')}
         </span>
       </p>

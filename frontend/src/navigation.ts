@@ -20,7 +20,6 @@ export const navigationData = {
       titleKey: 'navigation.dashboard',
       url: '/',
       icon: Home,
-      iconColor: 'text-[#515050]',
       isActive: true,
     },
     {
@@ -28,21 +27,18 @@ export const navigationData = {
       titleKey: 'navigation.autefs',
       url: '/semaspa/autefs',
       icon: FileText,
-      iconColor: 'text-[#4a7c59]',
     },
     {
       title: 'Forest Guides',
       titleKey: 'navigation.forestGuides',
       url: '/semaspa/forest-guides',
       icon: Trees,
-      iconColor: 'text-[#3d6b4f]',
     },
     {
       title: 'Users',
       titleKey: 'navigation.users',
       url: '/users',
       icon: User,
-      iconColor: 'text-[#5c7d92]',
       permission: 'users.manage' as Permission,
     },
     {
@@ -50,7 +46,6 @@ export const navigationData = {
       titleKey: 'navigation.teams',
       url: '/teams',
       icon: Users,
-      iconColor: 'text-[#6ba5c4]',
       permission: 'teams.manage' as Permission,
     },
   ],

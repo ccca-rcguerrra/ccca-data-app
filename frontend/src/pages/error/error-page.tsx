@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/shadcn/separator';
 
 const PAGE_BACKGROUND: React.CSSProperties = {
   background:
-    'radial-gradient(circle at 12% 20%, rgba(154, 190, 153, 0.26), transparent 34%), radial-gradient(circle at 82% 72%, rgba(159, 201, 227, 0.34), transparent 38%), linear-gradient(135deg, #f5faf5 0%, #ffffff 48%, #eef6fb 100%)',
+    'radial-gradient(circle at 12% 20%, rgba(14, 75, 59, 0.14), transparent 34%), radial-gradient(circle at 82% 72%, rgba(238, 207, 75, 0.18), transparent 38%), linear-gradient(135deg, #f5faf5 0%, #ffffff 48%, #f7f4e8 100%)',
 };
 
 function getErrorMessage(error: unknown): string | null {
@@ -68,9 +68,9 @@ export function ErrorPage() {
         <div className="absolute left-12 top-60 size-36 border border-[#cbd8cf]/55" />
         <div className="absolute left-48 top-32 size-20 border border-[#cbd8cf]/50" />
       </div>
-      <div className="pointer-events-none absolute -bottom-[25rem] -right-48 size-[46rem] rounded-full border border-[#a9c5d9]/45" />
-      <div className="pointer-events-none absolute -bottom-[22rem] -right-40 size-[41rem] rounded-full border border-[#a9c5d9]/40" />
-      <div className="pointer-events-none absolute -bottom-[19rem] -right-32 size-[36rem] rounded-full border border-[#a9c5d9]/35" />
+      <div className="pointer-events-none absolute -bottom-[25rem] -right-48 size-[46rem] rounded-full border border-[#eecf4b]/35" />
+      <div className="pointer-events-none absolute -bottom-[22rem] -right-40 size-[41rem] rounded-full border border-[#eecf4b]/30" />
+      <div className="pointer-events-none absolute -bottom-[19rem] -right-32 size-[36rem] rounded-full border border-[#0e4b3b]/20" />
 
       <div className="relative flex w-full max-w-[480px] flex-col items-center gap-5">
         <Card className="w-full gap-0 rounded-lg border-white/70 bg-white/95 px-5 py-7 shadow-[0_18px_48px_rgba(15,23,42,0.14)] backdrop-blur sm:px-10 sm:py-8">
@@ -93,7 +93,7 @@ export function ErrorPage() {
 
           <div className="my-5 flex items-center gap-4">
             <Separator className="flex-1 bg-slate-200" />
-            <span className="size-2 rounded-full bg-[#2ca25f]" />
+            <span className="size-2 rounded-full bg-primary" />
             <Separator className="flex-1 bg-slate-200" />
           </div>
 

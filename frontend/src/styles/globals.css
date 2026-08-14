@@ -1,11 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "Inter Variable", "Open Sans", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
   --radius-sm: calc(var(--radius) - 4px);
@@ -30,6 +31,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-yellow-foreground: var(--brand-yellow-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -47,60 +50,80 @@
   --color-sidebar-menu-active-border: var(--sidebar-menu-active-border);
 }
 
+/* ============================================
+   Light mode — CCCA identity + Linear structure
+   ============================================ */
 :root {
-  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "Inter Variable", "Open Sans", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
+
+  /* Radius scale (Linear: 8 / 12 / 16) */
+  --radius: 0.75rem;
   --border-radius-large: 8px;
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --color-primary-700: #43798A;
-  --color-green-300: #B5DFC6;
-  --color-neutral-100: #FFFFFF;
-  --color-neutral-200: #F1F2F2;
-  --color-neutral-300: #D2D3D4;
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.48 0.08 220);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: var(--color-neutral-200);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.48 0.08 220);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: var(--color-neutral-300);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --sidebar-menu-button: var(--color-neutral-100);
-  --sidebar-menu-active-border: var(--color-green-300);
+  --border-radius-xlarge: 12px;
   --border-size-small: 1px;
   --spacing-size-small: 8px;
   --spacing-size-large: 12px;
   --spacing-size-xlarge: 24px;
-  --border-radius-xlarge: 12px;
-  --body-small-strong: 600 12px/1.5 ui-sans-serif, system-ui, sans-serif;
-  --color-neutral-500: #6B7280;
-  --color-neutral-700: #374151;
-  --color-blue-700: #1d5e7a;
+
+  /* Surfaces */
+  --background: #f6f7f6;
+  --foreground: #0f1a16;
+  --card: #ffffff;
+  --card-foreground: #0f1a16;
+  --popover: #ffffff;
+  --popover-foreground: #0f1a16;
+
+  /* Brand */
+  --primary: #0e4b3b;
+  --primary-foreground: #ffffff;
+  --brand-yellow: #eecf4b;
+  --brand-yellow-foreground: #0e4b3b;
+
+  /* Neutral UI */
+  --secondary: #eef1ef;
+  --secondary-foreground: #0f1a16;
+  --muted: #eef1ef;
+  --muted-foreground: #5c6b64;
+  --accent: #eef1ef;
+  --accent-foreground: #0f1a16;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e4e8e5;
+  --input: #e4e8e5;
+  --ring: #0e4b3b;
+
+  /* Charts — greens + brand yellow + muted teal */
+  --chart-1: #0e4b3b;
+  --chart-2: #3fa983;
+  --chart-3: #eecf4b;
+  --chart-4: #5c7d92;
+  --chart-5: #8a9a90;
+
+  /* Sidebar — deep forest green (CCCA portal) */
+  --sidebar: #0e4237;
+  --sidebar-foreground: #dce9e2;
+  --sidebar-primary: #eecf4b;
+  --sidebar-primary-foreground: #0e4b3b;
+  --sidebar-accent: #165947;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1a5245;
+  --sidebar-ring: #eecf4b;
+  --sidebar-menu-button: transparent;
+  --sidebar-menu-active-border: var(--brand-yellow);
+
+  /* Legacy aliases (SCSS / older pages) */
+  --color-primary-700: #0e4b3b;
+  --color-green-300: #eecf4b;
+  --color-neutral-100: #ffffff;
+  --color-neutral-200: #f6f7f6;
+  --color-neutral-300: #e4e8e5;
+  --color-neutral-500: #5c6b64;
+  --color-neutral-700: #0f1a16;
+  --color-blue-700: #0e4b3b;
+  --body-small-strong: 600 12px/1.5 "Inter Variable", "Open Sans", ui-sans-serif,
+    system-ui, sans-serif;
 
   /* ============================================
      Alert Status Colors - Light Mode
@@ -121,46 +144,59 @@
   --alert-status-deleted: #999999;
 }
 
+/* ============================================
+   Dark mode — Linear surface ladder + CCCA tint
+   ============================================ */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.48 0.08 220);
-  --primary-foreground: oklch(0.985 0 0);
-  --color-primary-700: #A5DBEB;
-  --color-green-300: #56946F;
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #0a0f0d;
+  --foreground: #f7f8f8;
+  --card: #101512;
+  --card-foreground: #f7f8f8;
+  --popover: #141a17;
+  --popover-foreground: #f7f8f8;
+
+  --primary: #3fa983;
+  --primary-foreground: #0a0f0d;
+  --brand-yellow: #eecf4b;
+  --brand-yellow-foreground: #0e4b3b;
+
+  --secondary: #171d1a;
+  --secondary-foreground: #f7f8f8;
+  --muted: #171d1a;
+  --muted-foreground: #8a948e;
+  --accent: #171d1a;
+  --accent-foreground: #f7f8f8;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: var(--color-neutral-200);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.48 0.08 220);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-  --color-neutral-100: #000000;
-  --color-neutral-200: #121212;
-  --color-neutral-300: #2B2C2C;
-  --color-neutral-500: #9CA3AF;
-  --color-neutral-700: #D1D5DB;
-  --color-blue-700: #93C5FD;
+  --border: #232a26;
+  --input: #2b332e;
+  --ring: #3fa983;
+
+  --chart-1: #3fa983;
+  --chart-2: #0e4b3b;
+  --chart-3: #eecf4b;
+  --chart-4: #7a9bb0;
+  --chart-5: #8a948e;
+
+  /* Sidebar keeps deep brand green in dark mode */
+  --sidebar: #0c3a2e;
+  --sidebar-foreground: #dce9e2;
+  --sidebar-primary: #eecf4b;
+  --sidebar-primary-foreground: #0e4b3b;
+  --sidebar-accent: #14503f;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1a4a3c;
+  --sidebar-ring: #eecf4b;
+  --sidebar-menu-button: transparent;
+  --sidebar-menu-active-border: var(--brand-yellow);
+
+  --color-primary-700: #3fa983;
+  --color-green-300: #eecf4b;
+  --color-neutral-100: #101512;
+  --color-neutral-200: #0a0f0d;
+  --color-neutral-300: #232a26;
+  --color-neutral-500: #8a948e;
+  --color-neutral-700: #d0d6e0;
+  --color-blue-700: #3fa983;
 
   /* ============================================
      Alert Status Colors - Dark Mode
@@ -187,24 +223,17 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans font-normal antialiased;
   }
-}
 
-/* 
-#832413
-#9fc9e3
-#e2e07bt
-#515050
-#9abe99
-#9f9e65
-#81a5bd */
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+  h1 {
+    letter-spacing: -0.02em;
+    font-weight: 600;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  h2,
+  h3 {
+    letter-spacing: -0.01em;
+    font-weight: 600;
   }
 }
