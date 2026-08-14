@@ -273,7 +273,8 @@
         "subtitle": "Browse SEMAS-PA forest guides (GF).",
         "total": "{{count}} total",
         "totalRows": "{{count}} row(s)",
-        "noResults": "No forest guides found"
+        "noResults": "No forest guides found",
+        "noResultsWithFilters": "No forest guides match the current filters."
       },
       "filters": {
         "searchPlaceholder": "Search number...",
@@ -299,6 +300,7 @@
       "detail": {
         "back": "Back to list",
         "notFound": "Forest guide not found",
+        "eyebrow": "GF · SEMAS-PA",
         "title": "GF {{number}}",
         "untitled": "GF #{{id}}",
         "status": "Status",

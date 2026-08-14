@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@/components/ui/shadcn/button';
 import {
   Table,
   TableBody,
@@ -11,7 +12,10 @@ import {
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
 import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
+
 import type { ForestGuidesListController } from '../hooks/use-forest-guides-list-controller';
+import { ForestGuideStatusBadge } from './forest-guide-status-badge';
+import { PlateChip } from './plate-chip';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -22,9 +26,9 @@ interface Props {
 export function ForestGuidesTable({ controller }: Props) {
   const { t } = useTranslation();
   const {
-    api: { rows, pagination, isLoading, totalPages },
+    api: { rows, pagination, isLoading, totalPages, hasActiveFilters },
     store: { state },
-    handlers: { handlePageChange, handlePageSizeChange, handleRowClick },
+    handlers: { handlePageChange, handlePageSizeChange, handleRowClick, handleClearFilters },
   } = controller;
 
   const currentPage = pagination?.page ?? state.currentPage;
@@ -32,7 +36,7 @@ export function ForestGuidesTable({ controller }: Props) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
-        <div className="overflow-hidden rounded-lg border m-4 border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border m-4">
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow>
@@ -57,27 +61,42 @@ export function ForestGuidesTable({ controller }: Props) {
                 : null}
               {!isLoading && rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                    {t('semaspa.forestGuides.list.noResults')}
+                  <TableCell colSpan={5} className="h-32">
+                    <div className="flex flex-col items-center justify-center gap-2 text-center">
+                      <p className="text-sm text-muted-foreground">
+                        {hasActiveFilters
+                          ? t('semaspa.forestGuides.list.noResultsWithFilters')
+                          : t('semaspa.forestGuides.list.noResults')}
+                      </p>
+                      {hasActiveFilters ? (
+                        <Button variant="outline" size="sm" onClick={handleClearFilters}>
+                          {t('semaspa.forestGuides.filters.clear')}
+                        </Button>
+                      ) : null}
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : null}
               {rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-muted/50"
                   onClick={() => handleRowClick(row.id)}
                 >
-                  <TableCell className="font-medium">{row.number ?? '—'}</TableCell>
-                  <TableCell>{row.status ?? '—'}</TableCell>
-                  <TableCell>{row.type ?? '—'}</TableCell>
+                  <TableCell className="font-mono text-[13px] font-medium">
+                    {row.number ?? '—'}
+                  </TableCell>
                   <TableCell>
+                    <ForestGuideStatusBadge status={row.status} />
+                  </TableCell>
+                  <TableCell>{row.type ?? '—'}</TableCell>
+                  <TableCell className="tabular-nums">
                     {row.issuedAt
                       ? formatISODateLocal(row.issuedAt) || EMPTY_DATE_LABEL
                       : EMPTY_DATE_LABEL}
                   </TableCell>
                   <TableCell>
-                    {row.vehiclePlates?.length ? row.vehiclePlates.join(', ') : '—'}
+                    <PlateChip plates={row.vehiclePlates} />
                   </TableCell>
                 </TableRow>
               ))}

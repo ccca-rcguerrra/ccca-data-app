@@ -33,6 +33,8 @@ import {
 } from '@/hooks/api/use-semaspa';
 import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
 import { formatPersonLabel, formatSpeciesProductLabel, formatVolume } from '../../autefs/utils/format';
+import { ForestGuideStatusBadge } from './forest-guide-status-badge';
+import { PlateChip } from './plate-chip';
 
 interface ForestGuideDetailSheetProps {
   forestGuideId: number | null;
@@ -112,7 +114,7 @@ export function ForestGuideDetailSheet({
             <>
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
+                  <CardTitle className="font-mono text-base">
                     {guide.number
                       ? t('semaspa.forestGuides.detail.title', { number: guide.number })
                       : t('semaspa.forestGuides.detail.untitled', { id: guide.id })}
@@ -120,40 +122,42 @@ export function ForestGuideDetailSheet({
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
                       {t('semaspa.forestGuides.detail.status')}
                     </Label>
-                    <p className="font-medium">{guide.status ?? '—'}</p>
+                    <div className="mt-1">
+                      <ForestGuideStatusBadge status={guide.status} />
+                    </div>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
                       {t('semaspa.forestGuides.detail.type')}
                     </Label>
                     <p className="font-medium">{guide.type ?? '—'}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
                       {t('semaspa.forestGuides.detail.issuedAt')}
                     </Label>
-                    <p className="font-medium">
+                    <p className="font-medium tabular-nums">
                       {guide.issuedAt
                         ? formatISODateLocal(guide.issuedAt) || EMPTY_DATE_LABEL
                         : EMPTY_DATE_LABEL}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
                       {t('semaspa.forestGuides.detail.plates')}
                     </Label>
-                    <p className="font-medium">
-                      {guide.vehiclePlates?.length ? guide.vehiclePlates.join(', ') : '—'}
-                    </p>
+                    <div className="mt-1">
+                      <PlateChip plates={guide.vehiclePlates} />
+                    </div>
                   </div>
                   <div className="col-span-2">
-                    <Label className="text-muted-foreground">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
                       {t('semaspa.forestGuides.detail.permits')}
                     </Label>
-                    <p className="font-medium">
+                    <p className="font-mono text-[13px] font-medium">
                       {guide.permitRefs?.length ? guide.permitRefs.join(', ') : '—'}
                     </p>
                   </div>
@@ -167,7 +171,7 @@ export function ForestGuideDetailSheet({
                 <CardContent className="space-y-4 text-sm">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <p className="text-muted-foreground font-medium">
+                      <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
                         {t('semaspa.forestGuides.roles.origin')}
                       </p>
                       {originRoles.length === 0 ? (
@@ -186,7 +190,7 @@ export function ForestGuideDetailSheet({
                       )}
                     </div>
                     <div className="space-y-2">
-                      <p className="text-muted-foreground font-medium">
+                      <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
                         {t('semaspa.forestGuides.roles.destination')}
                       </p>
                       {destinationRoles.length === 0 ? (
@@ -245,11 +249,11 @@ export function ForestGuideDetailSheet({
                           const product = speciesMap[row.speciesProductId];
                           return (
                             <TableRow key={row.id}>
-                              <TableCell>
+                              <TableCell className="italic">
                                 {formatSpeciesProductLabel(product, row.speciesProductId)}
                               </TableCell>
-                              <TableCell>{formatVolume(row.volume, row.unit)}</TableCell>
-                              <TableCell>{formatCurrency(row.value)}</TableCell>
+                              <TableCell className="tabular-nums">{formatVolume(row.volume, row.unit)}</TableCell>
+                              <TableCell className="tabular-nums">{formatCurrency(row.value)}</TableCell>
                             </TableRow>
                           );
                         })}
@@ -275,7 +279,7 @@ export function ForestGuideDetailSheet({
                         className="flex items-center justify-between gap-3 border rounded-lg p-3"
                       >
                         <div>
-                          <p className="font-medium">{autef.number ?? `#${autef.id}`}</p>
+                          <p className="font-mono text-[13px] font-medium">{autef.number ?? `#${autef.id}`}</p>
                           <p className="text-xs text-muted-foreground">
                             {[autef.city, autef.state].filter(Boolean).join(' / ') || '—'}
                           </p>

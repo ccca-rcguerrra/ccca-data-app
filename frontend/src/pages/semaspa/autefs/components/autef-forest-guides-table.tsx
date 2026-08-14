@@ -15,6 +15,8 @@ import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
 import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
 import type { AutefDetailController } from '../hooks/use-autef-detail-controller';
 import { ForestGuideDetailSheet } from '../../forest-guides/components/forest-guide-detail-sheet';
+import { ForestGuideStatusBadge } from '../../forest-guides/components/forest-guide-status-badge';
+import { PlateChip } from '../../forest-guides/components/plate-chip';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -41,7 +43,7 @@ export function AutefForestGuidesTable({ controller }: Props) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
-        <div className="overflow-hidden rounded-lg border m-4 border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border m-4">
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow>
@@ -74,16 +76,18 @@ export function AutefForestGuidesTable({ controller }: Props) {
               ) : null}
               {rows.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell className="font-medium">{row.number ?? '—'}</TableCell>
-                  <TableCell>{row.status ?? '—'}</TableCell>
-                  <TableCell>{row.type ?? '—'}</TableCell>
+                  <TableCell className="font-mono text-[13px] font-medium">{row.number ?? '—'}</TableCell>
                   <TableCell>
+                    <ForestGuideStatusBadge status={row.status} />
+                  </TableCell>
+                  <TableCell>{row.type ?? '—'}</TableCell>
+                  <TableCell className="tabular-nums">
                     {row.issuedAt
                       ? formatISODateLocal(row.issuedAt) || EMPTY_DATE_LABEL
                       : EMPTY_DATE_LABEL}
                   </TableCell>
                   <TableCell>
-                    {row.vehiclePlates?.length ? row.vehiclePlates.join(', ') : '—'}
+                    <PlateChip plates={row.vehiclePlates} />
                   </TableCell>
                   <TableCell>
                     <Button

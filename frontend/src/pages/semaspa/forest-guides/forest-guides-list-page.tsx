@@ -86,30 +86,32 @@ function ForestGuidesListHeader({ controller }: { controller: ForestGuidesListCo
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-[200px]">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-border bg-card p-1.5">
+            <div className="relative w-[200px]">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                className="h-9 border-border bg-background pl-10 shadow-none"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder={t('semaspa.forestGuides.filters.searchPlaceholder')}
+                disabled={busy}
+              />
+            </div>
             <Input
-              className="pl-10 h-9"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder={t('semaspa.forestGuides.filters.searchPlaceholder')}
+              className="h-9 w-[120px] border-border bg-background shadow-none"
+              value={statusValue}
+              onChange={(e) => setStatusValue(e.target.value)}
+              placeholder={t('semaspa.forestGuides.filters.statusPlaceholder')}
+              disabled={busy}
+            />
+            <Input
+              className="h-9 w-[120px] border-border bg-background shadow-none"
+              value={typeValue}
+              onChange={(e) => setTypeValue(e.target.value)}
+              placeholder={t('semaspa.forestGuides.filters.typePlaceholder')}
               disabled={busy}
             />
           </div>
-          <Input
-            className="h-9 w-[120px]"
-            value={statusValue}
-            onChange={(e) => setStatusValue(e.target.value)}
-            placeholder={t('semaspa.forestGuides.filters.statusPlaceholder')}
-            disabled={busy}
-          />
-          <Input
-            className="h-9 w-[120px]"
-            value={typeValue}
-            onChange={(e) => setTypeValue(e.target.value)}
-            placeholder={t('semaspa.forestGuides.filters.typePlaceholder')}
-            disabled={busy}
-          />
           <Button variant="outline" size="sm" className="h-9" onClick={handleToggleAdvanced}>
             <Filter className="h-4 w-4" />
             {t('semaspa.forestGuides.filters.advanced')}
@@ -137,7 +139,7 @@ function ForestGuidesListHeader({ controller }: { controller: ForestGuidesListCo
       </div>
 
       <Collapsible open={state.advancedOpen} onOpenChange={handleToggleAdvanced}>
-        <CollapsibleContent className="space-y-4 rounded-lg border border-border bg-muted/20 p-4">
+        <CollapsibleContent className="space-y-4 rounded-lg border border-border bg-card p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="space-y-1.5">
               <Label>{t('semaspa.forestGuides.filters.issuedFrom')}</Label>
@@ -225,11 +227,11 @@ export function ForestGuidesListPage() {
     return (
       <div className="flex items-center justify-center w-full h-full p-6">
         <div
-          className="flex flex-col items-center gap-3 rounded-lg border border-[var(--color-error-500)] bg-[var(--color-error-bg)] p-6 max-w-md"
+          className="flex flex-col items-center gap-3 rounded-lg border border-status-over/40 bg-status-over/10 p-6 max-w-md"
           role="alert"
         >
-          <AlertCircle className="h-8 w-8 text-[var(--color-error-500)]" />
-          <h2 className="text-base font-bold text-[var(--color-error-500)]">
+          <AlertCircle className="h-8 w-8 text-status-over" />
+          <h2 className="text-base font-bold text-status-over">
             {t('semaspa.forestGuides.errors.title')}
           </h2>
           <p className="text-sm text-center">

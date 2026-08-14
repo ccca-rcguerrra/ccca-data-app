@@ -26,6 +26,8 @@ import {
   useForestGuideDetailController,
   type ForestGuideDetailController,
 } from './hooks/use-forest-guide-detail-controller';
+import { ForestGuideStatusBadge } from './components/forest-guide-status-badge';
+import { PlateChip } from './components/plate-chip';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -58,30 +60,45 @@ function DetailSummary({ controller }: { controller: ForestGuideDetailController
     : t('semaspa.forestGuides.detail.untitled', { id: forestGuide.id });
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-xl font-bold tracking-tight">{title}</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+    <div className="space-y-4">
+      <div>
+        <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
+          {t('semaspa.forestGuides.detail.eyebrow')}
+        </p>
+        <h2 className="mt-1 font-mono text-xl font-semibold tracking-tight">{title}</h2>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-border pt-3 text-sm">
         <div>
-          <p className="text-muted-foreground">{t('semaspa.forestGuides.detail.status')}</p>
-          <p className="font-medium">{forestGuide.status ?? '—'}</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.forestGuides.detail.status')}
+          </p>
+          <div className="mt-1">
+            <ForestGuideStatusBadge status={forestGuide.status} />
+          </div>
         </div>
         <div>
-          <p className="text-muted-foreground">{t('semaspa.forestGuides.detail.type')}</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.forestGuides.detail.type')}
+          </p>
           <p className="font-medium">{forestGuide.type ?? '—'}</p>
         </div>
         <div>
-          <p className="text-muted-foreground">{t('semaspa.forestGuides.detail.issuedAt')}</p>
-          <p className="font-medium">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.forestGuides.detail.issuedAt')}
+          </p>
+          <p className="font-medium tabular-nums">
             {forestGuide.issuedAt
               ? formatISODateLocal(forestGuide.issuedAt) || EMPTY_DATE_LABEL
               : EMPTY_DATE_LABEL}
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground">{t('semaspa.forestGuides.detail.plates')}</p>
-          <p className="font-medium">
-            {forestGuide.vehiclePlates?.length ? forestGuide.vehiclePlates.join(', ') : '—'}
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.forestGuides.detail.plates')}
           </p>
+          <div className="mt-1">
+            <PlateChip plates={forestGuide.vehiclePlates} />
+          </div>
         </div>
       </div>
     </div>
@@ -100,7 +117,7 @@ function SpeciesTab({ controller }: { controller: ForestGuideDetailController })
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto p-4">
-        <div className="overflow-hidden rounded-lg border border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader className="bg-muted">
               <TableRow>
@@ -122,15 +139,15 @@ function SpeciesTab({ controller }: { controller: ForestGuideDetailController })
                 const product = speciesProductsMap[row.speciesProductId];
                 return (
                   <TableRow key={row.id}>
-                    <TableCell>
+                    <TableCell className="italic">
                       {product?.scientificName ??
                         formatSpeciesProductLabel(product, row.speciesProductId)}
                     </TableCell>
                     <TableCell>{product?.commonName ?? '—'}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right tabular-nums">
                       {formatVolume(row.volume, row.unit)}
                     </TableCell>
-                    <TableCell className="text-right">{formatCurrency(row.value)}</TableCell>
+                    <TableCell className="text-right tabular-nums">{formatCurrency(row.value)}</TableCell>
                   </TableRow>
                 );
               })}
@@ -166,7 +183,7 @@ function RolesTab({ controller }: { controller: ForestGuideDetailController }) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto p-4">
-        <div className="overflow-hidden rounded-lg border border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader className="bg-muted">
               <TableRow>
@@ -222,7 +239,7 @@ function AutefsTab({ controller }: { controller: ForestGuideDetailController }) 
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto p-4">
-        <div className="overflow-hidden rounded-lg border border-[var(--color-neutral-300)]">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader className="bg-muted">
               <TableRow>
@@ -244,7 +261,7 @@ function AutefsTab({ controller }: { controller: ForestGuideDetailController }) 
                 <TableRow key={row.id}>
                   <TableCell>
                     <Link
-                      className="font-medium text-primary underline-offset-2 hover:underline"
+                      className="font-mono text-[13px] font-medium text-primary underline-offset-2 hover:underline"
                       to={ROUTES.semaspa.autefDetail.replace(':id', String(row.id))}
                     >
                       {row.number ?? `#${row.id}`}
@@ -252,7 +269,7 @@ function AutefsTab({ controller }: { controller: ForestGuideDetailController }) 
                   </TableCell>
                   <TableCell>{row.processNumber ?? '—'}</TableCell>
                   <TableCell>{[row.city, row.state].filter(Boolean).join(' / ') || '—'}</TableCell>
-                  <TableCell>
+                  <TableCell className="tabular-nums">
                     {row.issuedAt
                       ? formatISODateLocal(row.issuedAt) || EMPTY_DATE_LABEL
                       : EMPTY_DATE_LABEL}
@@ -306,11 +323,11 @@ export function ForestGuideDetailPage() {
     return (
       <div className="flex items-center justify-center w-full h-full p-6">
         <div
-          className="flex flex-col items-center gap-3 rounded-lg border border-[var(--color-error-500)] bg-[var(--color-error-bg)] p-6 max-w-md"
+          className="flex flex-col items-center gap-3 rounded-lg border border-status-over/40 bg-status-over/10 p-6 max-w-md"
           role="alert"
         >
-          <AlertCircle className="h-8 w-8 text-[var(--color-error-500)]" />
-          <h2 className="text-base font-bold text-[var(--color-error-500)]">
+          <AlertCircle className="h-8 w-8 text-status-over" />
+          <h2 className="text-base font-bold text-status-over">
             {t('semaspa.forestGuides.errors.detailTitle')}
           </h2>
           <Button asChild variant="outline" size="sm">
