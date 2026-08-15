@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useTeamsQuery } from '@/hooks/api/use-teams';
 import { useTerritoriesQuery } from '@/hooks/api/use-territories';
@@ -22,6 +23,7 @@ import type { TeamRowData } from '../types';
  * Same pattern as use-users-management-controller.
  */
 export function useTeamsManagementController() {
+  const { t } = useTranslation();
   const storeState = useTeamsManagementState();
   const storeActions = useTeamsManagementActions();
 
@@ -55,9 +57,9 @@ export function useTeamsManagementController() {
   const apiTeams: TeamRowData[] = useMemo(() => {
     if (!teamsQuery.data?.data) return [];
     return teamsQuery.data.data.map((team) =>
-      convertTeamToRowData(team, territoryNamesById),
+      convertTeamToRowData(team, territoryNamesById, t),
     );
-  }, [teamsQuery.data, territoryNamesById]);
+  }, [teamsQuery.data, territoryNamesById, t]);
 
   const filteredTeams = useMemo(
     () =>

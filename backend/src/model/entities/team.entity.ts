@@ -26,7 +26,8 @@ export class Team {
     /** @deprecated Use teamTerritories instead. Kept for legacy compatibility. */
     @ManyToOne(type => Territory)
     @JoinColumn({
-        name: 'territory_id'
+        name: 'territory_id',
+        referencedColumnName: 'id',
     })
     territory: Territory;
 

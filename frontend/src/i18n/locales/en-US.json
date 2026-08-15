@@ -16,6 +16,8 @@
     "of": "of",
     "previousPage": "Go to previous page",
     "nextPage": "Go to next page",
+    "firstPage": "Go to first page",
+    "lastPage": "Go to last page",
     "rowsPerPage": "Rows per page",
     "confirm": "Confirm",
     "saving": "Saving...",
@@ -28,8 +30,12 @@
     "boundary": {
       "title": "Something went wrong",
       "description": "An unexpected error occurred.",
+      "notFoundTitle": "Page not found",
+      "notFoundDescription": "The requested page does not exist or has been moved.",
       "goHome": "Back to home",
-      "tryAgain": "Try again"
+      "tryAgain": "Try again",
+      "details": "Details",
+      "status": "Status {{status}}"
     }
   },
   "comments": {
@@ -42,11 +48,14 @@
   },
   "header": {
     "userMenuAria": "User menu: {{name}}",
-    "userRole": "Role"
+    "userRole": "Role",
+    "onlineUsersTriggerAria": "{{count}} online user(s)",
+    "onlineUsersMenuTitle": "{{count}} online user(s)"
   },
   "language": {
     "switch": "Switch Language",
-    "english": "English"
+    "english": "English",
+    "portuguese": "Portuguese"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -54,7 +63,22 @@
     "teams": "Teams",
     "semaspa": "SEMASPA",
     "autefs": "AUTEFs",
-    "forestGuides": "Forest Guides"
+    "forestGuides": "Forest Guides",
+    "alerts": "Alerts",
+    "audit": "Audit"
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "list": "List",
+    "create": "Create",
+    "new": "New",
+    "edit": "Edit",
+    "clipping": "Clipping",
+    "management": "Management",
+    "refinement": "Refinement",
+    "supports": "Supports",
+    "details": "Details",
+    "ariaLabel": "Breadcrumb"
   },
   "layout": {
     "header": {
@@ -70,76 +94,324 @@
       "title": "Notifications",
       "empty": "No notifications",
       "markAsRead": "Mark as read",
+      "markAll": "Mark all as read",
       "view": "View"
     },
     "sidebar": {
       "navLabel": "Navigation"
-    }
-  },
-  "auth": {
-    "pageTitle": "Login",
-    "title": "Welcome",
-    "description": "Sign in to access your workspace.",
-    "email": "Email",
-    "emailPlaceholder": "name@example.com",
-    "password": "Password",
-    "passwordPlaceholder": "Your password",
-    "signIn": "Sign in",
-    "signingIn": "Signing in...",
-    "signInSuccessful": "Sign in successful!",
-    "forgotPassword": "Forgot your password?",
-    "forgotPasswordTitle": "Check your email",
-    "forgotPasswordDescription": "Enter your email address to receive reset instructions.",
-    "sendResetLink": "Send reset link",
-    "resetPasswordTitle": "Reset password",
-    "resetPasswordDescription": "Enter your new password.",
-    "newPassword": "New password",
-    "confirmPassword": "Confirm password",
-    "resetPassword": "Reset password",
-    "resetSuccess": "Password reset successfully!",
-    "goToLogin": "Back to login",
-    "errors": {
-      "invalidCredentials": "Invalid email or password",
-      "generic": "Authentication error",
-      "passwordMismatch": "Passwords do not match"
-    }
-  },
-  "users": {
-    "title": "Users",
-    "description": "Manage workspace users",
-    "management": {
-      "create": "New user",
-      "edit": "Edit user",
-      "delete": "Delete user",
-      "noResults": "No users found",
-      "columns": {
-        "name": "Name",
-        "email": "Email",
-        "role": "Role",
-        "teams": "Teams",
-        "actions": "Actions"
-      }
-    }
-  },
-  "teams": {
-    "title": "Teams",
-    "description": "Manage workspace teams",
-    "management": {
-      "create": "New team",
-      "edit": "Edit team",
-      "delete": "Delete team",
-      "noResults": "No teams found",
-      "columns": {
-        "name": "Name",
-        "members": "Members",
-        "territories": "Territories",
-        "actions": "Actions"
-      }
+    },
+    "blank": {
+      "ariaLabel": "Blank layout",
+      "mainAria": "Main content"
     }
   },
   "dashboard": {
     "welcome": "Welcome to Workspace",
     "description": "Your workspace is ready."
+  },
+  "auth": {
+    "login": {
+      "welcome": "Welcome",
+      "description": "Sign in to access your workspace.",
+      "subtitle": "Workspace access",
+      "logoAlt": "CCCA logo",
+      "copyright": "All rights reserved.",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Your password",
+      "signIn": "Sign in",
+      "signingIn": "Signing in...",
+      "forgotPassword": "Forgot your password?",
+      "or": "or",
+      "googleSignIn": "Sign in with Google",
+      "noAccount": "Don't have an account?",
+      "contactAdmin": "Contact the administrator",
+      "passwordResetSuccess": {
+        "title": "Password reset",
+        "description": "Your password was reset successfully. Sign in with your new password."
+      },
+      "errors": {
+        "title": "Authentication error",
+        "invalidCredentials": "Invalid email or password",
+        "invalidData": "Invalid data",
+        "network": "Network error. Please try again.",
+        "generic": "Authentication error"
+      }
+    },
+    "forgotPassword": {
+      "title": "Check your email",
+      "description": "Enter your email address to receive reset instructions.",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
+      "success": {
+        "title": "Email sent",
+        "description": "If the email exists, you will receive instructions shortly."
+      },
+      "errors": {
+        "title": "Could not send",
+        "invalidData": "Invalid data",
+        "network": "Network error. Please try again.",
+        "generic": "Could not send the reset link."
+      }
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "description": "Enter your new password.",
+      "newPassword": "New password",
+      "newPasswordPlaceholder": "New password",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm the new password",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "requestNewLink": "Request a new link",
+      "errors": {
+        "title": "Could not reset",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMismatch": "Passwords do not match",
+        "invalidToken": "The reset link is invalid or has expired.",
+        "missingTokenTitle": "Incomplete link",
+        "missingToken": "The reset token was not found in the URL.",
+        "network": "Network error. Please try again.",
+        "generic": "Could not reset the password."
+      }
+    },
+    "common": {
+      "backToLogin": "Back to login"
+    }
+  },
+  "users": {
+    "management": {
+      "title": "Users",
+      "subtitle": "Manage workspace users",
+      "total": "{{count}} total",
+      "filters": {
+        "searchPlaceholder": "Search users...",
+        "searchPlaceholderExtended": "Search by name or email...",
+        "team": "Team",
+        "selected": "{{count}} selected",
+        "loadingTeams": "Loading teams...",
+        "selectTeams": "Select teams",
+        "searchTeams": "Search teams...",
+        "noTeamFound": "No team found",
+        "clear": "Clear",
+        "apply": "Apply",
+        "newUser": "New user",
+        "refresh": "Refresh"
+      },
+      "table": {
+        "user": "User",
+        "email": "Email",
+        "institution": "Institution",
+        "roles": "Roles",
+        "teams": "Teams",
+        "status": "Status",
+        "actions": "Actions",
+        "viewJoinDate": "View join date",
+        "joined": "Joined ",
+        "fullBiomeAccess": "Full biome access",
+        "lastLogin": "Last login ",
+        "editUser": "Edit user",
+        "removeAccess": "Remove access",
+        "empty": "No users found",
+        "emptyFiltered": "No users match the current filters.",
+        "removeDialogTitle": "Remove access",
+        "removeDialogDescription": "Remove access for {{name}}? This action cannot be undone.",
+        "removing": "Removing..."
+      },
+      "errors": {
+        "title": "Failed to load users",
+        "message": "An unexpected error occurred while loading data."
+      },
+      "age": {
+        "days": "{{count}}d ago",
+        "months": "{{count}}mo ago",
+        "years": "{{count}}y ago"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "blocked": "Blocked"
+      }
+    },
+    "form": {
+      "newTitle": "New user",
+      "editTitle": "Edit user",
+      "newDescription": "Fill in the details to create a user.",
+      "editDescription": "Update the user details.",
+      "errorTitle": "Could not save",
+      "profile": "Profile",
+      "fullName": "Full name",
+      "nameHelp": "Name help",
+      "nameTooltip": "Use the full name as it appears on documents.",
+      "namePlaceholder": "Full name",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "access": "Access",
+      "institution": "Institution",
+      "institutionPlaceholder": "Institution",
+      "teams": "Teams",
+      "teamsSelected": "{{count}} team(s)",
+      "selectTeams": "Select teams",
+      "searchTeams": "Search teams...",
+      "noTeamFound": "No team found",
+      "roles": "Roles",
+      "rolesSelected": "{{count}} role(s)",
+      "selectRoles": "Select roles",
+      "status": "Status",
+      "security": "Security",
+      "password": "Password",
+      "passwordPlaceholder": "Password",
+      "passwordEditPlaceholder": "Leave blank to keep current",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "confirmPasswordEditPlaceholder": "Confirm the new password",
+      "cancel": "Cancel",
+      "saveChanges": "Save changes",
+      "createUser": "Create user",
+      "errors": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMismatch": "Passwords do not match",
+        "submitFailedEdit": "Could not update the user.",
+        "submitFailedCreate": "Could not create the user.",
+        "badRequest": "Bad request",
+        "unauthorized": "Unauthorized",
+        "forbidden": "Forbidden",
+        "notFound": "User not found",
+        "emailInUse": "This email is already in use",
+        "serverError": "Server error",
+        "genericSave": "Could not save (status {{status}})",
+        "genericCreate": "Could not create (status {{status}})"
+      }
+    },
+    "roles": {
+      "admin": "Admin",
+      "coordinator": "Coordinator",
+      "analystSenior": "Analyst Senior",
+      "analystMidlevel": "Analyst Midlevel",
+      "analystJunior": "Analyst Junior",
+      "analystSupport": "Analyst Support",
+      "viewer": "Viewer"
+    },
+    "roleSummaries": {
+      "admin": "All system permissions",
+      "coordinator": "Operations, audit, refinement, users, teams, and supports",
+      "analystSenior": "Pre-validation, refinement, and audit",
+      "analystMidlevel": "Pre-validation and refinement",
+      "analystJunior": "Pre-validation and image selection only",
+      "analystSupport": "Support cases module only",
+      "viewer": "Read-only access (no workflow actions)"
+    },
+    "permissions": {
+      "activationsCreate": "Create activations and pre-validation workflows",
+      "refinementsApprove": "Approve alert refinements",
+      "refinementsReject": "Reject alert refinements",
+      "auditApprove": "Approve alerts in audit",
+      "auditReject": "Reject or revise alerts in audit",
+      "alertsChangeStatus": "Manually change alert status (cancel/reopen published alerts)",
+      "alertsChangeClass": "Manually change the deforestation class of an alert",
+      "supportsManage": "Manage support cases",
+      "usersManage": "Manage users",
+      "teamsManage": "Manage teams",
+      "workingOverride": "Dismiss alerts reserved by other analysts",
+      "adminAccess": "Full administrative access"
+    },
+    "rolePermissions": {
+      "aboutAria": "About roles and permissions",
+      "overviewTitle": "Roles and permissions",
+      "overviewDescription": "Effective permissions are the union of all roles assigned to the user.",
+      "noPermissions": "This role grants no permissions.",
+      "effectivePermissions": "Effective permissions",
+      "noEffectivePermissions": "No effective permissions for the selected roles."
+    }
+  },
+  "teams": {
+    "management": {
+      "title": "Teams",
+      "subtitle": "Manage workspace teams",
+      "filters": {
+        "searchPlaceholder": "Search teams...",
+        "clear": "Clear",
+        "newTeam": "New team",
+        "refresh": "Refresh"
+      },
+      "errors": {
+        "title": "Failed to load teams",
+        "message": "An unexpected error occurred while loading data."
+      },
+      "grid": {
+        "archived": "Archived",
+        "more": "+{{count}}",
+        "members": "{{count}} member(s)",
+        "noMembers": "No members",
+        "updated": "Updated ",
+        "edit": "Edit",
+        "addMembers": "Add members",
+        "empty": "No teams found",
+        "emptyFiltered": "No teams match the current filters.",
+        "matchingFilter": " (matching filter)",
+        "memberCount": "{{count}} of {{total}}",
+        "unsavedChanges": "Unsaved changes",
+        "noTerritory": "No territory assigned"
+      },
+      "form": {
+        "newTitle": "New team",
+        "editTitle": "Edit team",
+        "newDescription": "Fill in the details to create a team.",
+        "editDescription": "Update the team details.",
+        "errorTitle": "Could not save",
+        "teamDetails": "Team details",
+        "name": "Name",
+        "namePlaceholder": "Team name",
+        "nameRequired": "Name is required",
+        "territory": "Territory",
+        "territoryPlaceholder": "Loading...",
+        "territorySelect": "Select territory",
+        "none": "None",
+        "members": "Members",
+        "searchMembers": "Filter members...",
+        "filterMembersAria": "Filter members",
+        "addMember": "Add member",
+        "searchUsers": "Search users...",
+        "loading": "Loading...",
+        "noUsersFound": "No users found",
+        "newUser": "New user",
+        "tableUser": "User",
+        "tableEmail": "Email",
+        "tableRole": "Role",
+        "tableStatus": "Status",
+        "tableActions": "Actions",
+        "emptyTitle": "No members yet",
+        "emptySubtitle": "Add users to this team.",
+        "filterEmptyTitle": "No members found",
+        "filterEmptySubtitle": "Adjust the search filter.",
+        "newBadge": "New",
+        "removeAria": "Remove {{name}}",
+        "cancel": "Cancel",
+        "saveChanges": "Save changes",
+        "createTeam": "Create team",
+        "errors": {
+          "submitFailedEdit": "Could not update the team.",
+          "submitFailedCreate": "Could not create the team.",
+          "badRequest": "Bad request",
+          "unauthorized": "Unauthorized",
+          "forbidden": "Forbidden",
+          "notFound": "Team not found",
+          "conflict": "Team conflict",
+          "serverError": "Server error",
+          "genericSave": "Could not save (status {{status}})",
+          "genericCreate": "Could not create (status {{status}})"
+        }
+      }
+    }
   },
   "semaspa": {
     "autefs": {
@@ -197,12 +469,10 @@
         "cityState": "Location",
         "totalAreaHa": "Total area",
         "issuedAt": "Issued at",
-        "issueYear": "Issue year",
         "hectares": "{{value}} ha"
       },
       "tabs": {
         "species": "Species & balances",
-        "volumeBalances": "Volume balances",
         "forestGuides": "Forest guides",
         "harvestUnits": "Harvest units",
         "roles": "Roles"
@@ -210,24 +480,15 @@
       "species": {
         "scientificName": "Scientific name",
         "commonName": "Common name",
-        "productName": "Product",
         "volume": "Original",
-        "unit": "Unit",
         "authorized": "Authorized",
         "moved": "Moved",
-        "ratio": "% Moved",
         "progress": "Progress",
         "noResults": "No species found"
       },
       "volumeBalances": {
-        "species": "Species",
-        "authorized": "Authorized",
-        "moved": "Moved",
-        "ratio": "Ratio",
-        "excess": "Excess",
         "overExtracted": "Over-extracted",
-        "unitConflict": "Unit conflict",
-        "noResults": "No volume balances found"
+        "unitConflict": "Unit conflict"
       },
       "forestGuides": {
         "number": "Number",
@@ -246,14 +507,10 @@
         "unitAreaHa": "Unit area",
         "netAreaHa": "Net area",
         "volumeM3": "Volume (m³)",
-        "mapTitle": "Harvest units map",
         "noGeometry": "No geometries available for map display",
         "noResults": "No harvest units found"
       },
       "roles": {
-        "person": "Person",
-        "role": "Role",
-        "source": "Source",
         "taxId": "Tax ID",
         "owner": "Owner",
         "analyst": "Analyst",
@@ -317,7 +574,6 @@
       "species": {
         "scientificName": "Scientific name",
         "commonName": "Common name",
-        "productName": "Product",
         "volume": "Volume",
         "value": "Value",
         "noResults": "No species found"

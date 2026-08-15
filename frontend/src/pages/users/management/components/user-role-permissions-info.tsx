@@ -87,11 +87,11 @@ function RolesPermissionsOverviewTooltip({ ariaLabel }: { ariaLabel: string }) {
 }
 
 /** Info icon for the Roles table column header. */
-export function RolesColumnHeaderHint({ label = 'Roles' }: RolesColumnHeaderHintProps) {
+export function RolesColumnHeaderHint({ label }: RolesColumnHeaderHintProps) {
   const { t } = useTranslation();
   return (
     <span className="inline-flex items-center gap-1">
-      {label}
+      {label ?? t('users.management.table.roles')}
       <RolesPermissionsOverviewTooltip ariaLabel={t('users.rolePermissions.aboutAria')} />
     </span>
   );
@@ -99,7 +99,8 @@ export function RolesColumnHeaderHint({ label = 'Roles' }: RolesColumnHeaderHint
 
 /** Info icon next to the Roles label in the user form. */
 export function RolesFormLabelHint() {
-  return <RolesPermissionsOverviewTooltip ariaLabel="About roles and permissions" />;
+  const { t } = useTranslation();
+  return <RolesPermissionsOverviewTooltip ariaLabel={t('users.rolePermissions.aboutAria')} />;
 }
 
 interface EffectivePermissionsSummaryProps {

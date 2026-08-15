@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { MultiPolygon } from 'geojson';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { SemaspaAutef } from '../../../model/entities/semaspa-autef.view.entity';
 import { SemaspaAutefSpecies } from '../../../model/entities/semaspa-autef-species.view.entity';
@@ -55,6 +56,19 @@ export class AutefsService {
     const n = Number(raw.bbox_n);
     if ([w, s, e, n].some((v) => !Number.isFinite(v))) return null;
     return [w, s, e, n];
+  }
+
+  private static parseGeoJson(raw: unknown): MultiPolygon | null {
+    if (raw == null) return null;
+    const value = typeof raw === 'string' ? (() => {
+      try {
+        return JSON.parse(raw) as unknown;
+      } catch {
+        return null;
+      }
+    })() : raw;
+    if (!value || typeof value !== 'object' || !('type' in value)) return null;
+    return value as MultiPolygon;
   }
 
   private async assertAutefExists(id: number): Promise<void> {
@@ -465,16 +479,28 @@ export class AutefsService {
       .take(limit);
 
     if (withGeom) {
-      qb.addSelect('hu.geometry');
+      qb.addSelect('ST_AsGeoJSON(hu.geom)::json', 'geom_json');
     }
 
     const countQb = this.autefHarvestUnitRepo
       .createQueryBuilder('bridge')
       .where('bridge.autefId = :autefId', { autefId });
 
-    const [rows, total] = await Promise.all([qb.getMany(), countQb.getCount()]);
+    const [result, total] = await Promise.all([
+      withGeom
+        ? qb.getRawAndEntities()
+        : qb.getMany().then((entities) => ({ entities, raw: [] as Record<string, unknown>[] })),
+      countQb.getCount(),
+    ]);
+
+    if (withGeom) {
+      result.entities.forEach((entity, i) => {
+        entity.geometry = AutefsService.parseGeoJson(result.raw[i]?.geom_json);
+      });
+    }
+
     return new GetHarvestUnitsResponseDto(
-      rows.map((r) => new HarvestUnitResponseDto(r, { withGeom })),
+      result.entities.map((r) => new HarvestUnitResponseDto(r, { withGeom })),
       page,
       limit,
       total,

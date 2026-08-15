@@ -10,8 +10,8 @@ import { Separator } from '@/components/ui/shadcn/separator';
 import { Card, CardContent, CardHeader } from '@/components/ui/shadcn/card';
 import { CountryFlag } from '@/components/ui/country-flag';
 
-/** Idioma padrão das telas de autenticação quando o usuário ainda não tem preferência salva. */
-const AUTH_FALLBACK_LOCALE = 'en-US';
+/** Default auth-page locale when the user has no stored preference. */
+const AUTH_FALLBACK_LOCALE = 'pt-BR';
 
 const AUTH_BACKGROUND: React.CSSProperties = {
   background:
@@ -30,7 +30,7 @@ export function AuthPageShell({ children, footer }: AuthPageShellProps) {
   const { t } = useTranslation();
   const { data: initiative } = usePublicInitiativeMetadata();
 
-  // Sem preferência salva no localStorage → telas de autenticação usam inglês por padrão.
+  // No stored preference → auth screens use the default locale.
   useEffect(() => {
     const hasStoredSettings = StorageService.has(STORAGE_KEYS.SETTINGS);
     if (!hasStoredSettings && i18n.language !== AUTH_FALLBACK_LOCALE) {
@@ -64,7 +64,7 @@ export function AuthPageShell({ children, footer }: AuthPageShellProps) {
               <div className="flex items-center gap-2">
                 <div className="flex items-center rounded-lg bg-primary px-3 py-2">
                   <img
-                    src="/images/ccca-logo.png"
+                    src="/images/ccca-logo-web.png"
                     alt={t('auth.login.logoAlt')}
                     className="h-10 w-auto max-w-[220px] object-contain"
                     draggable={false}

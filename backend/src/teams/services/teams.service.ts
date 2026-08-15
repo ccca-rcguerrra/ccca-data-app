@@ -17,6 +17,7 @@ import { CreateTeamDto } from '../dto/create-team.dto';
 import { UpdateTeamDto } from '../dto/update-team.dto';
 import { TerritoryDto } from '../../users/dto/territory.dto';
 import { UserDto } from '../dto/user.dto';
+import { TERRITORY_LIST_SELECT, toTerritoryDto } from '../../territories/utils/territory-select';
 import {
   getPrimaryTeamTerritory,
   setTeamTerritory,
@@ -55,7 +56,7 @@ export class TeamsService {
         (subQuery) =>
           subQuery
             .select('COUNT(ut.user_id)', 'count')
-            .from('workspace.user_teams', 'ut')
+            .from(UsersTeam, 'ut')
             .where('ut.team_id = team.id'),
         'usersCount',
       )
@@ -84,16 +85,7 @@ export class TeamsService {
         'teamTerritory.updatedAt',
       ])
       .leftJoin('teamTerritory.territory', 'territory')
-      .addSelect([
-        'territory.id',
-        'territory.version',
-        'territory.name',
-        'territory.category',
-        'territory.categoryName',
-        'territory.source',
-        'territory.areaHa',
-        'territory.enabled',
-      ]);
+      .addSelect([...TERRITORY_LIST_SELECT]);
 
     if (search) {
       queryBuilder.andWhere('LOWER(team.name) LIKE LOWER(:search)', {
@@ -167,7 +159,7 @@ export class TeamsService {
         (subQuery) =>
           subQuery
             .select('COUNT(DISTINCT ut.user_id)', 'count')
-            .from('workspace.user_teams', 'ut')
+            .from(UsersTeam, 'ut')
             .where('ut.team_id = team.id'),
         'usersCount',
       )
@@ -196,16 +188,7 @@ export class TeamsService {
         'teamTerritory.updatedAt',
       ])
       .leftJoin('teamTerritory.territory', 'territory')
-      .addSelect([
-        'territory.id',
-        'territory.version',
-        'territory.name',
-        'territory.category',
-        'territory.categoryName',
-        'territory.source',
-        'territory.areaHa',
-        'territory.enabled',
-      ])
+      .addSelect([...TERRITORY_LIST_SELECT])
       .where('team.id = :id', { id });
 
     const result = await queryBuilder.getRawAndEntities();
@@ -261,16 +244,7 @@ export class TeamsService {
     const territoryId = primaryTeamTerritory?.territoryId ?? null;
 
     const territory: TerritoryDto | null = territoryEntity
-      ? {
-          id: territoryEntity.id,
-          version: territoryEntity.version,
-          name: territoryEntity.name,
-          category: territoryEntity.category,
-          categoryName: territoryEntity.categoryName || null,
-          source: territoryEntity.source,
-          areaHa: territoryEntity.areaHa || null,
-          enabled: territoryEntity.enabled ?? true,
-        }
+      ? toTerritoryDto(territoryEntity)
       : null;
 
     return {

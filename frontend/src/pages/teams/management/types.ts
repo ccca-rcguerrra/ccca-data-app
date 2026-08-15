@@ -34,6 +34,7 @@ export interface TeamRowData {
 export function convertTeamToRowData(
   team: Team,
   territoryNamesById?: ReadonlyMap<number, string>,
+  t?: (key: string) => string,
 ): TeamRowData {
   const fromRelation =
     team.territories?.map((t) => t.name).filter((n): n is string => Boolean(n)) ?? [];
@@ -51,11 +52,11 @@ export function convertTeamToRowData(
       territoryLabel = resolved;
     } else {
       biomes = [];
-      territoryLabel = 'No territory assigned';
+      territoryLabel = t?.('teams.management.grid.noTerritory') ?? 'No territory assigned';
     }
   } else {
     biomes = [];
-    territoryLabel = 'No territory assigned';
+    territoryLabel = t?.('teams.management.grid.noTerritory') ?? 'No territory assigned';
   }
   const memberPreviews: TeamMemberPreview[] =
     team.users?.slice(0, 5).map((u) => ({

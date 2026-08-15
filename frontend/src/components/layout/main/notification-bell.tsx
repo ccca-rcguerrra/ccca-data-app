@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Bell, CheckCheck, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 import { buttonVariants } from '@/components/ui/shadcn/button';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ import { formatISODateTime } from '@/utils/date';
 import type { AppNotification } from '@/types/notifications';
 
 export function NotificationBell() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -47,7 +49,7 @@ export function NotificationBell() {
         <button
           type="button"
           className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'relative shrink-0')}
-          aria-label="Notificações"
+          aria-label={t('layout.notifications.title')}
         >
           <Bell className="size-4" />
           {unreadCount > 0 && (
@@ -63,7 +65,7 @@ export function NotificationBell() {
       <DropdownMenuContent className="w-80" align="end" sideOffset={6}>
         <div className="flex items-center justify-between px-2 py-1">
           <DropdownMenuLabel className="px-0 font-normal text-muted-foreground">
-            Notificações
+            {t('layout.notifications.title')}
           </DropdownMenuLabel>
           {unreadCount > 0 && (
             <button
@@ -73,7 +75,7 @@ export function NotificationBell() {
               className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground disabled:opacity-50"
             >
               <CheckCheck className="h-3.5 w-3.5" />
-              Marcar todas
+              {t('layout.notifications.markAll')}
             </button>
           )}
         </div>
@@ -85,7 +87,7 @@ export function NotificationBell() {
             </div>
           ) : notifications.length === 0 ? (
             <div className="px-3 py-6 text-center text-xs text-muted-foreground">
-              Sem notificações
+              {t('layout.notifications.empty')}
             </div>
           ) : (
             notifications.map((n) => (

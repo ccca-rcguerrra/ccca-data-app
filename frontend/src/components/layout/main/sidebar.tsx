@@ -448,15 +448,16 @@ export const AppSidebar = ({ isCollapsed = false, onToggle, onHover, isManuallyC
       {...props}
     >
       <SidebarHeader>
-        <div className={`relative flex items-center justify-center overflow-hidden transition-all duration-200 ${isCollapsedState ? 'px-0 py-2' : 'gap-2 px-2 py-3'} group-data-[collapsible=icon]:justify-center`}>
+        <div className={`relative flex items-center justify-center transition-all duration-200 ${isCollapsedState ? 'px-0 py-2' : 'gap-2 px-2 py-3'} group-data-[collapsible=icon]:justify-center`}>
           <img
-              src="/images/ccca-logo.png"
+              src={isCollapsedState ? '/images/ccca-logo-mark-64.png' : '/images/ccca-logo-web.png'}
+              srcSet={isCollapsedState ? '/images/ccca-logo-mark-64.png 1x, /images/ccca-logo-mark.png 2x' : undefined}
               alt="CCCA"
               draggable={false}
               className={
                 isCollapsedState
-                  ? 'h-8 w-8 object-cover object-left'
-                  : 'h-10 w-auto max-w-[155px] object-contain'
+                  ? 'size-8 shrink-0 object-contain'
+                  : 'h-10 w-auto max-w-[155px] shrink-0 object-contain'
               }
             />
         </div>

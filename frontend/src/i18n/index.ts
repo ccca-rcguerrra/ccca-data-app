@@ -5,9 +5,13 @@ import { StorageService } from '@/services/storage/storage.service';
 import { STORAGE_KEYS } from '@/constants/storage.constants';
 
 import { DEFAULT_LOCALE, normalizeLocale } from './supported-locales';
+import ptBR from './locales/pt-BR.json';
 import enUS from './locales/en-US.json';
 
 const resources = {
+  'pt-BR': {
+    translation: ptBR,
+  },
   'en-US': {
     translation: enUS,
   },

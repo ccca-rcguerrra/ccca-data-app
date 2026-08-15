@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 
 interface BlankLayoutProps {
@@ -6,17 +7,18 @@ interface BlankLayoutProps {
 }
 
 export const BlankLayout = ({ children }: BlankLayoutProps) => {
+  const { t } = useTranslation();
+
   return (
     <div 
       className="blank-layout"
       role="application" 
-      aria-label="Layout em Branco"
+      aria-label={t('layout.blank.ariaLabel')}
     >
-      {/* Conteúdo da Página */}
       <main 
         className="page-content"
         role="main"
-        aria-label="Conteúdo principal"
+        aria-label={t('layout.blank.mainAria')}
       >
         <div className="content-container">
           {children}

@@ -31,7 +31,7 @@ export class TeamTerritory {
   team: Team;
 
   @ManyToOne(() => Territory)
-  @JoinColumn({ name: 'territory_id' })
+  @JoinColumn({ name: 'territory_id', referencedColumnName: 'id' })
   territory: Territory;
 
   @CreateDateColumn({ name: 'created_at' })

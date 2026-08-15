@@ -40,14 +40,6 @@ export class Territory {
     })
     category: string;
 
-    @Column({
-        name: 'category_name',
-        type: 'varchar',
-        generated: true,
-        select: false
-    })
-    categoryName: string;
-
     @CreateDateColumn({
         name: 'inserted_at',
         type: 'timestamp',

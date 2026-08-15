@@ -1,5 +1,10 @@
 export const SUPPORTED_LOCALES = [
   {
+    code: 'pt-BR',
+    name: 'Portuguese (Brazil)',
+    nativeName: 'Português (Brasil)',
+  },
+  {
     code: 'en-US',
     name: 'English (United States)',
     nativeName: 'English (United States)',
@@ -8,7 +13,7 @@ export const SUPPORTED_LOCALES = [
 
 export type AppLocale = (typeof SUPPORTED_LOCALES)[number]['code'];
 
-export const DEFAULT_LOCALE: AppLocale = 'en-US';
+export const DEFAULT_LOCALE: AppLocale = 'pt-BR';
 
 const SUPPORTED_LOCALE_CODES = new Set<string>(
   SUPPORTED_LOCALES.map((locale) => locale.code),

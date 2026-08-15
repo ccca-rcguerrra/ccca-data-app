@@ -1,0 +1,608 @@
+{
+  "app": {
+    "title": "Workspace",
+    "welcome": "Bem-vindo ao painel",
+    "description": "Modelo inicial do workspace"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "page": "Página",
+    "of": "de",
+    "previousPage": "Ir para a página anterior",
+    "nextPage": "Ir para a próxima página",
+    "firstPage": "Ir para a primeira página",
+    "lastPage": "Ir para a última página",
+    "rowsPerPage": "Linhas por página",
+    "confirm": "Confirmar",
+    "saving": "Salvando...",
+    "refresh": "Atualizar",
+    "ok": "OK",
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Algo deu errado",
+      "description": "Ocorreu um erro inesperado.",
+      "notFoundTitle": "Página não encontrada",
+      "notFoundDescription": "A página solicitada não existe ou foi movida.",
+      "goHome": "Voltar ao início",
+      "tryAgain": "Tentar novamente",
+      "details": "Detalhes",
+      "status": "Status {{status}}"
+    }
+  },
+  "comments": {
+    "empty": "Nenhum comentário ainda",
+    "delete": "Excluir comentário",
+    "noUsers": "Nenhum usuário encontrado",
+    "placeholder": "Adicionar um comentário...",
+    "unavailable": "Comentários indisponíveis",
+    "post": "Publicar comentário"
+  },
+  "header": {
+    "userMenuAria": "Menu do usuário: {{name}}",
+    "userRole": "Função",
+    "onlineUsersTriggerAria": "{{count}} usuário(s) online",
+    "onlineUsersMenuTitle": "{{count}} usuário(s) online"
+  },
+  "language": {
+    "switch": "Trocar idioma",
+    "english": "Inglês",
+    "portuguese": "Português"
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "users": "Usuários",
+    "teams": "Equipes",
+    "semaspa": "SEMASPA",
+    "autefs": "AUTEFs",
+    "forestGuides": "Guias florestais",
+    "alerts": "Alertas",
+    "audit": "Auditoria"
+  },
+  "breadcrumbs": {
+    "home": "Início",
+    "list": "Lista",
+    "create": "Criar",
+    "new": "Novo",
+    "edit": "Editar",
+    "clipping": "Recorte",
+    "management": "Gestão",
+    "refinement": "Refinamento",
+    "supports": "Suportes",
+    "details": "Detalhes",
+    "ariaLabel": "Trilha de navegação"
+  },
+  "layout": {
+    "header": {
+      "searchPlaceholder": "Buscar...",
+      "expandSidebar": "Expandir barra lateral",
+      "collapseSidebar": "Recolher barra lateral",
+      "switchToLightMode": "Mudar para modo claro",
+      "switchToDarkMode": "Mudar para modo escuro",
+      "profile": "Perfil",
+      "logout": "Sair"
+    },
+    "notifications": {
+      "title": "Notificações",
+      "empty": "Sem notificações",
+      "markAsRead": "Marcar como lida",
+      "markAll": "Marcar todas",
+      "view": "Ver"
+    },
+    "sidebar": {
+      "navLabel": "Navegação"
+    },
+    "blank": {
+      "ariaLabel": "Layout em branco",
+      "mainAria": "Conteúdo principal"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo ao Workspace",
+    "description": "Seu workspace está pronto."
+  },
+  "auth": {
+    "login": {
+      "welcome": "Bem-vindo",
+      "description": "Entre para acessar seu workspace.",
+      "subtitle": "Acesso ao workspace",
+      "logoAlt": "Logotipo CCCA",
+      "copyright": "Todos os direitos reservados.",
+      "email": "E-mail",
+      "emailPlaceholder": "nome@exemplo.com",
+      "password": "Senha",
+      "passwordPlaceholder": "Sua senha",
+      "signIn": "Entrar",
+      "signingIn": "Entrando...",
+      "forgotPassword": "Esqueceu sua senha?",
+      "or": "ou",
+      "googleSignIn": "Entrar com o Google",
+      "noAccount": "Não tem uma conta?",
+      "contactAdmin": "Fale com o administrador",
+      "passwordResetSuccess": {
+        "title": "Senha redefinida",
+        "description": "Sua senha foi redefinida com sucesso. Entre com a nova senha."
+      },
+      "errors": {
+        "title": "Erro de autenticação",
+        "invalidCredentials": "E-mail ou senha inválidos",
+        "invalidData": "Dados inválidos",
+        "network": "Erro de rede. Tente novamente.",
+        "generic": "Erro de autenticação"
+      }
+    },
+    "forgotPassword": {
+      "title": "Verifique seu e-mail",
+      "description": "Informe seu e-mail para receber as instruções de redefinição.",
+      "submit": "Enviar link de redefinição",
+      "submitting": "Enviando...",
+      "success": {
+        "title": "E-mail enviado",
+        "description": "Se o e-mail existir, você receberá as instruções em instantes."
+      },
+      "errors": {
+        "title": "Não foi possível enviar",
+        "invalidData": "Dados inválidos",
+        "network": "Erro de rede. Tente novamente.",
+        "generic": "Não foi possível enviar o link de redefinição."
+      }
+    },
+    "resetPassword": {
+      "title": "Redefinir senha",
+      "description": "Informe sua nova senha.",
+      "newPassword": "Nova senha",
+      "newPasswordPlaceholder": "Nova senha",
+      "confirmPassword": "Confirmar senha",
+      "confirmPasswordPlaceholder": "Confirme a nova senha",
+      "submit": "Redefinir senha",
+      "submitting": "Redefinindo...",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha",
+      "requestNewLink": "Solicitar um novo link",
+      "errors": {
+        "title": "Não foi possível redefinir",
+        "passwordRequired": "Informe a senha",
+        "passwordMinLength": "A senha deve ter pelo menos 6 caracteres",
+        "confirmPasswordRequired": "Confirme a senha",
+        "passwordMismatch": "As senhas não coincidem",
+        "invalidToken": "O link de redefinição é inválido ou expirou.",
+        "missingTokenTitle": "Link incompleto",
+        "missingToken": "O token de redefinição não foi encontrado na URL.",
+        "network": "Erro de rede. Tente novamente.",
+        "generic": "Não foi possível redefinir a senha."
+      }
+    },
+    "common": {
+      "backToLogin": "Voltar ao login"
+    }
+  },
+  "users": {
+    "management": {
+      "title": "Usuários",
+      "subtitle": "Gerencie os usuários do workspace",
+      "total": "{{count}} no total",
+      "filters": {
+        "searchPlaceholder": "Buscar usuários...",
+        "searchPlaceholderExtended": "Buscar por nome ou e-mail...",
+        "team": "Equipe",
+        "selected": "{{count}} selecionada(s)",
+        "loadingTeams": "Carregando equipes...",
+        "selectTeams": "Selecionar equipes",
+        "searchTeams": "Buscar equipes...",
+        "noTeamFound": "Nenhuma equipe encontrada",
+        "clear": "Limpar",
+        "apply": "Aplicar",
+        "newUser": "Novo usuário",
+        "refresh": "Atualizar"
+      },
+      "table": {
+        "user": "Usuário",
+        "email": "E-mail",
+        "institution": "Instituição",
+        "roles": "Funções",
+        "teams": "Equipes",
+        "status": "Status",
+        "actions": "Ações",
+        "viewJoinDate": "Ver data de entrada",
+        "joined": "Entrou ",
+        "fullBiomeAccess": "Acesso a todos os biomas",
+        "lastLogin": "Último acesso ",
+        "editUser": "Editar usuário",
+        "removeAccess": "Remover acesso",
+        "empty": "Nenhum usuário encontrado",
+        "emptyFiltered": "Nenhum usuário corresponde aos filtros.",
+        "removeDialogTitle": "Remover acesso",
+        "removeDialogDescription": "Remover o acesso de {{name}}? Esta ação não pode ser desfeita.",
+        "removing": "Removendo..."
+      },
+      "errors": {
+        "title": "Falha ao carregar usuários",
+        "message": "Ocorreu um erro inesperado ao carregar os dados."
+      },
+      "age": {
+        "days": "{{count}}d atrás",
+        "months": "{{count}} meses atrás",
+        "years": "{{count}} anos atrás"
+      },
+      "status": {
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "blocked": "Bloqueado"
+      }
+    },
+    "form": {
+      "newTitle": "Novo usuário",
+      "editTitle": "Editar usuário",
+      "newDescription": "Preencha os dados para criar um usuário.",
+      "editDescription": "Atualize os dados do usuário.",
+      "errorTitle": "Não foi possível salvar",
+      "profile": "Perfil",
+      "fullName": "Nome completo",
+      "nameHelp": "Ajuda sobre o nome",
+      "nameTooltip": "Use o nome completo como aparece nos documentos.",
+      "namePlaceholder": "Nome completo",
+      "email": "E-mail",
+      "emailPlaceholder": "nome@exemplo.com",
+      "access": "Acesso",
+      "institution": "Instituição",
+      "institutionPlaceholder": "Instituição",
+      "teams": "Equipes",
+      "teamsSelected": "{{count}} equipe(s)",
+      "selectTeams": "Selecionar equipes",
+      "searchTeams": "Buscar equipes...",
+      "noTeamFound": "Nenhuma equipe encontrada",
+      "roles": "Funções",
+      "rolesSelected": "{{count}} função(ões)",
+      "selectRoles": "Selecionar funções",
+      "status": "Status",
+      "security": "Segurança",
+      "password": "Senha",
+      "passwordPlaceholder": "Senha",
+      "passwordEditPlaceholder": "Deixe em branco para manter",
+      "confirmPassword": "Confirmar senha",
+      "confirmPasswordPlaceholder": "Confirme a senha",
+      "confirmPasswordEditPlaceholder": "Confirme a nova senha",
+      "cancel": "Cancelar",
+      "saveChanges": "Salvar alterações",
+      "createUser": "Criar usuário",
+      "errors": {
+        "nameRequired": "Informe o nome",
+        "emailRequired": "Informe o e-mail",
+        "passwordRequired": "Informe a senha",
+        "passwordMinLength": "A senha deve ter pelo menos 6 caracteres",
+        "confirmPasswordRequired": "Confirme a senha",
+        "passwordMismatch": "As senhas não coincidem",
+        "submitFailedEdit": "Não foi possível atualizar o usuário.",
+        "submitFailedCreate": "Não foi possível criar o usuário.",
+        "badRequest": "Requisição inválida",
+        "unauthorized": "Não autorizado",
+        "forbidden": "Acesso negado",
+        "notFound": "Usuário não encontrado",
+        "emailInUse": "Este e-mail já está em uso",
+        "serverError": "Erro no servidor",
+        "genericSave": "Não foi possível salvar (status {{status}})",
+        "genericCreate": "Não foi possível criar (status {{status}})"
+      }
+    },
+    "roles": {
+      "admin": "Administrador",
+      "coordinator": "Coordenador",
+      "analystSenior": "Analista sênior",
+      "analystMidlevel": "Analista pleno",
+      "analystJunior": "Analista júnior",
+      "analystSupport": "Analista de suporte",
+      "viewer": "Visualizador"
+    },
+    "roleSummaries": {
+      "admin": "Todas as permissões do sistema",
+      "coordinator": "Operações, auditoria, refinamento, usuários, equipes e suportes",
+      "analystSenior": "Pré-validação, refinamento e auditoria",
+      "analystMidlevel": "Pré-validação e refinamento",
+      "analystJunior": "Somente pré-validação e seleção de imagens",
+      "analystSupport": "Somente o módulo de casos de suporte",
+      "viewer": "Acesso somente leitura (sem ações de fluxo)"
+    },
+    "permissions": {
+      "activationsCreate": "Criar ativações e fluxos de pré-validação",
+      "refinementsApprove": "Aprovar refinamentos de alerta",
+      "refinementsReject": "Rejeitar refinamentos de alerta",
+      "auditApprove": "Aprovar alertas na auditoria",
+      "auditReject": "Rejeitar ou revisar alertas na auditoria",
+      "alertsChangeStatus": "Alterar manualmente o status do alerta (cancelar/reabrir publicados)",
+      "alertsChangeClass": "Alterar manualmente a classe de desmatamento do alerta",
+      "supportsManage": "Gerenciar casos de suporte",
+      "usersManage": "Gerenciar usuários",
+      "teamsManage": "Gerenciar equipes",
+      "workingOverride": "Dispensar alertas reservados por outros analistas",
+      "adminAccess": "Acesso administrativo completo"
+    },
+    "rolePermissions": {
+      "aboutAria": "Sobre funções e permissões",
+      "overviewTitle": "Funções e permissões",
+      "overviewDescription": "As permissões efetivas são a união de todas as funções atribuídas ao usuário.",
+      "noPermissions": "Esta função não concede permissões.",
+      "effectivePermissions": "Permissões efetivas",
+      "noEffectivePermissions": "Nenhuma permissão efetiva para as funções selecionadas."
+    }
+  },
+  "teams": {
+    "management": {
+      "title": "Equipes",
+      "subtitle": "Gerencie as equipes do workspace",
+      "filters": {
+        "searchPlaceholder": "Buscar equipes...",
+        "clear": "Limpar",
+        "newTeam": "Nova equipe",
+        "refresh": "Atualizar"
+      },
+      "errors": {
+        "title": "Falha ao carregar equipes",
+        "message": "Ocorreu um erro inesperado ao carregar os dados."
+      },
+      "grid": {
+        "archived": "Arquivada",
+        "more": "+{{count}}",
+        "members": "{{count}} membro(s)",
+        "noMembers": "Sem membros",
+        "updated": "Atualizado ",
+        "edit": "Editar",
+        "addMembers": "Adicionar membros",
+        "empty": "Nenhuma equipe encontrada",
+        "emptyFiltered": "Nenhuma equipe corresponde aos filtros.",
+        "matchingFilter": " (filtro)",
+        "memberCount": "{{count}} de {{total}}",
+        "unsavedChanges": "Alterações não salvas",
+        "noTerritory": "Nenhum território atribuído"
+      },
+      "form": {
+        "newTitle": "Nova equipe",
+        "editTitle": "Editar equipe",
+        "newDescription": "Preencha os dados para criar uma equipe.",
+        "editDescription": "Atualize os dados da equipe.",
+        "errorTitle": "Não foi possível salvar",
+        "teamDetails": "Dados da equipe",
+        "name": "Nome",
+        "namePlaceholder": "Nome da equipe",
+        "nameRequired": "Informe o nome",
+        "territory": "Território",
+        "territoryPlaceholder": "Carregando...",
+        "territorySelect": "Selecionar território",
+        "none": "Nenhum",
+        "members": "Membros",
+        "searchMembers": "Filtrar membros...",
+        "filterMembersAria": "Filtrar membros",
+        "addMember": "Adicionar membro",
+        "searchUsers": "Buscar usuários...",
+        "loading": "Carregando...",
+        "noUsersFound": "Nenhum usuário encontrado",
+        "newUser": "Novo usuário",
+        "tableUser": "Usuário",
+        "tableEmail": "E-mail",
+        "tableRole": "Função",
+        "tableStatus": "Status",
+        "tableActions": "Ações",
+        "emptyTitle": "Nenhum membro ainda",
+        "emptySubtitle": "Adicione usuários a esta equipe.",
+        "filterEmptyTitle": "Nenhum membro encontrado",
+        "filterEmptySubtitle": "Ajuste o filtro de busca.",
+        "newBadge": "Novo",
+        "removeAria": "Remover {{name}}",
+        "cancel": "Cancelar",
+        "saveChanges": "Salvar alterações",
+        "createTeam": "Criar equipe",
+        "errors": {
+          "submitFailedEdit": "Não foi possível atualizar a equipe.",
+          "submitFailedCreate": "Não foi possível criar a equipe.",
+          "badRequest": "Requisição inválida",
+          "unauthorized": "Não autorizado",
+          "forbidden": "Acesso negado",
+          "notFound": "Equipe não encontrada",
+          "conflict": "Conflito ao salvar a equipe",
+          "serverError": "Erro no servidor",
+          "genericSave": "Não foi possível salvar (status {{status}})",
+          "genericCreate": "Não foi possível criar (status {{status}})"
+        }
+      }
+    }
+  },
+  "semaspa": {
+    "autefs": {
+      "list": {
+        "title": "AUTEFs",
+        "subtitle": "Consulte autorizações de exploração florestal do SEMAS-PA.",
+        "total": "{{count}} no total",
+        "totalRows": "{{count}} linha(s)",
+        "noResults": "Nenhuma AUTEF encontrada",
+        "noResultsWithFilters": "Nenhuma AUTEF corresponde aos filtros atuais."
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar número ou processo...",
+        "cityPlaceholder": "Município",
+        "statePlaceholder": "UF",
+        "yearPlaceholder": "Ano",
+        "clear": "Limpar",
+        "advanced": "Filtros avançados",
+        "apply": "Aplicar filtros",
+        "any": "Qualquer",
+        "yes": "Sim",
+        "no": "Não",
+        "issueMonth": "Mês de emissão",
+        "processNumber": "Número do processo",
+        "issuedFrom": "Emitida de",
+        "issuedTo": "Emitida até",
+        "taxId": "CPF/CNPJ",
+        "personName": "Nome da pessoa",
+        "isOverExtracted": "Somente sobre-extraídas",
+        "hasForestGuide": "Possui guia florestal",
+        "movedRatioMin": "Razão movimentada mín.",
+        "movedRatioMax": "Razão movimentada máx.",
+        "speciesProductId": "ID do produto da espécie",
+        "scientificName": "Nome científico",
+        "commonName": "Nome popular"
+      },
+      "table": {
+        "number": "Número",
+        "processNumber": "Processo",
+        "city": "Município",
+        "state": "UF",
+        "issueYear": "Ano",
+        "totalAreaHa": "Área (ha)",
+        "issuedAt": "Emissão",
+        "flags": "Flags"
+      },
+      "detail": {
+        "back": "Voltar à lista",
+        "notFound": "AUTEF não encontrada",
+        "eyebrow": "AUTEF · SEMAS-PA",
+        "title": "AUTEF {{number}}",
+        "untitled": "AUTEF #{{id}}",
+        "peakMoved": "Pico movimentado",
+        "processNumber": "Processo",
+        "cityState": "Localização",
+        "totalAreaHa": "Área total",
+        "issuedAt": "Emissão",
+        "hectares": "{{value}} ha"
+      },
+      "tabs": {
+        "species": "Espécies e saldos",
+        "forestGuides": "Guias florestais",
+        "harvestUnits": "UPAs",
+        "roles": "Papéis"
+      },
+      "species": {
+        "scientificName": "Nome científico",
+        "commonName": "Nome popular",
+        "volume": "Original",
+        "authorized": "Autorizado",
+        "moved": "Movimentado",
+        "progress": "Progresso",
+        "noResults": "Nenhuma espécie encontrada"
+      },
+      "volumeBalances": {
+        "overExtracted": "Sobre-extraída",
+        "unitConflict": "Conflito de unidade"
+      },
+      "forestGuides": {
+        "number": "Número",
+        "status": "Status",
+        "type": "Tipo",
+        "issuedAt": "Emissão",
+        "plates": "Placas",
+        "view": "Ver",
+        "noResults": "Nenhuma guia florestal encontrada"
+      },
+      "harvestUnits": {
+        "propertyName": "Imóvel",
+        "holder": "Detentor",
+        "city": "Município",
+        "propertyAreaHa": "Área do imóvel",
+        "unitAreaHa": "Área da UPA",
+        "netAreaHa": "Área líquida",
+        "volumeM3": "Volume (m³)",
+        "noGeometry": "Nenhuma geometria disponível para o mapa",
+        "noResults": "Nenhuma UPA encontrada"
+      },
+      "roles": {
+        "taxId": "CPF/CNPJ",
+        "owner": "Proprietário",
+        "analyst": "Analista",
+        "technicalResponsible": "Responsável técnico",
+        "other": "Outros papéis",
+        "noResults": "Nenhum papel encontrado"
+      },
+      "errors": {
+        "title": "Falha ao carregar AUTEFs",
+        "message": "Ocorreu um erro inesperado ao carregar os dados.",
+        "detailTitle": "Falha ao carregar AUTEF"
+      }
+    },
+    "forestGuides": {
+      "list": {
+        "title": "Guias florestais",
+        "subtitle": "Consulte guias florestais (GF) do SEMAS-PA.",
+        "total": "{{count}} no total",
+        "totalRows": "{{count}} linha(s)",
+        "noResults": "Nenhuma guia florestal encontrada",
+        "noResultsWithFilters": "Nenhuma guia florestal corresponde aos filtros atuais."
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar número...",
+        "statusPlaceholder": "Status",
+        "typePlaceholder": "Tipo",
+        "autefIdPlaceholder": "ID da AUTEF",
+        "taxId": "CPF/CNPJ",
+        "personName": "Nome da pessoa",
+        "plate": "Placa",
+        "issuedFrom": "Emitida de",
+        "issuedTo": "Emitida até",
+        "clear": "Limpar",
+        "advanced": "Filtros avançados",
+        "apply": "Aplicar filtros"
+      },
+      "table": {
+        "number": "Número",
+        "status": "Status",
+        "type": "Tipo",
+        "issuedAt": "Emissão",
+        "plates": "Placas"
+      },
+      "detail": {
+        "back": "Voltar à lista",
+        "notFound": "Guia florestal não encontrada",
+        "eyebrow": "GF · SEMAS-PA",
+        "title": "GF {{number}}",
+        "untitled": "GF #{{id}}",
+        "status": "Status",
+        "type": "Tipo",
+        "issuedAt": "Emissão",
+        "plates": "Placas",
+        "permits": "Referências de autorização"
+      },
+      "tabs": {
+        "species": "Espécies",
+        "roles": "Papéis",
+        "autefs": "AUTEFs relacionadas"
+      },
+      "species": {
+        "scientificName": "Nome científico",
+        "commonName": "Nome popular",
+        "volume": "Volume",
+        "value": "Valor",
+        "noResults": "Nenhuma espécie encontrada"
+      },
+      "roles": {
+        "person": "Pessoa",
+        "role": "Papel",
+        "source": "Fonte",
+        "origin": "Origem",
+        "destination": "Destino",
+        "noResults": "Nenhum papel encontrado"
+      },
+      "autefs": {
+        "number": "Número",
+        "processNumber": "Processo",
+        "city": "Município",
+        "issuedAt": "Emissão",
+        "noResults": "Nenhuma AUTEF relacionada encontrada"
+      },
+      "sheet": {
+        "title": "Detalhes da guia florestal",
+        "description": "Informações detalhadas da guia florestal",
+        "openAutef": "Abrir AUTEF"
+      },
+      "errors": {
+        "title": "Falha ao carregar guias florestais",
+        "message": "Ocorreu um erro inesperado ao carregar os dados.",
+        "detailTitle": "Falha ao carregar guia florestal"
+      }
+    }
+  }
+}

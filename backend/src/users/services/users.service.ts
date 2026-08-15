@@ -19,6 +19,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { TeamDto } from '../dto/team.dto';
 import { getPrimaryTeamTerritory } from '../../teams/utils/team-territory.helper';
+import { TERRITORY_LIST_SELECT, toTerritoryDto } from '../../territories/utils/territory-select';
 import { RedisService } from '../../shared/redis/redis.service';
 import { REDIS_KEYS } from '../../shared/redis/redis.keys';
 import { REDIS_TTL } from '../../shared/redis/redis.constants';
@@ -77,16 +78,7 @@ export class UsersService {
         'teamTerritory.updatedAt',
       ])
       .leftJoin('teamTerritory.territory', 'territory')
-      .addSelect([
-        'territory.id',
-        'territory.version',
-        'territory.name',
-        'territory.category',
-        'territory.categoryName',
-        'territory.source',
-        'territory.areaHa',
-        'territory.enabled',
-      ])
+      .addSelect([...TERRITORY_LIST_SELECT])
       .leftJoin('user.userRoles', 'userRole')
       .addSelect(['userRole.id', 'userRole.role', 'userRole.grantedAt']);
 
@@ -171,16 +163,7 @@ export class UsersService {
         'teamTerritory.updatedAt',
       ])
       .leftJoin('teamTerritory.territory', 'territory')
-      .addSelect([
-        'territory.id',
-        'territory.version',
-        'territory.name',
-        'territory.category',
-        'territory.categoryName',
-        'territory.source',
-        'territory.areaHa',
-        'territory.enabled',
-      ])
+      .addSelect([...TERRITORY_LIST_SELECT])
       .leftJoin('user.userRoles', 'userRole')
       .addSelect(['userRole.id', 'userRole.role', 'userRole.grantedAt'])
       .where('user.id = :id', { id })
@@ -343,18 +326,7 @@ export class UsersService {
       territoryId,
       createdAt: team.createdAt,
       updatedAt: team.updatedAt,
-      territory: territoryEntity
-        ? {
-            id: territoryEntity.id,
-            version: territoryEntity.version,
-            name: territoryEntity.name,
-            category: territoryEntity.category,
-            categoryName: territoryEntity.categoryName || null,
-            source: territoryEntity.source,
-            areaHa: territoryEntity.areaHa || null,
-            enabled: territoryEntity.enabled ?? true,
-          }
-        : null,
+      territory: territoryEntity ? toTerritoryDto(territoryEntity) : null,
     };
   }
 
