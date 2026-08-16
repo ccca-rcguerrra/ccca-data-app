@@ -1,8 +1,20 @@
 import type { MultiPolygon } from 'geojson';
+import type { ApiPaginatedResponse } from '@/types/api';
 
 export interface SemaspaPaginationParams {
   page?: number;
   limit?: number;
+}
+
+export type AutefVolumeBalanceSortField =
+  | 'excessVolume'
+  | 'movedRatio'
+  | 'authorizedVolume'
+  | 'id';
+
+export interface AutefVolumeBalanceParams extends SemaspaPaginationParams {
+  sortBy?: AutefVolumeBalanceSortField;
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export type AutefSortField =
@@ -78,6 +90,24 @@ export interface AutefVolumeBalance {
   hasUnitConflict: boolean;
 }
 
+export interface VolumeBalanceForestGuide {
+  forestGuideId: number;
+  number: string | null;
+  issuedAt: string | null;
+  status: string | null;
+  type: string | null;
+  volume: number | null;
+  unit: string | null;
+  speciesProductId: string;
+  runningTotal: number;
+}
+
+export interface VolumeBalanceForestGuidesResponse
+  extends ApiPaginatedResponse<VolumeBalanceForestGuide> {
+  movedVolumeSum: number | null;
+  crossingForestGuideId: number | null;
+}
+
 export interface ForestGuide {
   id: number;
   number: string | null;
@@ -149,6 +179,32 @@ export interface PersonRole {
   source: string;
 }
 
+export interface PersonListParams extends SemaspaPaginationParams {
+  search?: string;
+}
+
+export interface PersonParticipation {
+  ownerAutefCount: number;
+  technicalResponsibleAutefCount: number;
+  analystAutefCount: number;
+  originGfCount: number;
+  destinationGfCount: number;
+  distinctAutefCount: number;
+  distinctGfCount: number;
+}
+
+export interface PersonLinkedAutef {
+  role: string;
+  source: string;
+  autef: Autef;
+}
+
+export interface PersonLinkedForestGuide {
+  role: string;
+  source: string;
+  forestGuide: ForestGuide;
+}
+
 export interface Person {
   id: string;
   taxId: string | null;
@@ -174,4 +230,132 @@ export interface SpeciesProduct {
   productName: string | null;
   source: string | null;
   occurrenceCount: number | null;
+}
+
+export const INDICATOR_IDS = {
+  OVER_EXTRACTED: 'autef_over_extracted',
+  CREDIT_USE_OVER_90: 'autef_credit_use_over_90',
+  UNIT_CONFLICT: 'autef_unit_conflict',
+  PERSON_MULTIPLE_OVER_EXTRACTED_AUTEFS: 'person_multiple_over_extracted_autefs',
+  PERSON_RECURRENT_GF_DESTINATION: 'person_recurrent_gf_destination',
+  PLATE_RECURRENT: 'plate_recurrent',
+} as const;
+
+export const ANY_INDICATOR_ID = 'any';
+
+export type CatalogIndicatorId =
+  (typeof INDICATOR_IDS)[keyof typeof INDICATOR_IDS];
+
+export type IndicatorQueryId = CatalogIndicatorId | typeof ANY_INDICATOR_ID;
+
+export type IndicatorEntity = 'autef' | 'person' | 'plate';
+
+export interface IndicatorFilters {
+  city?: string;
+  state?: string;
+  issuedFrom?: string;
+  issuedTo?: string;
+  speciesProductId?: string;
+  scientificName?: string;
+  commonName?: string;
+  movedRatioMin?: number;
+  movedRatioMax?: number;
+  excessVolumeMin?: number;
+}
+
+export interface IndicatorSummaryItem {
+  id: CatalogIndicatorId;
+  name: string;
+  entity: IndicatorEntity | string;
+  severity: string;
+  count: number;
+  rule: string;
+  ruleVersion: number;
+  inputs: string[];
+  limitations: string[];
+}
+
+export interface IndicatorSummary {
+  generatedAt: string;
+  filters: IndicatorFilters;
+  indicators: IndicatorSummaryItem[];
+}
+
+export type IndicatorCaseSortField =
+  | 'issuedAt'
+  | 'number'
+  | 'city'
+  | 'maxMovedRatio'
+  | 'maxExcessVolume';
+
+export interface IndicatorCasesParams extends IndicatorFilters, SemaspaPaginationParams {
+  sortBy?: IndicatorCaseSortField;
+  sortOrder?: 'ASC' | 'DESC';
+}
+
+export interface AutefIndicatorCase {
+  entity: 'autef';
+  autefId: number;
+  number: string | null;
+  city: string | null;
+  state: string | null;
+  issuedAt: string | null;
+  matchedIndicatorIds: string[];
+  maxMovedRatio: number | null;
+  maxExcessVolume: number | null;
+  hasUnitConflict: boolean;
+}
+
+export interface PersonIndicatorCase {
+  entity: 'person';
+  personId: string;
+  names: string[] | null;
+  taxId: string | null;
+  city: string | null;
+  state: string | null;
+  roleTypes: string[] | null;
+  distinctAutefCount: number;
+  distinctGfCount: number;
+}
+
+export interface PlateIndicatorCase {
+  entity: 'plate';
+  plate: string;
+  distinctGfCount: number;
+  distinctAutefCount: number;
+}
+
+export type IndicatorCase = AutefIndicatorCase | PersonIndicatorCase | PlateIndicatorCase;
+
+export function isAutefIndicatorCase(row: IndicatorCase): row is AutefIndicatorCase {
+  return row.entity === 'autef';
+}
+
+export function isPersonIndicatorCase(row: IndicatorCase): row is PersonIndicatorCase {
+  return row.entity === 'person';
+}
+
+export function isPlateIndicatorCase(row: IndicatorCase): row is PlateIndicatorCase {
+  return row.entity === 'plate';
+}
+
+export interface IndicatorSavedFilter {
+  id: number;
+  name: string;
+  indicatorId: CatalogIndicatorId | typeof ANY_INDICATOR_ID | null;
+  filters: IndicatorFilters;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateIndicatorSavedFilterPayload {
+  name: string;
+  indicatorId?: CatalogIndicatorId | typeof ANY_INDICATOR_ID | null;
+  filters: IndicatorFilters;
+}
+
+export interface UpdateIndicatorSavedFilterPayload {
+  name?: string;
+  indicatorId?: CatalogIndicatorId | typeof ANY_INDICATOR_ID | null;
+  filters?: IndicatorFilters;
 }

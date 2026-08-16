@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Eye } from 'lucide-react';
 
-import { Button } from '@/components/ui/shadcn/button';
+import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
 import {
   Table,
   TableBody,
@@ -11,12 +11,12 @@ import {
   TableRow,
 } from '@/components/ui/shadcn/table';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
+import { Button } from '@/components/ui/shadcn/button';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
-import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
+
 import type { AutefDetailController } from '../hooks/use-autef-detail-controller';
-import { ForestGuideDetailSheet } from '../../forest-guides/components/forest-guide-detail-sheet';
-import { ForestGuideStatusBadge } from '../../forest-guides/components/forest-guide-status-badge';
 import { PlateChip } from '../../forest-guides/components/plate-chip';
+import { ForestGuideStatusBadge } from '../../forest-guides/components/forest-guide-status-badge';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -33,7 +33,6 @@ export function AutefForestGuidesTable({ controller }: Props) {
       handleTabPageChange,
       handleTabPageSizeChange,
       handleOpenForestGuide,
-      handleForestGuideSheetOpenChange,
     },
   } = controller;
 
@@ -116,12 +115,6 @@ export function AutefForestGuidesTable({ controller }: Props) {
         canNext={forestGuides.hasNext}
         onPageChange={(page) => handleTabPageChange('forestGuides', page)}
         isBusy={isLoadingForestGuides}
-      />
-
-      <ForestGuideDetailSheet
-        forestGuideId={state.selectedForestGuideId}
-        open={state.forestGuideSheetOpen}
-        onOpenChange={handleForestGuideSheetOpenChange}
       />
     </div>
   );

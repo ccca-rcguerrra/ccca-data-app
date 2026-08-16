@@ -1,4 +1,4 @@
-import { FileText, Home, Trees, User, Users } from 'lucide-react';
+import { Building2, FileText, Home, Trees, User, Users } from 'lucide-react';
 import type { Permission } from '@/constants/permissions';
 
 export interface NavItem {
@@ -16,8 +16,8 @@ export const navigationData = {
   teams: [],
   navMain: [
     {
-      title: 'Dashboard',
-      titleKey: 'navigation.dashboard',
+      title: 'Indicator Center',
+      titleKey: 'navigation.indicators',
       url: '/',
       icon: Home,
       isActive: true,
@@ -33,6 +33,12 @@ export const navigationData = {
       titleKey: 'navigation.forestGuides',
       url: '/semaspa/forest-guides',
       icon: Trees,
+    },
+    {
+      title: 'People',
+      titleKey: 'navigation.people',
+      url: '/semaspa/people',
+      icon: Building2,
     },
     {
       title: 'Users',

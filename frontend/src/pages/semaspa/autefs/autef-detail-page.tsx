@@ -2,122 +2,19 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 
-import { Button } from '@/components/ui/shadcn/button';
-import { Skeleton } from '@/components/ui/shadcn/skeleton';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs';
-import { LazyTabsContent } from '@/components/ui/lazy-tabs-content';
 import { ROUTES } from '@/constants/routes.constants';
-import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs';
+import { Button } from '@/components/ui/shadcn/button';
+import { LazyTabsContent } from '@/components/ui/lazy-tabs-content';
 
-import {
-  useAutefDetailController,
-  type AutefDetailController,
-} from './hooks/use-autef-detail-controller';
+import { useAutefDetailController } from './hooks/use-autef-detail-controller';
 import { AutefSpeciesTable } from './components/autef-species-table';
-import { AutefForestGuidesTable } from './components/autef-forest-guides-table';
-import { AutefHarvestUnitsPanel } from './components/autef-harvest-units-panel';
 import { AutefRolesCards } from './components/autef-roles-cards';
-import { VolumeBalanceGauge } from './components/volume-balance-gauge';
-
-function AutefDetailSummary({ controller }: { controller: AutefDetailController }) {
-  const { t } = useTranslation();
-  const { autef, isLoadingAutef, mergedSpeciesRows } = controller.api;
-
-  if (isLoadingAutef) {
-    return (
-      <div className="space-y-3">
-        <Skeleton className="h-7 w-64" />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!autef) return null;
-
-  const title = autef.number
-    ? t('semaspa.autefs.detail.title', { number: autef.number })
-    : t('semaspa.autefs.detail.untitled', { id: autef.id });
-
-  const location = [autef.city, autef.state].filter(Boolean).join(' / ') || '—';
-  const area =
-    autef.totalAreaHa != null
-      ? t('semaspa.autefs.detail.hectares', {
-          value: autef.totalAreaHa.toLocaleString(undefined, { maximumFractionDigits: 2 }),
-        })
-      : '—';
-
-  const peakMovedRatio = mergedSpeciesRows.reduce<number | null>((peak, row) => {
-    const ratio = row.balance?.movedRatio;
-    if (ratio == null || Number.isNaN(ratio)) return peak;
-    if (peak == null) return ratio;
-    return Math.max(peak, ratio);
-  }, null);
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
-          {t('semaspa.autefs.detail.eyebrow')}
-        </p>
-        <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 className="font-mono text-xl font-semibold tracking-tight text-foreground">
-              {title}
-            </h2>
-            {autef.title ? (
-              <p className="text-sm text-muted-foreground mt-1">{autef.title}</p>
-            ) : null}
-          </div>
-          {peakMovedRatio != null ? (
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                {t('semaspa.autefs.detail.peakMoved')}
-              </span>
-              <VolumeBalanceGauge ratio={peakMovedRatio} />
-            </div>
-          ) : null}
-        </div>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-border pt-3 text-sm">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            {t('semaspa.autefs.detail.processNumber')}
-          </p>
-          <p className="font-mono text-[13px] font-medium tabular-nums">
-            {autef.processNumber ?? '—'}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            {t('semaspa.autefs.detail.cityState')}
-          </p>
-          <p className="font-medium">{location}</p>
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            {t('semaspa.autefs.detail.totalAreaHa')}
-          </p>
-          <p className="font-medium tabular-nums">{area}</p>
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            {t('semaspa.autefs.detail.issuedAt')}
-          </p>
-          <p className="font-medium tabular-nums">
-            {autef.issuedAt
-              ? formatISODateLocal(autef.issuedAt) || EMPTY_DATE_LABEL
-              : EMPTY_DATE_LABEL}
-            {autef.issueYear != null ? ` (${autef.issueYear})` : ''}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { AutefOverviewPanel } from './components/autef-overview-panel';
+import { AutefHarvestUnitsPanel } from './components/autef-harvest-units-panel';
+import { AutefForestGuidesTable } from './components/autef-forest-guides-table';
+import { AutefDossierHeader } from './components/autef-dossier-header';
+import { ForestGuideDetailSheet } from '../forest-guides/components/forest-guide-detail-sheet';
 
 export function AutefDetailPage() {
   const { t } = useTranslation();
@@ -171,14 +68,8 @@ export function AutefDetailPage() {
 
   return (
     <div className="w-full h-full overflow-hidden flex flex-col">
-      <div className="p-6 pb-4 shrink-0 border-b border-border space-y-4">
-        <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit">
-          <Link to={ROUTES.semaspa.autefs}>
-            <ArrowLeft className="h-4 w-4" />
-            {t('semaspa.autefs.detail.back')}
-          </Link>
-        </Button>
-        <AutefDetailSummary controller={controller} />
+      <div className="p-6 pb-4 shrink-0 border-b border-border">
+        <AutefDossierHeader controller={controller} />
       </div>
 
       <Tabs
@@ -186,13 +77,21 @@ export function AutefDetailPage() {
         onValueChange={handlers.handleActiveTabChange}
         className="flex-1 min-h-0 overflow-hidden px-6 pt-4"
       >
-        <TabsList variant="line" className="shrink-0 w-full justify-start">
+        <TabsList variant="line" className="shrink-0 w-full justify-start overflow-x-auto">
+          <TabsTrigger value="overview">{t('semaspa.autefs.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="species">{t('semaspa.autefs.tabs.species')}</TabsTrigger>
           <TabsTrigger value="forestGuides">{t('semaspa.autefs.tabs.forestGuides')}</TabsTrigger>
           <TabsTrigger value="harvestUnits">{t('semaspa.autefs.tabs.harvestUnits')}</TabsTrigger>
           <TabsTrigger value="roles">{t('semaspa.autefs.tabs.roles')}</TabsTrigger>
         </TabsList>
 
+        <LazyTabsContent
+          value="overview"
+          activeValue={activeTab}
+          className="flex-1 min-h-0 overflow-hidden mt-0 data-[state=inactive]:hidden"
+        >
+          <AutefOverviewPanel controller={controller} />
+        </LazyTabsContent>
         <LazyTabsContent
           value="species"
           activeValue={activeTab}
@@ -222,6 +121,12 @@ export function AutefDetailPage() {
           <AutefRolesCards controller={controller} />
         </LazyTabsContent>
       </Tabs>
+
+      <ForestGuideDetailSheet
+        forestGuideId={store.state.selectedForestGuideId}
+        open={store.state.forestGuideSheetOpen}
+        onOpenChange={handlers.handleForestGuideSheetOpenChange}
+      />
     </div>
   );
 }

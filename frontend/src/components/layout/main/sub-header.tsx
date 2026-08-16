@@ -14,7 +14,7 @@ export const SubHeader = () => {
 
   const pathLabelKeys: Record<string, string> = {
     '': 'breadcrumbs.home',
-    'dashboard': 'navigation.dashboard',
+    'dashboard': 'navigation.indicators',
     'users': 'navigation.users',
     'list': 'breadcrumbs.list',
     'create': 'breadcrumbs.create',
@@ -31,6 +31,7 @@ export const SubHeader = () => {
     'semaspa': 'navigation.semaspa',
     'autefs': 'navigation.autefs',
     'forest-guides': 'navigation.forestGuides',
+    'people': 'navigation.people',
   };
 
   const breadcrumbItems = useMemo(() => {
@@ -39,7 +40,7 @@ export const SubHeader = () => {
     if (pathnames.length === 0) {
       return [
         { id: 'home', label: t('breadcrumbs.home') },
-        { id: '/dashboard', label: t('navigation.dashboard') },
+        { id: '/dashboard', label: t('navigation.indicators') },
       ];
     }
 

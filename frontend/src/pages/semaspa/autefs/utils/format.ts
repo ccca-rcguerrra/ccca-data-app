@@ -32,3 +32,8 @@ export function formatRatio(value: number | null): string {
   if (value == null || Number.isNaN(value)) return '—';
   return `${(value * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`;
 }
+
+export function formatExcess(value: number | null): string {
+  if (value == null || Number.isNaN(value)) return '—';
+  return value.toLocaleString(undefined, { maximumFractionDigits: 3 });
+}

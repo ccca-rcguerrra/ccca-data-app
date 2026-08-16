@@ -12,6 +12,9 @@ import { HarvestUnitsController } from './harvest-units/harvest-units.controller
 import { HarvestUnitsService } from './harvest-units/services/harvest-units.service';
 import { AutefVolumeBalancesController } from './autef-volume-balances/autef-volume-balances.controller';
 import { AutefVolumeBalancesService } from './autef-volume-balances/services/autef-volume-balances.service';
+import { IndicatorsController } from './indicators/indicators.controller';
+import { IndicatorsService } from './indicators/services/indicators.service';
+import { IndicatorSavedFiltersService } from './indicators/services/indicator-saved-filters.service';
 
 @Module({
   imports: [ModelModule],
@@ -22,6 +25,7 @@ import { AutefVolumeBalancesService } from './autef-volume-balances/services/aut
     SpeciesProductsController,
     HarvestUnitsController,
     AutefVolumeBalancesController,
+    IndicatorsController,
   ],
   providers: [
     AutefsService,
@@ -30,6 +34,8 @@ import { AutefVolumeBalancesService } from './autef-volume-balances/services/aut
     SpeciesProductsService,
     HarvestUnitsService,
     AutefVolumeBalancesService,
+    IndicatorsService,
+    IndicatorSavedFiltersService,
   ],
   exports: [
     AutefsService,
@@ -38,6 +44,8 @@ import { AutefVolumeBalancesService } from './autef-volume-balances/services/aut
     SpeciesProductsService,
     HarvestUnitsService,
     AutefVolumeBalancesService,
+    IndicatorsService,
+    IndicatorSavedFiltersService,
   ],
 })
 export class SemaspaModule {}

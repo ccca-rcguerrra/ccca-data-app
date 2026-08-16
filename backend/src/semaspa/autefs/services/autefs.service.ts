@@ -10,7 +10,26 @@ import { SemaspaAutefHarvestUnit } from '../../../model/entities/semaspa-autef-h
 import { SemaspaForestGuide } from '../../../model/entities/semaspa-forest-guide.view.entity';
 import { SemaspaHarvestUnit } from '../../../model/entities/semaspa-harvest-unit.view.entity';
 import { SemaspaPersonRole } from '../../../model/entities/semaspa-person-role.view.entity';
+import { SemaspaForestGuideSpecies } from '../../../model/entities/semaspa-forest-guide-species.view.entity';
+import { SemaspaSpeciesProduct } from '../../../model/entities/semaspa-species-product.view.entity';
 import { AUTEF_SORT_FIELDS, GetAutefsQueryDto } from '../dto/get-autefs-query.dto';
+import { GetAutefNestedVolumeBalancesQueryDto } from '../dto/get-autef-nested-volume-balances-query.dto';
+import { GetVolumeBalanceForestGuidesQueryDto } from '../dto/get-volume-balance-forest-guides-query.dto';
+import {
+  applyVolumeBalanceSort,
+  buildVolumeBalancesCsvBody,
+  mapVolumeBalanceCsvRow,
+  VOLUME_BALANCE_CSV_ROW_LIMIT,
+} from '../volume-balance-csv';
+import {
+  applyVolumeBalanceGfScope,
+  mapVolumeBalanceForestGuideRow,
+  parseNumeric,
+} from '../volume-balance-gf-scope';
+import {
+  buildCreditTimeline,
+  VOLUME_BALANCE_TIMELINE_ROW_LIMIT,
+} from '../volume-balance-timeline';
 import { AutefResponseDto } from '../dto/autef-response.dto';
 import { GetAutefsResponseDto } from '../dto/get-autefs-response.dto';
 import { AutefSpeciesResponseDto } from '../../shared/autef-species-response.dto';
@@ -25,6 +44,7 @@ import {
   GetForestGuidesResponseDto,
   GetHarvestUnitsResponseDto,
   GetPersonRolesResponseDto,
+  GetVolumeBalanceForestGuidesResponseDto,
 } from '../../shared/paginated-responses.dto';
 
 @Injectable()
@@ -401,22 +421,141 @@ export class AutefsService {
 
   async findVolumeBalances(
     autefId: number,
-    query: SemaspaPaginationQueryDto,
+    query: GetAutefNestedVolumeBalancesQueryDto,
   ): Promise<GetAutefVolumeBalancesResponseDto> {
     await this.assertAutefExists(autefId);
     const { page = 1, limit = 20 } = query;
-    const [rows, total] = await this.volumeBalanceRepo.findAndCount({
-      where: { autefId },
-      skip: (page - 1) * limit,
-      take: limit,
-      order: { id: 'ASC' },
-    });
+    const skip = (page - 1) * limit;
+
+    const qb = this.volumeBalanceRepo
+      .createQueryBuilder('vb')
+      .where('vb.autefId = :autefId', { autefId })
+      .skip(skip)
+      .take(limit);
+    applyVolumeBalanceSort(qb, query);
+
+    const countQb = this.volumeBalanceRepo
+      .createQueryBuilder('vb')
+      .where('vb.autefId = :autefId', { autefId });
+
+    const [rows, total] = await Promise.all([qb.getMany(), countQb.getCount()]);
     return new GetAutefVolumeBalancesResponseDto(
       rows.map((r) => new AutefVolumeBalanceResponseDto(r)),
       page,
       limit,
       total,
     );
+  }
+
+  async findVolumeBalanceForestGuides(
+    autefId: number,
+    speciesProductId: string,
+    query: GetVolumeBalanceForestGuidesQueryDto,
+  ): Promise<GetVolumeBalanceForestGuidesResponseDto> {
+    await this.assertAutefExists(autefId);
+    const { page = 1, limit = 100 } = query;
+    const skip = (page - 1) * limit;
+
+    const base = () => {
+      const qb = this.forestGuideRepo
+        .createQueryBuilder('gf')
+        .innerJoin(
+          SemaspaAutefForestGuide,
+          'bridge',
+          'bridge.forest_guide_id = gf.id',
+        )
+        .innerJoin(
+          SemaspaForestGuideSpecies,
+          'fgs',
+          'fgs.forest_guide_id = gf.id',
+        )
+        .where('bridge.autef_id = :autefId', { autefId })
+        .andWhere('fgs.species_product_id = :speciesProductId', {
+          speciesProductId,
+        });
+      applyVolumeBalanceGfScope(qb);
+      return qb;
+    };
+
+    const listQb = base()
+      .select('gf.id', 'forest_guide_id')
+      .addSelect('gf.number', 'number')
+      .addSelect('gf.issuedAt', 'issued_at')
+      .addSelect('gf.status', 'status')
+      .addSelect('gf.type', 'type')
+      .addSelect('fgs.volume', 'volume')
+      .addSelect('fgs.unit', 'unit')
+      .addSelect('fgs.species_product_id', 'species_product_id')
+      .orderBy('gf.issuedAt', 'ASC', 'NULLS LAST')
+      .addOrderBy('gf.id', 'ASC')
+      .take(VOLUME_BALANCE_TIMELINE_ROW_LIMIT);
+
+    const countQb = base().select('COUNT(gf.id)', 'count');
+    const sumQb = base().select('COALESCE(SUM(fgs.volume), 0)', 'sum');
+
+    const [rawRows, countRow, sumRow, balance] = await Promise.all([
+      listQb.getRawMany<Record<string, unknown>>(),
+      countQb.getRawOne<{ count: string | number }>(),
+      sumQb.getRawOne<{ sum: string | number }>(),
+      this.volumeBalanceRepo.findOne({
+        where: { autefId, speciesProductId },
+      }),
+    ]);
+
+    const total = parseNumeric(countRow?.count) ?? 0;
+    const movedVolumeSum = parseNumeric(sumRow?.sum) ?? 0;
+    const mapped = rawRows.map((row) => mapVolumeBalanceForestGuideRow(row));
+    const { runningTotals, crossingForestGuideId } = buildCreditTimeline(
+      mapped,
+      parseNumeric(balance?.authorizedVolume),
+    );
+    const pageRows = mapped.slice(skip, skip + limit).map((row) => ({
+      ...row,
+      runningTotal: runningTotals.get(row.forestGuideId) ?? 0,
+    }));
+
+    return new GetVolumeBalanceForestGuidesResponseDto(
+      pageRows,
+      page,
+      limit,
+      total,
+      movedVolumeSum,
+      crossingForestGuideId,
+    );
+  }
+
+  async exportVolumeBalancesCsv(
+    autefId: number,
+    query: Pick<GetAutefNestedVolumeBalancesQueryDto, 'sortBy' | 'sortOrder'> = {},
+  ): Promise<{ filename: string; body: string }> {
+    await this.assertAutefExists(autefId);
+    const generatedAt = new Date().toISOString();
+
+    const qb = this.volumeBalanceRepo
+      .createQueryBuilder('vb')
+      .select('vb.speciesProductId', 'species_product_id')
+      .addSelect('sp.scientificName', 'scientific_name')
+      .addSelect('sp.commonName', 'common_name')
+      .addSelect('sp.productName', 'product_name')
+      .addSelect('vb.authorizedVolume', 'authorized_volume')
+      .addSelect('vb.authorizedUnit', 'authorized_unit')
+      .addSelect('vb.movedVolume', 'moved_volume')
+      .addSelect('vb.movedUnit', 'moved_unit')
+      .addSelect('vb.excessVolume', 'excess_volume')
+      .addSelect('vb.movedRatio', 'moved_ratio')
+      .addSelect('vb.isOverExtracted', 'is_over_extracted')
+      .addSelect('vb.hasUnitConflict', 'has_unit_conflict')
+      .leftJoin(SemaspaSpeciesProduct, 'sp', 'sp.id = vb.speciesProductId')
+      .where('vb.autefId = :autefId', { autefId })
+      .limit(VOLUME_BALANCE_CSV_ROW_LIMIT);
+    applyVolumeBalanceSort(qb, query);
+
+    const rawRows = await qb.getRawMany<Record<string, unknown>>();
+    const rows = rawRows.map((row) => mapVolumeBalanceCsvRow(row));
+    return {
+      filename: `autef-${autefId}-volume-balances.csv`,
+      body: buildVolumeBalancesCsvBody(autefId, generatedAt, rows),
+    };
   }
 
   async findForestGuides(

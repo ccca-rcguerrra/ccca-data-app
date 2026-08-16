@@ -22,6 +22,8 @@ export const ROUTES = {
     autefDetail: '/semaspa/autefs/:id',
     forestGuides: '/semaspa/forest-guides',
     forestGuideDetail: '/semaspa/forest-guides/:id',
+    people: '/semaspa/people',
+    personDetail: '/semaspa/people/:id',
   },
 } as const;
 

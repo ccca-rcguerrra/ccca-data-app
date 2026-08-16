@@ -58,12 +58,14 @@
     "portuguese": "Portuguese"
   },
   "navigation": {
-    "dashboard": "Dashboard",
+    "dashboard": "Indicator Center",
+    "indicators": "Indicator Center",
     "users": "Users",
     "teams": "Teams",
     "semaspa": "SEMASPA",
     "autefs": "AUTEFs",
     "forestGuides": "Forest Guides",
+    "people": "People",
     "alerts": "Alerts",
     "audit": "Audit"
   },
@@ -460,8 +462,10 @@
       },
       "detail": {
         "back": "Back to list",
+        "backToCenter": "Indicator Center",
         "notFound": "AUTEF not found",
-        "eyebrow": "AUTEF · SEMAS-PA",
+        "eyebrow": "Investigative dossier · SEMAS-PA AUTEF",
+        "question": "What is known about this authorization, its volumes, area, responsible parties, and linked timber movement?",
         "title": "AUTEF {{number}}",
         "untitled": "AUTEF #{{id}}",
         "peakMoved": "Peak moved",
@@ -469,22 +473,87 @@
         "cityState": "Location",
         "totalAreaHa": "Total area",
         "issuedAt": "Issued at",
-        "hectares": "{{value}} ha"
+        "hectares": "{{value}} ha",
+        "owner": "Owner",
+        "technicalResponsible": "Technical responsible",
+        "analyst": "Analyst",
+        "upa": "Harvest unit",
+        "upaCount": "{{count}} harvest units"
       },
       "tabs": {
-        "species": "Species & balances",
+        "overview": "Overview",
+        "species": "Credit execution",
         "forestGuides": "Forest guides",
-        "harvestUnits": "Harvest units",
-        "roles": "Roles"
+        "harvestUnits": "UPA / Map",
+        "roles": "Actors"
+      },
+      "dossier": {
+        "selectFlag": "Select a flag to see its rule. Flags are discrepancies, not legal conclusions.",
+        "noFlags": "No volume flags on this AUTEF",
+        "flags": {
+          "noMovement": {
+            "name": "No movement",
+            "rule": "no species-product has moved_volume > 0",
+            "limitations": {
+              "0": "GF3 volumes are excluded from the balance.",
+              "1": "Absence of GF1 movement is not proof that the area was not harvested."
+            }
+          }
+        },
+        "overview": {
+          "speciesProducts": "Species-products",
+          "peakRatioHint": "Peak moved {{value}}",
+          "maxExcess": "Max excess",
+          "overExtractedCount": "{{count}} over-extracted row(s)",
+          "forestGuides": "Forest guides",
+          "harvestUnits": "Harvest units",
+          "actors": "Actors",
+          "openLinked": "Open linked records",
+          "openTab": "Open"
+        }
       },
       "species": {
+        "species": "Species",
         "scientificName": "Scientific name",
         "commonName": "Common name",
+        "product": "Product",
         "volume": "Original",
         "authorized": "Authorized",
         "moved": "Moved",
+        "excess": "Excess",
         "progress": "Progress",
-        "noResults": "No species found"
+        "ratioPercent": "%",
+        "noResults": "No volume balances found for this AUTEF.",
+        "export": "Export CSV",
+        "exporting": "Exporting…",
+        "exportFailed": "Could not export credit execution.",
+        "ruleHint": "Balances use GF1 only. GF3 volumes are excluded. Unit conflicts are flagged. These figures are discrepancies, not legal conclusions.",
+        "selected": {
+          "title": "Selected species-product",
+          "empty": "Select a row to inspect authorized vs moved volume.",
+          "unknownSpecies": "Unknown species",
+          "authorizedUnit": "Authorized unit",
+          "movedUnit": "Moved unit",
+          "original": "Original AUTEF volume",
+          "limitationsTitle": "Limitations",
+          "limitations": {
+            "0": "Only GF1 volumes with accepted statuses enter the balance.",
+            "1": "GF3 volumes are excluded from the balance.",
+            "2": "Comparison depends on compatible units of measure.",
+            "3": "Credit use at or above 90% is not an irregularity by itself."
+          }
+        },
+        "contributions": {
+          "title": "Contributing forest guides",
+          "empty": "No GF1 contributed volume to this balance.",
+          "total": "{{count}} guide(s)",
+          "movedSum": "Sum of GF volumes: {{sum}}",
+          "movedMismatch": "This sum differs from the balance moved volume ({{moved}}). The difference is informational.",
+          "deltaEquals": "+{{delta}} = {{running}}",
+          "crossed": "Limit crossed",
+          "crossedHint": "First GF that exceeded authorized: {{number}}",
+          "view": "View"
+        }
       },
       "volumeBalances": {
         "overExtracted": "Over-extracted",
@@ -602,6 +671,209 @@
         "title": "Failed to load forest guides",
         "message": "An unexpected error occurred while loading data.",
         "detailTitle": "Failed to load forest guide"
+      }
+    },
+    "people": {
+      "list": {
+        "title": "People and companies",
+        "subtitle": "Browse actors linked to AUTEFs and forest guides by name or tax ID.",
+        "total": "{{count}} total",
+        "totalRows": "{{count}} row(s)",
+        "searchPlaceholder": "Search name or tax ID...",
+        "noResults": "No people found"
+      },
+      "table": {
+        "name": "Name",
+        "taxId": "Tax ID (CPF/CNPJ)",
+        "city": "City",
+        "state": "State",
+        "sources": "Sources",
+        "occurrences": "Occurrences"
+      },
+      "detail": {
+        "back": "Back to list",
+        "notFound": "Person not found",
+        "eyebrow": "Person / company · SEMAS-PA",
+        "question": "Where else does this actor appear in linked AUTEFs and forest guides?"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "autefs": "AUTEFs",
+        "forestGuides": "Forest guides"
+      },
+      "participation": {
+        "title": "Participations",
+        "owner": "Owner of {{count}} AUTEF(s)",
+        "technicalResponsible": "Technical responsible of {{count}} AUTEF(s)",
+        "analyst": "Analyst of {{count}} AUTEF(s)",
+        "origin": "Origin of {{count}} forest guide(s)",
+        "destination": "Destination of {{count}} forest guide(s)",
+        "distinctAutefs": "{{count}} distinct AUTEF(s)",
+        "distinctGfs": "{{count}} distinct forest guide(s)"
+      },
+      "identity": {
+        "limitationsTitle": "Identity limitations",
+        "limitations": {
+          "0": "Person ID is a hash of CPF/CNPJ.",
+          "1": "Actors without a tax ID do not appear in this app.",
+          "2": "An incorrect tax ID splits the same actor into multiple profiles."
+        }
+      },
+      "autefs": {
+        "number": "Number",
+        "city": "City",
+        "issuedAt": "Issued at",
+        "role": "Role",
+        "empty": "No AUTEFs linked to this person."
+      },
+      "forestGuides": {
+        "number": "Number",
+        "type": "Type",
+        "status": "Status",
+        "issuedAt": "Issued at",
+        "role": "Role",
+        "empty": "No forest guides linked to this person."
+      },
+      "roles": {
+        "owner": "Owner",
+        "technicalResponsible": "Technical responsible",
+        "analyst": "Analyst",
+        "origin": "Origin",
+        "destination": "Destination"
+      },
+      "errors": {
+        "listTitle": "Failed to load people",
+        "detailTitle": "Failed to load person"
+      }
+    },
+    "indicators": {
+      "title": "Indicator Center",
+      "subtitle": "Situations that warrant a closer look. Counts are discrepancies, not legal conclusions.",
+      "cards": {
+        "select": "Open matching AUTEFs",
+        "selected": "Showing these AUTEFs",
+        "selectPeople": "Open matching people",
+        "selectedPeople": "Showing these people",
+        "selectPlates": "Open matching plates",
+        "selectedPlates": "Showing these plates",
+        "anyHint": "No indicator selected. The table lists AUTEFs that match any Phase 1 indicator."
+      },
+      "rule": {
+        "anyDescription": "Select an indicator to see its rule, inputs, and limitations. The table below lists AUTEFs matching any volume-balance flag.",
+        "meta": "Rule v{{version}} · analyzed {{generatedAt}}",
+        "unknownTime": "time unknown",
+        "inputs": "Inputs: {{inputs}}"
+      },
+      "filters": {
+        "title": "Filters",
+        "clear": "Clear",
+        "issuedFrom": "Issued from",
+        "issuedTo": "Issued to",
+        "city": "City",
+        "state": "State",
+        "scientificName": "Scientific name",
+        "commonName": "Common name",
+        "speciesProductId": "Species-product ID",
+        "movedRatioMin": "Moved ratio min",
+        "movedRatioMax": "Moved ratio max",
+        "excessVolumeMin": "Excess volume min",
+        "savedHint": "Filters apply to over-extracted AUTEFs used in the join, not the person's city."
+      },
+      "savedFilters": {
+        "title": "Saved filters",
+        "name": "Name",
+        "namePlaceholder": "Preset name",
+        "save": "Save",
+        "selectPlaceholder": "Apply a saved filter",
+        "empty": "No saved filters yet",
+        "delete": "Delete saved filter"
+      },
+      "list": {
+        "title": "Cases",
+        "totalRows": "{{count}} row(s)",
+        "noResults": "No AUTEFs match these indicators.",
+        "noResultsWithFilters": "No records match the current filters.",
+        "noPeople": "No people match this indicator.",
+        "noPlates": "No plates match this indicator."
+      },
+      "table": {
+        "number": "AUTEF",
+        "indicators": "Indicators",
+        "city": "City",
+        "state": "State",
+        "maxRatio": "Max %",
+        "excess": "Excess",
+        "issuedAt": "Issued at",
+        "person": "Person",
+        "taxId": "Tax ID",
+        "plate": "Plate",
+        "distinctAutefs": "AUTEFs",
+        "distinctGfs": "Forest guides"
+      },
+      "badges": {
+        "creditUse": "≥ 90% credit"
+      },
+      "export": {
+        "label": "Export CSV",
+        "exporting": "Exporting…",
+        "failed": "Could not export the current result set."
+      },
+      "errors": {
+        "title": "Failed to load indicators",
+        "message": "An unexpected error occurred while loading indicator data."
+      },
+      "catalog": {
+        "autef_over_extracted": {
+          "name": "Over-extraction",
+          "rule": "moved_volume > authorized_volume",
+          "limitations": {
+            "0": "GF3 volumes are excluded from the balance.",
+            "1": "Comparison depends on compatible units of measure."
+          }
+        },
+        "autef_credit_use_over_90": {
+          "name": "Credit use ≥ 90%",
+          "rule": "moved_ratio >= 0.9",
+          "limitations": {
+            "0": "GF3 volumes are excluded from the balance.",
+            "1": "Comparison depends on compatible units of measure.",
+            "2": "Credit use at or above 90% is not an irregularity by itself."
+          }
+        },
+        "autef_unit_conflict": {
+          "name": "Unit conflict",
+          "rule": "authorized_unit is incompatible with moved_unit",
+          "limitations": {
+            "0": "GF3 volumes are excluded from the balance.",
+            "1": "Comparison depends on compatible units of measure."
+          }
+        },
+        "person_multiple_over_extracted_autefs": {
+          "name": "Person on multiple over-extracted AUTEFs",
+          "rule": "COUNT(DISTINCT over-extracted AUTEF) >= 2 for owner or technical responsible",
+          "limitations": {
+            "0": "GF3 volumes are excluded from the balance.",
+            "1": "Comparison depends on compatible units of measure.",
+            "2": "Person ID is a hash of CPF/CNPJ."
+          }
+        },
+        "person_recurrent_gf_destination": {
+          "name": "Recurrent GF destination of over-extracted AUTEFs",
+          "rule": "COUNT(DISTINCT GF as destination linked to over-extracted AUTEFs) >= 2",
+          "limitations": {
+            "0": "GF3 volumes are excluded from the balance.",
+            "1": "Comparison depends on compatible units of measure.",
+            "2": "Person ID is a hash of CPF/CNPJ."
+          }
+        },
+        "plate_recurrent": {
+          "name": "Plate recurrent across over-extracted AUTEFs",
+          "rule": "COUNT(DISTINCT over-extracted AUTEF linked via GFs carrying the plate) >= 2",
+          "limitations": {
+            "0": "GF3 volumes are excluded from the balance.",
+            "1": "Plates are compared after trim only; no further normalization."
+          }
+        }
       }
     }
   }

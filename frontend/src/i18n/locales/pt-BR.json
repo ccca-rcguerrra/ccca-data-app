@@ -58,12 +58,14 @@
     "portuguese": "Português"
   },
   "navigation": {
-    "dashboard": "Painel",
+    "dashboard": "Central de indicadores",
+    "indicators": "Central de indicadores",
     "users": "Usuários",
     "teams": "Equipes",
     "semaspa": "SEMASPA",
     "autefs": "AUTEFs",
     "forestGuides": "Guias florestais",
+    "people": "Pessoas",
     "alerts": "Alertas",
     "audit": "Auditoria"
   },
@@ -460,8 +462,10 @@
       },
       "detail": {
         "back": "Voltar à lista",
+        "backToCenter": "Central de indicadores",
         "notFound": "AUTEF não encontrada",
-        "eyebrow": "AUTEF · SEMAS-PA",
+        "eyebrow": "Dossiê investigativo · AUTEF SEMAS-PA",
+        "question": "O que sabemos sobre esta autorização, seus volumes, sua área, seus responsáveis e a movimentação de madeira vinculada a ela?",
         "title": "AUTEF {{number}}",
         "untitled": "AUTEF #{{id}}",
         "peakMoved": "Pico movimentado",
@@ -469,22 +473,87 @@
         "cityState": "Localização",
         "totalAreaHa": "Área total",
         "issuedAt": "Emissão",
-        "hectares": "{{value}} ha"
+        "hectares": "{{value}} ha",
+        "owner": "Proprietário",
+        "technicalResponsible": "Responsável técnico",
+        "analyst": "Analista",
+        "upa": "UPA",
+        "upaCount": "{{count}} UPAs"
       },
       "tabs": {
-        "species": "Espécies e saldos",
+        "overview": "Visão geral",
+        "species": "Execução de crédito",
         "forestGuides": "Guias florestais",
-        "harvestUnits": "UPAs",
-        "roles": "Papéis"
+        "harvestUnits": "UPA / Mapa",
+        "roles": "Atores"
+      },
+      "dossier": {
+        "selectFlag": "Selecione um indicador para ver a regra. São discrepâncias, não conclusões jurídicas.",
+        "noFlags": "Nenhum indicador de volume nesta AUTEF",
+        "flags": {
+          "noMovement": {
+            "name": "Sem movimentação",
+            "rule": "no species-product has moved_volume > 0",
+            "limitations": {
+              "0": "Volumes de GF3 não entram no saldo.",
+              "1": "A ausência de movimentação GF1 não prova que a área não foi explorada."
+            }
+          }
+        },
+        "overview": {
+          "speciesProducts": "Espécies-produtos",
+          "peakRatioHint": "Pico movimentado {{value}}",
+          "maxExcess": "Excesso máximo",
+          "overExtractedCount": "{{count}} linha(s) sobre-extraída(s)",
+          "forestGuides": "Guias florestais",
+          "harvestUnits": "UPAs",
+          "actors": "Atores",
+          "openLinked": "Abrir registros vinculados",
+          "openTab": "Abrir"
+        }
       },
       "species": {
+        "species": "Espécie",
         "scientificName": "Nome científico",
         "commonName": "Nome popular",
+        "product": "Produto",
         "volume": "Original",
         "authorized": "Autorizado",
         "moved": "Movimentado",
+        "excess": "Excesso",
         "progress": "Progresso",
-        "noResults": "Nenhuma espécie encontrada"
+        "ratioPercent": "%",
+        "noResults": "Nenhum saldo de volume encontrado para esta AUTEF.",
+        "export": "Exportar CSV",
+        "exporting": "Exportando…",
+        "exportFailed": "Não foi possível exportar a execução de crédito.",
+        "ruleHint": "Os saldos usam somente GF1. Volumes de GF3 ficam de fora. Conflitos de unidade são sinalizados. Estes números são discrepâncias, não conclusões jurídicas.",
+        "selected": {
+          "title": "Espécie-produto selecionada",
+          "empty": "Selecione uma linha para inspecionar o volume autorizado e o movimentado.",
+          "unknownSpecies": "Espécie desconhecida",
+          "authorizedUnit": "Unidade autorizada",
+          "movedUnit": "Unidade movimentada",
+          "original": "Volume original da AUTEF",
+          "limitationsTitle": "Limitações",
+          "limitations": {
+            "0": "Somente volumes de GF1 com status aceitos entram no saldo.",
+            "1": "Volumes de GF3 ficam de fora do saldo.",
+            "2": "A comparação depende de unidades de medida compatíveis.",
+            "3": "Uso de crédito igual ou acima de 90% não é irregularidade por si só."
+          }
+        },
+        "contributions": {
+          "title": "Guias florestais do saldo",
+          "empty": "Nenhuma GF1 neste saldo.",
+          "total": "{{count}} guia(s)",
+          "movedSum": "Soma dos volumes das GFs: {{sum}}",
+          "movedMismatch": "Esta soma difere do volume movimentado do saldo ({{moved}}). A diferença é informativa.",
+          "deltaEquals": "+{{delta}} = {{running}}",
+          "crossed": "Limite ultrapassado",
+          "crossedHint": "Primeira GF que ultrapassou o autorizado: {{number}}",
+          "view": "Ver"
+        }
       },
       "volumeBalances": {
         "overExtracted": "Sobre-extraída",
@@ -602,6 +671,209 @@
         "title": "Falha ao carregar guias florestais",
         "message": "Ocorreu um erro inesperado ao carregar os dados.",
         "detailTitle": "Falha ao carregar guia florestal"
+      }
+    },
+    "people": {
+      "list": {
+        "title": "Pessoas e empresas",
+        "subtitle": "Consulte atores ligados a AUTEFs e guias florestais por nome ou CPF/CNPJ.",
+        "total": "{{count}} no total",
+        "totalRows": "{{count}} linha(s)",
+        "searchPlaceholder": "Buscar nome ou CPF/CNPJ...",
+        "noResults": "Nenhuma pessoa encontrada"
+      },
+      "table": {
+        "name": "Nome",
+        "taxId": "CPF/CNPJ",
+        "city": "Município",
+        "state": "UF",
+        "sources": "Fontes",
+        "occurrences": "Ocorrências"
+      },
+      "detail": {
+        "back": "Voltar à lista",
+        "notFound": "Pessoa não encontrada",
+        "eyebrow": "Pessoa / empresa · SEMAS-PA",
+        "question": "Onde mais este ator aparece nas AUTEFs e guias florestais já ligadas a ele?"
+      },
+      "tabs": {
+        "overview": "Visão geral",
+        "autefs": "AUTEFs",
+        "forestGuides": "Guias florestais"
+      },
+      "participation": {
+        "title": "Participações",
+        "owner": "Proprietário de {{count}} AUTEF(s)",
+        "technicalResponsible": "Responsável técnico de {{count}} AUTEF(s)",
+        "analyst": "Analista de {{count}} AUTEF(s)",
+        "origin": "Origem de {{count}} guia(s) florestal(is)",
+        "destination": "Destino de {{count}} guia(s) florestal(is)",
+        "distinctAutefs": "{{count}} AUTEF(s) distinta(s)",
+        "distinctGfs": "{{count}} guia(s) florestal(is) distinta(s)"
+      },
+      "identity": {
+        "limitationsTitle": "Limitações de identidade",
+        "limitations": {
+          "0": "O identificador da pessoa é um hash de CPF/CNPJ.",
+          "1": "Atores sem CPF/CNPJ não aparecem neste aplicativo.",
+          "2": "Um CPF/CNPJ incorreto fragmenta o mesmo ator em vários perfis."
+        }
+      },
+      "autefs": {
+        "number": "Número",
+        "city": "Município",
+        "issuedAt": "Emissão",
+        "role": "Papel",
+        "empty": "Nenhuma AUTEF ligada a esta pessoa."
+      },
+      "forestGuides": {
+        "number": "Número",
+        "type": "Tipo",
+        "status": "Status",
+        "issuedAt": "Emissão",
+        "role": "Papel",
+        "empty": "Nenhuma guia florestal ligada a esta pessoa."
+      },
+      "roles": {
+        "owner": "Proprietário",
+        "technicalResponsible": "Responsável técnico",
+        "analyst": "Analista",
+        "origin": "Origem",
+        "destination": "Destino"
+      },
+      "errors": {
+        "listTitle": "Falha ao carregar pessoas",
+        "detailTitle": "Falha ao carregar pessoa"
+      }
+    },
+    "indicators": {
+      "title": "Central de indicadores",
+      "subtitle": "Situações que merecem análise. Os totais são discrepâncias, não conclusões jurídicas.",
+      "cards": {
+        "select": "Abrir AUTEFs correspondentes",
+        "selected": "Exibindo estas AUTEFs",
+        "selectPeople": "Abrir pessoas correspondentes",
+        "selectedPeople": "Exibindo estas pessoas",
+        "selectPlates": "Abrir placas correspondentes",
+        "selectedPlates": "Exibindo estas placas",
+        "anyHint": "Nenhum indicador selecionado. A tabela lista AUTEFs que disparam qualquer indicador da Fase 1."
+      },
+      "rule": {
+        "anyDescription": "Selecione um indicador para ver a regra, os insumos e as limitações. A tabela abaixo lista AUTEFs com qualquer flag de saldo de volume.",
+        "meta": "Regra v{{version}} · analisado em {{generatedAt}}",
+        "unknownTime": "horário desconhecido",
+        "inputs": "Insumos: {{inputs}}"
+      },
+      "filters": {
+        "title": "Filtros",
+        "clear": "Limpar",
+        "issuedFrom": "Emitida a partir de",
+        "issuedTo": "Emitida até",
+        "city": "Município",
+        "state": "UF",
+        "scientificName": "Nome científico",
+        "commonName": "Nome comum",
+        "speciesProductId": "ID espécie-produto",
+        "movedRatioMin": "Razão movimentada mín.",
+        "movedRatioMax": "Razão movimentada máx.",
+        "excessVolumeMin": "Volume excedente mín.",
+        "savedHint": "Os filtros se aplicam às AUTEFs sobre-extraídas usadas no cruzamento, não à cidade da pessoa."
+      },
+      "savedFilters": {
+        "title": "Filtros salvos",
+        "name": "Nome",
+        "namePlaceholder": "Nome do filtro",
+        "save": "Salvar",
+        "selectPlaceholder": "Aplicar um filtro salvo",
+        "empty": "Nenhum filtro salvo ainda",
+        "delete": "Excluir filtro salvo"
+      },
+      "list": {
+        "title": "Casos",
+        "totalRows": "{{count}} linha(s)",
+        "noResults": "Nenhuma AUTEF corresponde a estes indicadores.",
+        "noResultsWithFilters": "Nenhum registro corresponde aos filtros atuais.",
+        "noPeople": "Nenhuma pessoa corresponde a este indicador.",
+        "noPlates": "Nenhuma placa corresponde a este indicador."
+      },
+      "table": {
+        "number": "AUTEF",
+        "indicators": "Indicadores",
+        "city": "Município",
+        "state": "UF",
+        "maxRatio": "% máx.",
+        "excess": "Excesso",
+        "issuedAt": "Emissão",
+        "person": "Pessoa",
+        "taxId": "CPF/CNPJ",
+        "plate": "Placa",
+        "distinctAutefs": "AUTEFs",
+        "distinctGfs": "Guias florestais"
+      },
+      "badges": {
+        "creditUse": "≥ 90% do crédito"
+      },
+      "export": {
+        "label": "Exportar CSV",
+        "exporting": "Exportando…",
+        "failed": "Não foi possível exportar o resultado atual."
+      },
+      "errors": {
+        "title": "Falha ao carregar indicadores",
+        "message": "Ocorreu um erro inesperado ao carregar os indicadores."
+      },
+      "catalog": {
+        "autef_over_extracted": {
+          "name": "Sobre-extração",
+          "rule": "moved_volume > authorized_volume",
+          "limitations": {
+            "0": "Volumes de GF3 não entram no saldo.",
+            "1": "A comparação depende de unidades de medida compatíveis."
+          }
+        },
+        "autef_credit_use_over_90": {
+          "name": "Uso de crédito ≥ 90%",
+          "rule": "moved_ratio >= 0.9",
+          "limitations": {
+            "0": "Volumes de GF3 não entram no saldo.",
+            "1": "A comparação depende de unidades de medida compatíveis.",
+            "2": "Uso de crédito igual ou acima de 90% não é irregularidade por si só."
+          }
+        },
+        "autef_unit_conflict": {
+          "name": "Conflito de unidade",
+          "rule": "authorized_unit is incompatible with moved_unit",
+          "limitations": {
+            "0": "Volumes de GF3 não entram no saldo.",
+            "1": "A comparação depende de unidades de medida compatíveis."
+          }
+        },
+        "person_multiple_over_extracted_autefs": {
+          "name": "Pessoa em várias AUTEFs sobre-extraídas",
+          "rule": "COUNT(DISTINCT AUTEF sobre-extraída) >= 2 para proprietário ou responsável técnico",
+          "limitations": {
+            "0": "Volumes de GF3 não entram no saldo.",
+            "1": "A comparação depende de unidades de medida compatíveis.",
+            "2": "O identificador da pessoa é um hash de CPF/CNPJ."
+          }
+        },
+        "person_recurrent_gf_destination": {
+          "name": "Destino recorrente de GFs de AUTEFs sobre-extraídas",
+          "rule": "COUNT(DISTINCT GF como destino ligada a AUTEFs sobre-extraídas) >= 2",
+          "limitations": {
+            "0": "Volumes de GF3 não entram no saldo.",
+            "1": "A comparação depende de unidades de medida compatíveis.",
+            "2": "O identificador da pessoa é um hash de CPF/CNPJ."
+          }
+        },
+        "plate_recurrent": {
+          "name": "Placa recorrente em AUTEFs sobre-extraídas",
+          "rule": "COUNT(DISTINCT AUTEF sobre-extraída ligada via GFs com a placa) >= 2",
+          "limitations": {
+            "0": "Volumes de GF3 não entram no saldo.",
+            "1": "As placas são comparadas só após trim; sem outra normalização."
+          }
+        }
       }
     }
   }

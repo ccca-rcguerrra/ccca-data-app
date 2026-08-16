@@ -1,9 +1,11 @@
 import {
   Controller,
   Get,
+  Header,
   Param,
   ParseIntPipe,
   Query,
+  StreamableFile,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -12,6 +14,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiProduces,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiPropertyOptional,
@@ -21,6 +24,8 @@ import { AutefsService } from './services/autefs.service';
 import { GetAutefsQueryDto } from './dto/get-autefs-query.dto';
 import { GetAutefsResponseDto } from './dto/get-autefs-response.dto';
 import { AutefResponseDto } from './dto/autef-response.dto';
+import { GetAutefNestedVolumeBalancesQueryDto } from './dto/get-autef-nested-volume-balances-query.dto';
+import { GetVolumeBalanceForestGuidesQueryDto } from './dto/get-volume-balance-forest-guides-query.dto';
 import { SemaspaPaginationQueryDto } from '../shared/semaspa-pagination.dto';
 import {
   GetAutefSpeciesResponseDto,
@@ -28,6 +33,7 @@ import {
   GetForestGuidesResponseDto,
   GetHarvestUnitsResponseDto,
   GetPersonRolesResponseDto,
+  GetVolumeBalanceForestGuidesResponseDto,
 } from '../shared/paginated-responses.dto';
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional } from 'class-validator';
@@ -80,13 +86,64 @@ export class AutefsController {
     return this.autefsService.findSpecies(id, query);
   }
 
+  @Get(':id/volume-balances.csv')
+  @ApiOperation({
+    summary: 'Export AUTEF volume balances as CSV',
+    description:
+      'Exports up to 10,000 species-product balances for one AUTEF. Grain is species-product; GF1 only.',
+  })
+  @ApiParam({ name: 'id', example: 1 })
+  @ApiProduces('text/csv')
+  @ApiNotFoundResponse({ description: 'AUTEF not found' })
+  @ApiUnauthorizedResponse({ description: 'Invalid or expired JWT token' })
+  @Header('Content-Type', 'text/csv; charset=utf-8')
+  async exportVolumeBalancesCsv(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: GetAutefNestedVolumeBalancesQueryDto,
+  ): Promise<StreamableFile> {
+    const { filename, body } = await this.autefsService.exportVolumeBalancesCsv(
+      id,
+      query,
+    );
+    return new StreamableFile(Buffer.from(body, 'utf8'), {
+      type: 'text/csv; charset=utf-8',
+      disposition: `attachment; filename="${filename}"`,
+    });
+  }
+
+  @Get(':id/volume-balances/:speciesProductId/forest-guides')
+  @ApiOperation({
+    summary: 'List GF1 contributions for an AUTEF species-product balance',
+    description:
+      'Returns forest guides that enter moved_volume: GF1 with accepted statuses, chronological. Unknown species-product IDs return an empty list.',
+  })
+  @ApiParam({ name: 'id', example: 497 })
+  @ApiParam({ name: 'speciesProductId', example: 'c58688845974af07c441d6d3e74e4c4b' })
+  @ApiOkResponse({ type: GetVolumeBalanceForestGuidesResponseDto })
+  @ApiNotFoundResponse({ description: 'AUTEF not found' })
+  findVolumeBalanceForestGuides(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('speciesProductId') speciesProductId: string,
+    @Query() query: GetVolumeBalanceForestGuidesQueryDto,
+  ): Promise<GetVolumeBalanceForestGuidesResponseDto> {
+    return this.autefsService.findVolumeBalanceForestGuides(
+      id,
+      speciesProductId,
+      query,
+    );
+  }
+
   @Get(':id/volume-balances')
-  @ApiOperation({ summary: 'List volume balances for an AUTEF' })
+  @ApiOperation({
+    summary: 'List volume balances for an AUTEF',
+    description:
+      'Species-product grain. Default sort is excess volume descending (largest discrepancy first).',
+  })
   @ApiOkResponse({ type: GetAutefVolumeBalancesResponseDto })
   @ApiNotFoundResponse({ description: 'AUTEF not found' })
   findVolumeBalances(
     @Param('id', ParseIntPipe) id: number,
-    @Query() query: SemaspaPaginationQueryDto,
+    @Query() query: GetAutefNestedVolumeBalancesQueryDto,
   ): Promise<GetAutefVolumeBalancesResponseDto> {
     return this.autefsService.findVolumeBalances(id, query);
   }

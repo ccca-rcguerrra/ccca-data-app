@@ -1,8 +1,7 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 import type { FeatureCollection } from 'geojson';
 
-import { Map, GeoJSONLayer } from '@/components/map';
 import { geometryLayerStyles } from '@/constants/geometry-styles.constants';
 import {
   Table,
@@ -14,6 +13,8 @@ import {
 } from '@/components/ui/shadcn/table';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
+import { Map, GeoJSONLayer } from '@/components/map';
+
 import type { AutefDetailController } from '../hooks/use-autef-detail-controller';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];

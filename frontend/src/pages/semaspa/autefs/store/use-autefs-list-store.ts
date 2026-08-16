@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
+import { create } from 'zustand';
 
 export interface AutefsQuickFilters {
   searchQuery: string;

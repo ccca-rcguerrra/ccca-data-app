@@ -1,14 +1,16 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 import { User } from 'lucide-react';
 
-import { Badge } from '@/components/ui/shadcn/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/shadcn/card';
-import { Skeleton } from '@/components/ui/shadcn/skeleton';
-import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
 import type { PersonRole } from '@/types/semaspa';
-import type { AutefDetailController } from '../hooks/use-autef-detail-controller';
+import { Skeleton } from '@/components/ui/shadcn/skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/shadcn/card';
+import { Badge } from '@/components/ui/shadcn/badge';
+import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
+
 import { formatPersonLabel } from '../utils/format';
+import type { AutefDetailController } from '../hooks/use-autef-detail-controller';
+import { PersonLink } from '../../people/components/person-link';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100];
 
@@ -91,7 +93,9 @@ export function AutefRolesCards({ controller }: Props) {
                     return (
                       <div key={role.id} className="space-y-1 border-b border-border pb-2 last:border-0">
                         <p className="text-sm font-medium">
-                          {formatPersonLabel(person, role.personId)}
+                          <PersonLink personId={role.personId}>
+                            {formatPersonLabel(person, role.personId)}
+                          </PersonLink>
                         </p>
                         {person?.taxId ? (
                           <p className="text-xs text-muted-foreground">
@@ -127,7 +131,9 @@ export function AutefRolesCards({ controller }: Props) {
                   >
                     <div>
                       <p className="text-sm font-medium">
-                        {formatPersonLabel(person, role.personId)}
+                        <PersonLink personId={role.personId}>
+                          {formatPersonLabel(person, role.personId)}
+                        </PersonLink>
                       </p>
                       <p className="text-xs text-muted-foreground">{role.role}</p>
                     </div>

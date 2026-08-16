@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import {
   AlertCircle,
   ChevronDown,
@@ -9,14 +9,7 @@ import {
   X,
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/shadcn/button';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/shadcn/collapsible';
-import { Input } from '@/components/ui/shadcn/input';
-import { Label } from '@/components/ui/shadcn/label';
+import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -24,13 +17,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/shadcn/select';
-import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/shadcn/label';
+import { Input } from '@/components/ui/shadcn/input';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/shadcn/collapsible';
+import { Button } from '@/components/ui/shadcn/button';
 
-import { AutefsTable } from './components/autefs-table';
 import {
   useAutefsListController,
   type AutefsListController,
 } from './hooks/use-autefs-list-controller';
+import { AutefsTable } from './components/autefs-table';
 
 const SEARCH_DEBOUNCE_MS = 350;
 

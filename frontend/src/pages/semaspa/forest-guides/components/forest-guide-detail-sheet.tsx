@@ -35,6 +35,7 @@ import { formatISODateLocal, EMPTY_DATE_LABEL } from '@/utils/date';
 import { formatPersonLabel, formatSpeciesProductLabel, formatVolume } from '../../autefs/utils/format';
 import { ForestGuideStatusBadge } from './forest-guide-status-badge';
 import { PlateChip } from './plate-chip';
+import { PersonLink } from '../../people/components/person-link';
 
 interface ForestGuideDetailSheetProps {
   forestGuideId: number | null;
@@ -180,7 +181,9 @@ export function ForestGuideDetailSheet({
                         originRoles.map((role) => (
                           <div key={role.id}>
                             <p className="font-medium">
-                              {formatPersonLabel(peopleMap[role.personId], role.personId)}
+                              <PersonLink personId={role.personId}>
+                                {formatPersonLabel(peopleMap[role.personId], role.personId)}
+                              </PersonLink>
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {peopleMap[role.personId]?.taxId ?? role.role}
@@ -199,7 +202,9 @@ export function ForestGuideDetailSheet({
                         destinationRoles.map((role) => (
                           <div key={role.id}>
                             <p className="font-medium">
-                              {formatPersonLabel(peopleMap[role.personId], role.personId)}
+                              <PersonLink personId={role.personId}>
+                                {formatPersonLabel(peopleMap[role.personId], role.personId)}
+                              </PersonLink>
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {peopleMap[role.personId]?.taxId ?? role.role}
@@ -214,7 +219,9 @@ export function ForestGuideDetailSheet({
                       {otherRoles.map((role) => (
                         <div key={role.id} className="flex items-center justify-between gap-2">
                           <span>
-                            {formatPersonLabel(peopleMap[role.personId], role.personId)}
+                            <PersonLink personId={role.personId}>
+                              {formatPersonLabel(peopleMap[role.personId], role.personId)}
+                            </PersonLink>
                           </span>
                           <Badge variant="outline">{role.role}</Badge>
                         </div>

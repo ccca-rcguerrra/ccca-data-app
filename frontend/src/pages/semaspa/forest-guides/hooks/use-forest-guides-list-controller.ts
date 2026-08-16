@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { useForestGuidesQuery } from '@/hooks/api/use-semaspa';
 import { ROUTES } from '@/constants/routes.constants';
@@ -27,6 +27,7 @@ export function useForestGuidesListController() {
   const storeState = useForestGuidesListState();
   const storeActions = useForestGuidesListActions();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const listParams = useMemo((): ForestGuideListParams => {
     const quick = storeState.quickFilters;
@@ -80,10 +81,12 @@ export function useForestGuidesListController() {
   }, [storeState.quickFilters, storeState.advancedApplied]);
 
   useEffect(() => {
+    const plate = searchParams.get('plate')?.trim() ?? '';
+    if (plate) storeActions.hydratePlateFilter(plate);
     return () => {
       storeActions.reset();
     };
-  }, [storeActions]);
+  }, [searchParams, storeActions]);
 
   return {
     api: {

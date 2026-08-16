@@ -1,17 +1,24 @@
 import { useMemo } from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AutefsService } from '@/services/semaspa/autefs.service';
 import { ForestGuidesService } from '@/services/semaspa/forest-guides.service';
 import { PeopleService } from '@/services/semaspa/people.service';
 import { SpeciesProductsService } from '@/services/semaspa/species-products.service';
+import { IndicatorsService } from '@/services/semaspa/indicators.service';
 import { QUERY_KEYS } from '@/constants/query-keys.constants';
 import type {
   AutefListParams,
+  AutefVolumeBalanceParams,
   ForestGuideListParams,
   HarvestUnitsParams,
+  IndicatorCasesParams,
+  IndicatorFilters,
+  IndicatorQueryId,
   Person,
+  PersonListParams,
   SemaspaPaginationParams,
   SpeciesProduct,
+  CreateIndicatorSavedFilterPayload,
 } from '@/types/semaspa';
 
 const LIST_STALE_MS = 1000 * 60 * 2;
@@ -55,7 +62,7 @@ export const useAutefSpeciesQuery = (
 
 export const useAutefVolumeBalancesQuery = (
   id: number,
-  params: SemaspaPaginationParams = {},
+  params: AutefVolumeBalanceParams = {},
   options?: { enabled?: boolean },
 ) => {
   return useQuery({
@@ -63,6 +70,29 @@ export const useAutefVolumeBalancesQuery = (
     queryFn: () => AutefsService.findVolumeBalances(id, params),
     staleTime: LIST_STALE_MS,
     enabled: options?.enabled !== false && Number.isInteger(id) && id > 0,
+  });
+};
+
+export const useAutefVolumeBalanceForestGuidesQuery = (
+  id: number,
+  speciesProductId: string,
+  params: SemaspaPaginationParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.autefs.volumeBalanceForestGuides(
+      id,
+      speciesProductId,
+      params,
+    ),
+    queryFn: () =>
+      AutefsService.findVolumeBalanceForestGuides(id, speciesProductId, params),
+    staleTime: LIST_STALE_MS,
+    enabled:
+      options?.enabled !== false &&
+      Number.isInteger(id) &&
+      id > 0 &&
+      speciesProductId.length > 0,
   });
 };
 
@@ -165,6 +195,63 @@ export const useForestGuideAutefsQuery = (
   });
 };
 
+export const usePeopleQuery = (
+  params: PersonListParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.people.list(params),
+    queryFn: () => PeopleService.findAll(params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false,
+  });
+};
+
+export const usePersonQuery = (id: string, enabled = true) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.people.detail(id),
+    queryFn: () => PeopleService.findOne(id),
+    enabled: enabled && id.length > 0,
+    staleTime: DETAIL_STALE_MS,
+    gcTime: 1000 * 60 * 10,
+  });
+};
+
+export const usePersonParticipationQuery = (id: string, enabled = true) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.people.participation(id),
+    queryFn: () => PeopleService.findParticipation(id),
+    enabled: enabled && id.length > 0,
+    staleTime: DETAIL_STALE_MS,
+  });
+};
+
+export const usePersonAutefsQuery = (
+  id: string,
+  params: SemaspaPaginationParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.people.autefs(id, params),
+    queryFn: () => PeopleService.findAutefs(id, params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false && id.length > 0,
+  });
+};
+
+export const usePersonForestGuidesQuery = (
+  id: string,
+  params: SemaspaPaginationParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.people.forestGuides(id, params),
+    queryFn: () => PeopleService.findForestGuides(id, params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false && id.length > 0,
+  });
+};
+
 export const usePeopleByIdsMap = (ids: string[]) => {
   const uniqueIds = useMemo(
     () => Array.from(new Set(ids.filter((id) => typeof id === 'string' && id.length > 0))),
@@ -217,4 +304,63 @@ export const useSpeciesProductsByIdsMap = (ids: string[]) => {
     });
     return map;
   }, [queries, uniqueIds]);
+};
+
+export const useIndicatorSummaryQuery = (
+  params: IndicatorFilters = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.indicators.summary(params),
+    queryFn: () => IndicatorsService.getSummary(params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false,
+  });
+};
+
+export const useIndicatorCasesQuery = (
+  id: IndicatorQueryId,
+  params: IndicatorCasesParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.indicators.cases(id, params),
+    queryFn: () => IndicatorsService.findCases(id, params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false,
+  });
+};
+
+export const useIndicatorSavedFiltersQuery = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.indicators.savedFilters(),
+    queryFn: () => IndicatorsService.listSavedFilters(),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false,
+  });
+};
+
+export const useCreateIndicatorSavedFilterMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateIndicatorSavedFilterPayload) =>
+      IndicatorsService.createSavedFilter(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.semaspa.indicators.savedFilters(),
+      });
+    },
+  });
+};
+
+export const useDeleteIndicatorSavedFilterMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => IndicatorsService.deleteSavedFilter(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.semaspa.indicators.savedFilters(),
+      });
+    },
+  });
 };

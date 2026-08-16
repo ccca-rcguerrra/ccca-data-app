@@ -117,6 +117,20 @@ export const QUERY_KEYS = {
         ['semaspa', 'autefs', 'species', id, params] as const,
       volumeBalances: (id: number, params: unknown) =>
         ['semaspa', 'autefs', 'volume-balances', id, params] as const,
+      volumeBalanceForestGuides: (
+        id: number,
+        speciesProductId: string,
+        params: unknown,
+      ) =>
+        [
+          'semaspa',
+          'autefs',
+          'volume-balances',
+          id,
+          speciesProductId,
+          'forest-guides',
+          params,
+        ] as const,
       forestGuides: (id: number, params: unknown) =>
         ['semaspa', 'autefs', 'forest-guides', id, params] as const,
       harvestUnits: (id: number, params: unknown) =>
@@ -125,7 +139,17 @@ export const QUERY_KEYS = {
         ['semaspa', 'autefs', 'roles', id, params] as const,
     },
     people: {
+      lists: () => ['semaspa', 'people', 'list'] as const,
+      list: (params: unknown) => ['semaspa', 'people', 'list', params] as const,
       detail: (id: string) => ['semaspa', 'people', 'detail', id] as const,
+      participation: (id: string) =>
+        ['semaspa', 'people', 'participation', id] as const,
+      autefs: (id: string, params: unknown) =>
+        ['semaspa', 'people', 'autefs', id, params] as const,
+      forestGuides: (id: string, params: unknown) =>
+        ['semaspa', 'people', 'forest-guides', id, params] as const,
+      roles: (id: string, params: unknown) =>
+        ['semaspa', 'people', 'roles', id, params] as const,
     },
     speciesProducts: {
       detail: (id: string) => ['semaspa', 'species-products', 'detail', id] as const,
@@ -140,6 +164,12 @@ export const QUERY_KEYS = {
         ['semaspa', 'forest-guides', 'roles', id, params] as const,
       autefs: (id: number, params: unknown) =>
         ['semaspa', 'forest-guides', 'autefs', id, params] as const,
+    },
+    indicators: {
+      summary: (params: unknown) => ['semaspa', 'indicators', 'summary', params] as const,
+      cases: (id: string, params: unknown) =>
+        ['semaspa', 'indicators', 'cases', id, params] as const,
+      savedFilters: () => ['semaspa', 'indicators', 'saved-filters'] as const,
     },
   },
 } as const;

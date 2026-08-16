@@ -28,6 +28,7 @@ import {
 } from './hooks/use-forest-guide-detail-controller';
 import { ForestGuideStatusBadge } from './components/forest-guide-status-badge';
 import { PlateChip } from './components/plate-chip';
+import { PersonLink } from '../people/components/person-link';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -202,7 +203,11 @@ function RolesTab({ controller }: { controller: ForestGuideDetailController }) {
               ) : null}
               {roles.data.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>{formatPersonLabel(peopleMap[row.personId], row.personId)}</TableCell>
+                  <TableCell>
+                    <PersonLink personId={row.personId}>
+                      {formatPersonLabel(peopleMap[row.personId], row.personId)}
+                    </PersonLink>
+                  </TableCell>
                   <TableCell>{row.role}</TableCell>
                   <TableCell>{row.source}</TableCell>
                 </TableRow>

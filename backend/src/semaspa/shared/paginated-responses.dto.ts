@@ -6,7 +6,10 @@ import { PersonRoleResponseDto } from './person-role-response.dto';
 import { ForestGuideResponseDto } from '../forest-guides/dto/forest-guide-response.dto';
 import { HarvestUnitResponseDto } from '../harvest-units/dto/harvest-unit-response.dto';
 import { AutefVolumeBalanceResponseDto } from '../autef-volume-balances/dto/autef-volume-balance-response.dto';
+import { VolumeBalanceForestGuideResponseDto } from '../autefs/dto/volume-balance-forest-guide-response.dto';
 import { PersonResponseDto } from '../people/dto/person-response.dto';
+import { PersonLinkedAutefResponseDto } from '../people/dto/person-linked-autef-response.dto';
+import { PersonLinkedForestGuideResponseDto } from '../people/dto/person-linked-forest-guide-response.dto';
 import { SpeciesProductResponseDto } from '../species-products/dto/species-product-response.dto';
 
 abstract class PaginatedBase {
@@ -106,11 +109,76 @@ export class GetAutefVolumeBalancesResponseDto extends PaginatedBase {
   }
 }
 
+export class GetVolumeBalanceForestGuidesResponseDto extends PaginatedBase {
+  @ApiProperty({ type: [VolumeBalanceForestGuideResponseDto] })
+  data: VolumeBalanceForestGuideResponseDto[];
+
+  @ApiProperty({
+    description: 'Sum of matching GF species volumes (all pages, not only the current page)',
+    nullable: true,
+  })
+  movedVolumeSum: number | null;
+
+  @ApiProperty({
+    description:
+      'First GF in chronological order whose running total exceeds authorized volume',
+    nullable: true,
+  })
+  crossingForestGuideId: number | null;
+
+  constructor(
+    data: VolumeBalanceForestGuideResponseDto[],
+    page: number,
+    limit: number,
+    total: number,
+    movedVolumeSum: number | null,
+    crossingForestGuideId: number | null,
+  ) {
+    super();
+    this.data = data;
+    this.movedVolumeSum = movedVolumeSum;
+    this.crossingForestGuideId = crossingForestGuideId;
+    this.assignPagination(page, limit, total);
+  }
+}
+
 export class GetPeopleResponseDto extends PaginatedBase {
   @ApiProperty({ type: [PersonResponseDto] })
   data: PersonResponseDto[];
 
   constructor(data: PersonResponseDto[], page: number, limit: number, total: number) {
+    super();
+    this.data = data;
+    this.assignPagination(page, limit, total);
+  }
+}
+
+export class GetPersonLinkedAutefsResponseDto extends PaginatedBase {
+  @ApiProperty({ type: [PersonLinkedAutefResponseDto] })
+  data: PersonLinkedAutefResponseDto[];
+
+  constructor(
+    data: PersonLinkedAutefResponseDto[],
+    page: number,
+    limit: number,
+    total: number,
+  ) {
+    super();
+    this.data = data;
+    this.assignPagination(page, limit, total);
+  }
+}
+
+export class GetPersonLinkedForestGuidesResponseDto extends PaginatedBase {
+  @ApiProperty({ type: [PersonLinkedForestGuideResponseDto] })
+  data: PersonLinkedForestGuideResponseDto[];
+
+  constructor(
+    data: PersonLinkedForestGuideResponseDto[],
+    page: number,
+    limit: number,
+    total: number,
+  ) {
     super();
     this.data = data;
     this.assignPagination(page, limit, total);

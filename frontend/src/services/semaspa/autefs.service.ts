@@ -5,11 +5,13 @@ import type {
   AutefListParams,
   AutefSpecies,
   AutefVolumeBalance,
+  AutefVolumeBalanceParams,
   ForestGuide,
   HarvestUnit,
   HarvestUnitsParams,
   PersonRole,
   SemaspaPaginationParams,
+  VolumeBalanceForestGuidesResponse,
 } from '@/types/semaspa';
 
 function appendDefined(
@@ -19,6 +21,15 @@ function appendDefined(
 ) {
   if (value === undefined || value === null || value === '') return;
   target[key] = value;
+}
+
+function filenameFromDisposition(header: string | undefined, fallback: string): string {
+  if (!header) return fallback;
+  const utfMatch = header.match(/filename\*=UTF-8''([^;]+)/i);
+  if (utfMatch?.[1]) return decodeURIComponent(utfMatch[1]);
+  const plainMatch = header.match(/filename="?([^";]+)"?/i);
+  if (plainMatch?.[1]) return plainMatch[1];
+  return fallback;
 }
 
 /**
@@ -78,11 +89,52 @@ export class AutefsService {
 
   static async findVolumeBalances(
     id: number,
-    params: SemaspaPaginationParams = {},
+    params: AutefVolumeBalanceParams = {},
   ): Promise<ApiPaginatedResponse<AutefVolumeBalance>> {
     const { page = 1, limit = 20 } = params;
+    const queryParams: Record<string, string | number | boolean> = { page, limit };
+    appendDefined(queryParams, 'sortBy', params.sortBy);
+    appendDefined(queryParams, 'sortOrder', params.sortOrder);
     const response = await api.get<ApiPaginatedResponse<AutefVolumeBalance>>(
       `${AutefsService.BASE_URL}/${id}/volume-balances`,
+      { params: queryParams },
+    );
+    return response.data;
+  }
+
+  static async exportVolumeBalancesCsv(
+    id: number,
+    params: Pick<AutefVolumeBalanceParams, 'sortBy' | 'sortOrder'> = {},
+  ): Promise<void> {
+    const queryParams: Record<string, string | number | boolean> = {};
+    appendDefined(queryParams, 'sortBy', params.sortBy);
+    appendDefined(queryParams, 'sortOrder', params.sortOrder);
+    const response = await api.get<Blob>(
+      `${AutefsService.BASE_URL}/${id}/volume-balances.csv`,
+      { params: queryParams, responseType: 'blob' },
+    );
+    const filename = filenameFromDisposition(
+      response.headers['content-disposition'] as string | undefined,
+      `autef-${id}-volume-balances.csv`,
+    );
+    const url = URL.createObjectURL(response.data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  static async findVolumeBalanceForestGuides(
+    id: number,
+    speciesProductId: string,
+    params: SemaspaPaginationParams = {},
+  ): Promise<VolumeBalanceForestGuidesResponse> {
+    const { page = 1, limit = 100 } = params;
+    const response = await api.get<VolumeBalanceForestGuidesResponse>(
+      `${AutefsService.BASE_URL}/${id}/volume-balances/${encodeURIComponent(speciesProductId)}/forest-guides`,
       { params: { page, limit } },
     );
     return response.data;

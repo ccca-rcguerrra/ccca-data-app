@@ -33,6 +33,7 @@ export interface ForestGuidesListStateActions {
   setQuickFilters: (filters: Partial<ForestGuidesQuickFilters>) => void;
   setAdvancedInputs: (filters: Partial<ForestGuidesAdvancedFilters>) => void;
   applyAdvancedFilters: () => void;
+  hydratePlateFilter: (plate: string) => void;
   setAdvancedOpen: (open: boolean) => void;
   clearFilters: () => void;
   reset: () => void;
@@ -84,6 +85,15 @@ export const useForestGuidesListStore = create<ForestGuidesListState>((set, get)
     const { advancedInputs } = get();
     set({ advancedApplied: { ...advancedInputs }, currentPage: 1 });
   },
+  hydratePlateFilter: (plate) => {
+    const next = { ...initialAdvancedFilters, plate };
+    set({
+      advancedInputs: next,
+      advancedApplied: next,
+      advancedOpen: true,
+      currentPage: 1,
+    });
+  },
   setAdvancedOpen: (open) => set({ advancedOpen: open }),
   clearFilters: () =>
     set({
@@ -115,6 +125,7 @@ export const useForestGuidesListActions = (): ForestGuidesListStateActions =>
       setQuickFilters: s.setQuickFilters,
       setAdvancedInputs: s.setAdvancedInputs,
       applyAdvancedFilters: s.applyAdvancedFilters,
+      hydratePlateFilter: s.hydratePlateFilter,
       setAdvancedOpen: s.setAdvancedOpen,
       clearFilters: s.clearFilters,
       reset: s.reset,

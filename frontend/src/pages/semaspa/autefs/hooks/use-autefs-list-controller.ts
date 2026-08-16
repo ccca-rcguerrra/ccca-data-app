@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
+import { useCallback, useEffect, useMemo } from 'react';
 
+import type { AutefListParams } from '@/types/semaspa';
 import { useAutefsQuery } from '@/hooks/api/use-semaspa';
 import { ROUTES } from '@/constants/routes.constants';
-import type { AutefListParams } from '@/types/semaspa';
+
 import {
   useAutefsListActions,
   useAutefsListState,

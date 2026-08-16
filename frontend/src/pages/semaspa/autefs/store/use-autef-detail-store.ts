@@ -1,7 +1,14 @@
-import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
+import { create } from 'zustand';
 
-export type AutefDetailTabId = 'species' | 'forestGuides' | 'harvestUnits' | 'roles';
+import type { AutefVolumeBalanceSortField } from '@/types/semaspa';
+
+export type AutefDetailTabId =
+  | 'overview'
+  | 'species'
+  | 'forestGuides'
+  | 'harvestUnits'
+  | 'roles';
 
 export interface AutefDetailTabPagination {
   page: number;
@@ -13,6 +20,9 @@ export interface AutefDetailStateData {
   tabs: Record<AutefDetailTabId, AutefDetailTabPagination>;
   selectedForestGuideId: number | null;
   forestGuideSheetOpen: boolean;
+  selectedSpeciesProductId: string | null;
+  creditSortBy: AutefVolumeBalanceSortField;
+  creditSortOrder: 'ASC' | 'DESC';
 }
 
 export interface AutefDetailStateActions {
@@ -21,6 +31,8 @@ export interface AutefDetailStateActions {
   setTabPageSize: (tab: AutefDetailTabId, pageSize: number) => void;
   openForestGuideSheet: (id: number) => void;
   closeForestGuideSheet: () => void;
+  setSelectedSpeciesProductId: (id: string | null) => void;
+  setCreditSort: (sortBy: AutefVolumeBalanceSortField, sortOrder: 'ASC' | 'DESC') => void;
   reset: () => void;
 }
 
@@ -31,7 +43,13 @@ const DEFAULT_TAB_PAGINATION: AutefDetailTabPagination = {
   pageSize: 20,
 };
 
-const TAB_IDS: AutefDetailTabId[] = ['species', 'forestGuides', 'harvestUnits', 'roles'];
+const TAB_IDS: AutefDetailTabId[] = [
+  'overview',
+  'species',
+  'forestGuides',
+  'harvestUnits',
+  'roles',
+];
 
 function createInitialTabs(): Record<AutefDetailTabId, AutefDetailTabPagination> {
   return TAB_IDS.reduce(
@@ -47,10 +65,13 @@ function createInitialTabs(): Record<AutefDetailTabId, AutefDetailTabPagination>
 }
 
 const initialState: AutefDetailStateData = {
-  activeTab: 'species',
+  activeTab: 'overview',
   tabs: createInitialTabs(),
   selectedForestGuideId: null,
   forestGuideSheetOpen: false,
+  selectedSpeciesProductId: null,
+  creditSortBy: 'excessVolume',
+  creditSortOrder: 'DESC',
 };
 
 export const useAutefDetailStore = create<AutefDetailState>((set) => ({
@@ -81,12 +102,27 @@ export const useAutefDetailStore = create<AutefDetailState>((set) => ({
   closeForestGuideSheet: () =>
     set({ forestGuideSheetOpen: false, selectedForestGuideId: null }),
 
+  setSelectedSpeciesProductId: (id) => set({ selectedSpeciesProductId: id }),
+
+  setCreditSort: (sortBy, sortOrder) =>
+    set((state) => ({
+      creditSortBy: sortBy,
+      creditSortOrder: sortOrder,
+      tabs: {
+        ...state.tabs,
+        species: { ...state.tabs.species, page: 1 },
+      },
+    })),
+
   reset: () =>
     set({
-      activeTab: 'species',
+      activeTab: 'overview',
       tabs: createInitialTabs(),
       selectedForestGuideId: null,
       forestGuideSheetOpen: false,
+      selectedSpeciesProductId: null,
+      creditSortBy: 'excessVolume',
+      creditSortOrder: 'DESC',
     }),
 }));
 
@@ -97,6 +133,9 @@ export const useAutefDetailState = (): AutefDetailStateData =>
       tabs: s.tabs,
       selectedForestGuideId: s.selectedForestGuideId,
       forestGuideSheetOpen: s.forestGuideSheetOpen,
+      selectedSpeciesProductId: s.selectedSpeciesProductId,
+      creditSortBy: s.creditSortBy,
+      creditSortOrder: s.creditSortOrder,
     })),
   );
 
@@ -108,6 +147,8 @@ export const useAutefDetailActions = (): AutefDetailStateActions =>
       setTabPageSize: s.setTabPageSize,
       openForestGuideSheet: s.openForestGuideSheet,
       closeForestGuideSheet: s.closeForestGuideSheet,
+      setSelectedSpeciesProductId: s.setSelectedSpeciesProductId,
+      setCreditSort: s.setCreditSort,
       reset: s.reset,
     })),
   );

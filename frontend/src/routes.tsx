@@ -7,13 +7,15 @@ import ForgotPasswordPage from './pages/auth/forgot-password-page';
 import ResetPasswordPage from './pages/auth/reset-password-page';
 import { ErrorPage } from './pages/error/error-page';
 import ProtectedRoute from './routes/protected-route';
-import { DashboardPage } from './pages/dashboard/dashboard-page';
+import { IndicatorsPage } from './pages/semaspa/indicators/indicators-page';
 import { UsersManagementPage } from './pages/users/management/users-management-page';
 import { TeamsManagementPage } from './pages/teams/management/teams-management-page';
 import { AutefsListPage } from './pages/semaspa/autefs/autefs-list-page';
 import { AutefDetailPage } from './pages/semaspa/autefs/autef-detail-page';
 import { ForestGuidesListPage } from './pages/semaspa/forest-guides/forest-guides-list-page';
 import { ForestGuideDetailPage } from './pages/semaspa/forest-guides/forest-guide-detail-page';
+import { PeopleListPage } from './pages/semaspa/people/people-list-page';
+import { PersonDetailPage } from './pages/semaspa/people/person-detail-page';
 
 const router = createBrowserRouter([
   {
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
             index: true,
             element: (
               <MainLayout>
-                <DashboardPage />
+                <IndicatorsPage />
               </MainLayout>
             ),
           },
@@ -52,7 +54,7 @@ const router = createBrowserRouter([
             path: toChildPath(ROUTES.dashboard.root),
             element: (
               <MainLayout>
-                <DashboardPage />
+                <IndicatorsPage />
               </MainLayout>
             ),
           },
@@ -117,6 +119,22 @@ const router = createBrowserRouter([
             element: (
               <MainLayout>
                 <ForestGuideDetailPage />
+              </MainLayout>
+            ),
+          },
+          {
+            path: toChildPath(ROUTES.semaspa.people),
+            element: (
+              <MainLayout>
+                <PeopleListPage />
+              </MainLayout>
+            ),
+          },
+          {
+            path: toChildPath(ROUTES.semaspa.personDetail),
+            element: (
+              <MainLayout>
+                <PersonDetailPage />
               </MainLayout>
             ),
           },
