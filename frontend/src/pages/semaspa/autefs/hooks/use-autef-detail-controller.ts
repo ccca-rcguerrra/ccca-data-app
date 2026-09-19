@@ -14,7 +14,9 @@ import { AutefsService } from '@/services/semaspa/autefs.service';
 import {
   useAutefForestGuidesQuery,
   useAutefHarvestUnitsQuery,
+  useAutefPlatesQuery,
   useAutefQuery,
+  useAutefRelatedQuery,
   useAutefRolesQuery,
   useAutefSpeciesQuery,
   useAutefVolumeBalanceForestGuidesQuery,
@@ -132,6 +134,10 @@ export function useAutefDetailController() {
     () => ({ page: tabs.roles.page, limit: tabs.roles.pageSize }),
     [tabs.roles.page, tabs.roles.pageSize],
   );
+  const platesParams = useMemo(
+    () => ({ page: tabs.plates.page, limit: tabs.plates.pageSize }),
+    [tabs.plates.page, tabs.plates.pageSize],
+  );
 
   const headerBalancesQuery = useAutefVolumeBalancesQuery(autefId, HEADER_LIST_PARAMS, {
     enabled: validId,
@@ -145,6 +151,10 @@ export function useAutefDetailController() {
   const headerHarvestUnitsQuery = useAutefHarvestUnitsQuery(autefId, HEADER_UPA_PARAMS, {
     enabled: validId,
   });
+  const headerPlatesQuery = useAutefPlatesQuery(autefId, HEADER_COUNT_PARAMS, {
+    enabled: validId,
+  });
+  const relatedQuery = useAutefRelatedQuery(autefId, { enabled: validId });
 
   const speciesEnabled = validId && activeTab === 'species';
   const speciesQuery = useAutefSpeciesQuery(autefId, speciesLookupParams, {
@@ -167,6 +177,9 @@ export function useAutefDetailController() {
   });
   const rolesQuery = useAutefRolesQuery(autefId, rolesParams, {
     enabled: validId && activeTab === 'roles',
+  });
+  const platesQuery = useAutefPlatesQuery(autefId, platesParams, {
+    enabled: validId && activeTab === 'plates',
   });
 
   const speciesByProduct = useMemo(() => {
@@ -198,8 +211,9 @@ export function useAutefDetailController() {
   const personIds = useMemo(() => {
     const fromHeader = (headerRolesQuery.data?.data ?? []).map((row) => row.personId);
     const fromTab = (rolesQuery.data?.data ?? []).map((row) => row.personId);
-    return [...fromHeader, ...fromTab];
-  }, [headerRolesQuery.data, rolesQuery.data]);
+    const fromRelated = (relatedQuery.data?.data ?? []).map((row) => row.personId);
+    return [...fromHeader, ...fromTab, ...fromRelated];
+  }, [headerRolesQuery.data, rolesQuery.data, relatedQuery.data]);
 
   const dossierFlags = useMemo(
     () =>
@@ -332,6 +346,10 @@ export function useAutefDetailController() {
       isLoadingHarvestUnits: harvestUnitsQuery.isLoading || harvestUnitsQuery.isFetching,
       roles: rolesQuery.data ?? emptyPagination(),
       isLoadingRoles: rolesQuery.isLoading || rolesQuery.isFetching,
+      plates: platesQuery.data ?? emptyPagination(),
+      isLoadingPlates: platesQuery.isLoading || platesQuery.isFetching,
+      relatedAutefs: relatedQuery.data?.data ?? [],
+      isLoadingRelated: relatedQuery.isLoading || relatedQuery.isFetching,
       speciesProductsMap,
       peopleMap,
       dossierFlags,
@@ -340,11 +358,13 @@ export function useAutefDetailController() {
       forestGuideTotal: headerForestGuidesQuery.data?.total ?? 0,
       harvestUnitTotal: headerHarvestUnitsQuery.data?.total ?? 0,
       actorTotal: headerRolesQuery.data?.total ?? 0,
+      plateTotal: headerPlatesQuery.data?.total ?? 0,
       isLoadingDossierMeta:
         headerBalancesQuery.isLoading ||
         headerRolesQuery.isLoading ||
         headerForestGuidesQuery.isLoading ||
-        headerHarvestUnitsQuery.isLoading,
+        headerHarvestUnitsQuery.isLoading ||
+        headerPlatesQuery.isLoading,
     },
     store: {
       state: storeState,

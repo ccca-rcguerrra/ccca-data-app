@@ -25,6 +25,7 @@ import {
 import { ROUTES } from '@/constants/routes.constants';
 import {
   useForestGuideAutefsQuery,
+  useForestGuidePermitReferencesQuery,
   useForestGuideQuery,
   useForestGuideRolesQuery,
   useForestGuideSpeciesQuery,
@@ -36,6 +37,11 @@ import { formatPersonLabel, formatSpeciesProductLabel, formatVolume } from '../.
 import { ForestGuideStatusBadge } from './forest-guide-status-badge';
 import { PlateChip } from './plate-chip';
 import { PersonLink } from '../../people/components/person-link';
+import { PermitReferencesList } from '../../permit-references/components/permit-references-list';
+import {
+  hasBrokenPermitRef,
+  PermitMatchStatusBadge,
+} from '../../permit-references/components/permit-match-status-badge';
 
 interface ForestGuideDetailSheetProps {
   forestGuideId: number | null;
@@ -67,6 +73,11 @@ export function ForestGuideDetailSheet({
   const speciesQuery = useForestGuideSpeciesQuery(id, { page: 1, limit: 100 }, { enabled });
   const rolesQuery = useForestGuideRolesQuery(id, { page: 1, limit: 100 }, { enabled });
   const autefsQuery = useForestGuideAutefsQuery(id, { page: 1, limit: 50 }, { enabled });
+  const permitReferencesQuery = useForestGuidePermitReferencesQuery(
+    id,
+    { page: 1, limit: 100 },
+    { enabled },
+  );
 
   const personIds = (rolesQuery.data?.data ?? []).map((row) => row.personId);
   const peopleMap = usePeopleByIdsMap(personIds);
@@ -77,9 +88,11 @@ export function ForestGuideDetailSheet({
     detailQuery.isLoading ||
     speciesQuery.isLoading ||
     rolesQuery.isLoading ||
-    autefsQuery.isLoading;
+    autefsQuery.isLoading ||
+    permitReferencesQuery.isLoading;
 
   const guide = detailQuery.data;
+  const permitRefs = permitReferencesQuery.data?.data ?? [];
   const originRoles = (rolesQuery.data?.data ?? []).filter((r) =>
     r.role.toUpperCase().includes('ORIGEM'),
   );
@@ -115,10 +128,19 @@ export function ForestGuideDetailSheet({
             <>
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-mono text-base">
+                  <CardTitle className="font-mono text-base flex items-center gap-2 flex-wrap">
                     {guide.number
                       ? t('semaspa.forestGuides.detail.title', { number: guide.number })
                       : t('semaspa.forestGuides.detail.untitled', { id: guide.id })}
+                    {hasBrokenPermitRef(permitRefs.map((row) => row.matchStatus)) ? (
+                      <PermitMatchStatusBadge
+                        status={
+                          permitRefs.some((row) => row.matchStatus === 'unparseable')
+                            ? 'unparseable'
+                            : 'unmatched'
+                        }
+                      />
+                    ) : null}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4 text-sm">
@@ -161,6 +183,17 @@ export function ForestGuideDetailSheet({
                     <p className="font-mono text-[13px] font-medium">
                       {guide.permitRefs?.length ? guide.permitRefs.join(', ') : '—'}
                     </p>
+                  </div>
+                  <div className="col-span-2">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                      {t('semaspa.forestGuides.detail.permitMatch')}
+                    </Label>
+                    <div className="mt-2">
+                      <PermitReferencesList
+                        rows={permitRefs}
+                        emptyLabel={t('semaspa.permitReferences.list.emptyNested')}
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>

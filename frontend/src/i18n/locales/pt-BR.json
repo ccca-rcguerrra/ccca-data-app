@@ -66,6 +66,7 @@
     "autefs": "AUTEFs",
     "forestGuides": "Guias florestais",
     "people": "Pessoas",
+    "permitReferences": "Referências de AUTEF",
     "alerts": "Alertas",
     "audit": "Auditoria"
   },
@@ -485,7 +486,8 @@
         "species": "Execução de crédito",
         "forestGuides": "Guias florestais",
         "harvestUnits": "UPA / Mapa",
-        "roles": "Atores"
+        "roles": "Atores",
+        "plates": "Placas"
       },
       "dossier": {
         "selectFlag": "Selecione um indicador para ver a regra. São discrepâncias, não conclusões jurídicas.",
@@ -508,6 +510,7 @@
           "forestGuides": "Guias florestais",
           "harvestUnits": "UPAs",
           "actors": "Atores",
+          "plates": "Placas",
           "openLinked": "Abrir registros vinculados",
           "openTab": "Abrir"
         }
@@ -587,6 +590,19 @@
         "other": "Outros papéis",
         "noResults": "Nenhum papel encontrado"
       },
+      "plates": {
+        "plate": "Placa",
+        "distinctGfCount": "Guias florestais",
+        "empty": "Nenhuma placa nas guias ligadas a esta AUTEF."
+      },
+      "related": {
+        "title": "AUTEFs relacionadas",
+        "number": "Número",
+        "city": "Município",
+        "sharedRole": "Papel compartilhado",
+        "person": "Pessoa",
+        "empty": "Nenhuma outra AUTEF compartilha este proprietário ou responsável técnico."
+      },
       "errors": {
         "title": "Falha ao carregar AUTEFs",
         "message": "Ocorreu um erro inesperado ao carregar os dados.",
@@ -633,7 +649,8 @@
         "type": "Tipo",
         "issuedAt": "Emissão",
         "plates": "Placas",
-        "permits": "Referências de autorização"
+        "permits": "Referências de autorização",
+        "permitMatch": "Correspondência da referência"
       },
       "tabs": {
         "species": "Espécies",
@@ -711,12 +728,30 @@
         "distinctAutefs": "{{count}} AUTEF(s) distinta(s)",
         "distinctGfs": "{{count}} guia(s) florestal(is) distinta(s)"
       },
+      "occurrences": {
+        "title": "Ocorrências",
+        "overExtracted": "{{count}} AUTEF(s) sobre-extraída(s) como proprietário ou responsável técnico",
+        "unitConflict": "{{count}} AUTEF(s) com conflito de unidade como proprietário ou responsável técnico",
+        "creditUseOver90": "{{count}} AUTEF(s) com uso de crédito ≥ 90% como proprietário ou responsável técnico",
+        "recurrentDestination": "{{count}} guia(s) florestal(is) como destino ligada(s) a AUTEFs sobre-extraídas",
+        "associatedPlates": "{{count}} placa(s) distinta(s) em guias ligadas a AUTEFs sobre-extraídas",
+        "clearFilter": "Limpar filtro",
+        "flags": {
+          "over_extracted": "Exibindo AUTEFs sobre-extraídas",
+          "unit_conflict": "Exibindo AUTEFs com conflito de unidade",
+          "credit_use_over_90": "Exibindo AUTEFs com uso de crédito ≥ 90%",
+          "destination_over_extracted": "Exibindo guias de destino ligadas a AUTEFs sobre-extraídas",
+          "associated_plates": "Exibindo guias com placas ligadas a AUTEFs sobre-extraídas"
+        }
+      },
       "identity": {
         "limitationsTitle": "Limitações de identidade",
         "limitations": {
           "0": "O identificador da pessoa é um hash de CPF/CNPJ.",
           "1": "Atores sem CPF/CNPJ não aparecem neste aplicativo.",
-          "2": "Um CPF/CNPJ incorreto fragmenta o mesmo ator em vários perfis."
+          "2": "Um CPF/CNPJ incorreto fragmenta o mesmo ator em vários perfis.",
+          "3": "Os totais são discrepâncias, não conclusões jurídicas.",
+          "4": "Volumes de GF3 ficam fora do saldo de crédito da AUTEF."
         }
       },
       "autefs": {
@@ -756,6 +791,8 @@
         "selectedPeople": "Exibindo estas pessoas",
         "selectPlates": "Abrir placas correspondentes",
         "selectedPlates": "Exibindo estas placas",
+        "selectGfs": "Abrir guias florestais correspondentes",
+        "selectedGfs": "Exibindo estas guias florestais",
         "anyHint": "Nenhum indicador selecionado. A tabela lista AUTEFs que disparam qualquer indicador da Fase 1."
       },
       "rule": {
@@ -794,7 +831,8 @@
         "noResults": "Nenhuma AUTEF corresponde a estes indicadores.",
         "noResultsWithFilters": "Nenhum registro corresponde aos filtros atuais.",
         "noPeople": "Nenhuma pessoa corresponde a este indicador.",
-        "noPlates": "Nenhuma placa corresponde a este indicador."
+        "noPlates": "Nenhuma placa corresponde a este indicador.",
+        "noForestGuides": "Nenhuma guia florestal corresponde a este indicador."
       },
       "table": {
         "number": "AUTEF",
@@ -808,7 +846,11 @@
         "taxId": "CPF/CNPJ",
         "plate": "Placa",
         "distinctAutefs": "AUTEFs",
-        "distinctGfs": "Guias florestais"
+        "distinctGfs": "Guias florestais",
+        "forestGuide": "Guia florestal",
+        "type": "Tipo",
+        "matchStatuses": "Status da correspondência",
+        "rawReferences": "Referências originais"
       },
       "badges": {
         "creditUse": "≥ 90% do crédito"
@@ -873,7 +915,58 @@
             "0": "Volumes de GF3 não entram no saldo.",
             "1": "As placas são comparadas só após trim; sem outra normalização."
           }
+        },
+        "gf_permit_unparseable": {
+          "name": "Referência de AUTEF não parseável na guia florestal",
+          "rule": "A GF tem ao menos uma referência declarada com match_status = unparseable",
+          "limitations": {
+            "0": "GFs com autorizacoes vazio não entram no explode e não aparecem aqui.",
+            "1": "A referência só é parseável quando se divide em número/ano por uma barra."
+          }
+        },
+        "gf_permit_unmatched": {
+          "name": "Referência de AUTEF sem correspondência na guia florestal",
+          "rule": "A GF tem ao menos uma referência parseável com match_status = unmatched",
+          "limitations": {
+            "0": "GFs com autorizacoes vazio não entram no explode e não aparecem aqui.",
+            "1": "A referência só é parseável quando se divide em número/ano por uma barra."
+          }
         }
+      }
+    },
+    "permitReferences": {
+      "list": {
+        "title": "Auditoria de origem documental",
+        "subtitle": "Referências de AUTEF declaradas nas guias florestais. Os status são discrepâncias, não conclusões jurídicas.",
+        "total": "{{count}} no total",
+        "totalRows": "{{count}} linha(s)",
+        "searchPlaceholder": "Buscar referência original...",
+        "empty": "Nenhuma referência corresponde aos filtros atuais.",
+        "emptyNested": "Esta guia florestal não tem referências de AUTEF explodidas."
+      },
+      "table": {
+        "forestGuide": "Guia florestal",
+        "rawReference": "Referência original",
+        "status": "Status",
+        "parsed": "Parseada",
+        "autef": "AUTEF"
+      },
+      "filters": {
+        "status": "Status",
+        "anyStatus": "Qualquer status",
+        "type": "Tipo de GF",
+        "issuedFrom": "Emitida de",
+        "issuedTo": "Emitida até",
+        "multiple": "Somente guias com mais de uma referência"
+      },
+      "status": {
+        "unparseable": "Não parseável",
+        "unmatched": "Sem correspondência",
+        "matched": "Correspondida",
+        "ambiguous": "Ambígua"
+      },
+      "errors": {
+        "listTitle": "Falha ao carregar referências de autorização"
       }
     }
   }

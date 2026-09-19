@@ -44,6 +44,19 @@ export interface Autef {
   bbox?: [number, number, number, number] | null;
 }
 
+export interface AutefPlate {
+  plate: string;
+  distinctGfCount: number;
+}
+
+export interface AutefRelated {
+  autefId: number;
+  number: string | null;
+  city: string | null;
+  sharedRole: string;
+  personId: string;
+}
+
 export interface AutefListParams extends SemaspaPaginationParams {
   search?: string;
   city?: string;
@@ -116,6 +129,35 @@ export interface ForestGuide {
   type: string | null;
   permitRefs: string[] | null;
   vehiclePlates: string[] | null;
+}
+
+export type PermitReferenceMatchStatus =
+  | 'unparseable'
+  | 'unmatched'
+  | 'matched'
+  | 'ambiguous';
+
+export interface PermitReference {
+  id: string;
+  forestGuideId: number;
+  forestGuideNumber: string | null;
+  type: string | null;
+  issuedAt: string | null;
+  rawReference: string;
+  parsedNumber: string | null;
+  parsedYear: string | null;
+  matchStatus: PermitReferenceMatchStatus;
+  autefId: number | null;
+  autefNumber: string | null;
+}
+
+export interface PermitReferenceListParams extends SemaspaPaginationParams {
+  matchStatus?: PermitReferenceMatchStatus;
+  issuedFrom?: string;
+  issuedTo?: string;
+  type?: string;
+  multiple?: boolean;
+  search?: string;
 }
 
 export interface ForestGuideListParams extends SemaspaPaginationParams {
@@ -191,7 +233,22 @@ export interface PersonParticipation {
   destinationGfCount: number;
   distinctAutefCount: number;
   distinctGfCount: number;
+  overExtractedAutefCount: number;
+  unitConflictAutefCount: number;
+  creditUseOver90AutefCount: number;
+  recurrentDestinationGfCount: number;
+  associatedPlateCount: number;
+  associatedPlateSample: string | null;
 }
+
+export type PersonAutefOccurrenceFlag =
+  | 'over_extracted'
+  | 'unit_conflict'
+  | 'credit_use_over_90';
+
+export type PersonGfOccurrenceFlag =
+  | 'destination_over_extracted'
+  | 'associated_plates';
 
 export interface PersonLinkedAutef {
   role: string;
@@ -239,6 +296,8 @@ export const INDICATOR_IDS = {
   PERSON_MULTIPLE_OVER_EXTRACTED_AUTEFS: 'person_multiple_over_extracted_autefs',
   PERSON_RECURRENT_GF_DESTINATION: 'person_recurrent_gf_destination',
   PLATE_RECURRENT: 'plate_recurrent',
+  GF_PERMIT_UNPARSEABLE: 'gf_permit_unparseable',
+  GF_PERMIT_UNMATCHED: 'gf_permit_unmatched',
 } as const;
 
 export const ANY_INDICATOR_ID = 'any';
@@ -248,7 +307,7 @@ export type CatalogIndicatorId =
 
 export type IndicatorQueryId = CatalogIndicatorId | typeof ANY_INDICATOR_ID;
 
-export type IndicatorEntity = 'autef' | 'person' | 'plate';
+export type IndicatorEntity = 'autef' | 'person' | 'plate' | 'gf';
 
 export interface IndicatorFilters {
   city?: string;
@@ -325,7 +384,21 @@ export interface PlateIndicatorCase {
   distinctAutefCount: number;
 }
 
-export type IndicatorCase = AutefIndicatorCase | PersonIndicatorCase | PlateIndicatorCase;
+export interface GfIndicatorCase {
+  entity: 'gf';
+  forestGuideId: number;
+  number: string | null;
+  issuedAt: string | null;
+  type: string | null;
+  matchStatuses: string[] | null;
+  rawReferences: string[] | null;
+}
+
+export type IndicatorCase =
+  | AutefIndicatorCase
+  | PersonIndicatorCase
+  | PlateIndicatorCase
+  | GfIndicatorCase;
 
 export function isAutefIndicatorCase(row: IndicatorCase): row is AutefIndicatorCase {
   return row.entity === 'autef';
@@ -337,6 +410,10 @@ export function isPersonIndicatorCase(row: IndicatorCase): row is PersonIndicato
 
 export function isPlateIndicatorCase(row: IndicatorCase): row is PlateIndicatorCase {
   return row.entity === 'plate';
+}
+
+export function isGfIndicatorCase(row: IndicatorCase): row is GfIndicatorCase {
+  return row.entity === 'gf';
 }
 
 export interface IndicatorSavedFilter {

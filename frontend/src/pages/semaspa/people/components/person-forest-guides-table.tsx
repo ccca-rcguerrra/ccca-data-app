@@ -25,7 +25,7 @@ export function PersonForestGuidesTable({ controller }: { controller: PersonDeta
   const navigate = useNavigate();
   const {
     api: { forestGuides, isLoadingForestGuides },
-    store: { state },
+    store: { state, actions },
     handlers: { handleTabPageChange, handleTabPageSizeChange },
   } = controller;
   const tab = state.tabs.forestGuides;
@@ -33,6 +33,20 @@ export function PersonForestGuidesTable({ controller }: { controller: PersonDeta
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
+      {state.forestGuideFlag ? (
+        <div className="px-4 pt-4 flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">
+            {t(`semaspa.people.occurrences.flags.${state.forestGuideFlag}`)}
+          </span>
+          <button
+            type="button"
+            className="text-xs underline text-muted-foreground hover:text-foreground"
+            onClick={actions.clearForestGuideFlag}
+          >
+            {t('semaspa.people.occurrences.clearFilter')}
+          </button>
+        </div>
+      ) : null}
       <div className="flex-1 overflow-auto">
         <div className="overflow-hidden rounded-lg border border-border m-4">
           <Table>

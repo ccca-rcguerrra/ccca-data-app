@@ -39,6 +39,8 @@ import { HarvestUnitResponseDto } from '../../harvest-units/dto/harvest-unit-res
 import { PersonRoleResponseDto } from '../../shared/person-role-response.dto';
 import { SemaspaPaginationQueryDto } from '../../shared/semaspa-pagination.dto';
 import {
+  GetAutefPlatesResponseDto,
+  GetAutefRelatedResponseDto,
   GetAutefSpeciesResponseDto,
   GetAutefVolumeBalancesResponseDto,
   GetForestGuidesResponseDto,
@@ -663,6 +665,117 @@ export class AutefsService {
       page,
       limit,
       total,
+    );
+  }
+
+  async findPlates(
+    autefId: number,
+    query: SemaspaPaginationQueryDto,
+  ): Promise<GetAutefPlatesResponseDto> {
+    await this.assertAutefExists(autefId);
+    const { page = 1, limit = 20 } = query;
+    const skip = (page - 1) * limit;
+
+    const plateJoinSql = `(
+      SELECT gf_src.id AS forest_guide_id, TRIM(plate_value) AS plate
+      FROM public_app.semaspa_forest_guides gf_src
+      CROSS JOIN LATERAL unnest(COALESCE(gf_src.vehicle_plates, ARRAY[]::text[])) AS plate_value
+      WHERE TRIM(plate_value) <> ''
+    )`;
+
+    const listQb = this.forestGuideRepo
+      .createQueryBuilder('gf')
+      .innerJoin(
+        SemaspaAutefForestGuide,
+        'bridge',
+        'bridge.forest_guide_id = gf.id',
+      )
+      .innerJoin(plateJoinSql, 'plate_row', 'plate_row.forest_guide_id = gf.id')
+      .where('bridge.autef_id = :autefId', { autefId })
+      .select('plate_row.plate', 'plate')
+      .addSelect('COUNT(DISTINCT gf.id)', 'distinctGfCount')
+      .groupBy('plate_row.plate')
+      .orderBy('COUNT(DISTINCT gf.id)', 'DESC')
+      .addOrderBy('plate_row.plate', 'ASC')
+      .offset(skip)
+      .limit(limit);
+
+    const countQb = this.forestGuideRepo
+      .createQueryBuilder('gf')
+      .innerJoin(
+        SemaspaAutefForestGuide,
+        'bridge',
+        'bridge.forest_guide_id = gf.id',
+      )
+      .innerJoin(plateJoinSql, 'plate_row', 'plate_row.forest_guide_id = gf.id')
+      .where('bridge.autef_id = :autefId', { autefId })
+      .select('COUNT(DISTINCT plate_row.plate)', 'count');
+
+    const [rows, countRow] = await Promise.all([
+      listQb.getRawMany<{ plate: string; distinctGfCount: string | number }>(),
+      countQb.getRawOne<{ count: string | number }>(),
+    ]);
+    const total = Number(countRow?.count ?? 0);
+
+    return new GetAutefPlatesResponseDto(
+      rows.map((row) => ({
+        plate: String(row.plate ?? '').trim(),
+        distinctGfCount: Number(row.distinctGfCount ?? 0),
+      })),
+      page,
+      limit,
+      Number.isFinite(total) ? total : 0,
+    );
+  }
+
+  async findRelated(autefId: number): Promise<GetAutefRelatedResponseDto> {
+    await this.assertAutefExists(autefId);
+
+    const rows = await this.autefRepo
+      .createQueryBuilder('autef')
+      .innerJoin(
+        SemaspaPersonRole,
+        'pr',
+        "pr.entity_id = autef.id AND pr.entity_type = 'AUTEF'",
+      )
+      .innerJoin(
+        SemaspaPersonRole,
+        'current',
+        `current.person_id = pr.person_id
+          AND current.role = pr.role
+          AND current.entity_type = 'AUTEF'
+          AND current.entity_id = :autefId`,
+        { autefId },
+      )
+      .where('autef.id <> :autefId', { autefId })
+      .andWhere('pr.role IN (:...ownerRoles)', {
+        ownerRoles: ['PROPRIETARIO', 'RESPONSAVEL_TECNICO'],
+      })
+      .select('autef.id', 'autefId')
+      .addSelect('autef.number', 'number')
+      .addSelect('autef.city', 'city')
+      .addSelect('pr.role', 'sharedRole')
+      .addSelect('pr.person_id', 'personId')
+      .distinct(true)
+      .orderBy('autef.number', 'ASC')
+      .addOrderBy('pr.role', 'ASC')
+      .limit(20)
+      .getRawMany<{
+        autefId: string | number;
+        number: string | null;
+        city: string | null;
+        sharedRole: string;
+        personId: string;
+      }>();
+
+    return new GetAutefRelatedResponseDto(
+      rows.map((row) => ({
+        autefId: Number(row.autefId),
+        number: row.number ?? null,
+        city: row.city ?? null,
+        sharedRole: String(row.sharedRole ?? ''),
+        personId: String(row.personId ?? ''),
+      })),
     );
   }
 }

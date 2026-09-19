@@ -66,6 +66,7 @@
     "autefs": "AUTEFs",
     "forestGuides": "Forest Guides",
     "people": "People",
+    "permitReferences": "Permit references",
     "alerts": "Alerts",
     "audit": "Audit"
   },
@@ -485,7 +486,8 @@
         "species": "Credit execution",
         "forestGuides": "Forest guides",
         "harvestUnits": "UPA / Map",
-        "roles": "Actors"
+        "roles": "Actors",
+        "plates": "Plates"
       },
       "dossier": {
         "selectFlag": "Select a flag to see its rule. Flags are discrepancies, not legal conclusions.",
@@ -508,6 +510,7 @@
           "forestGuides": "Forest guides",
           "harvestUnits": "Harvest units",
           "actors": "Actors",
+          "plates": "Plates",
           "openLinked": "Open linked records",
           "openTab": "Open"
         }
@@ -587,6 +590,19 @@
         "other": "Other roles",
         "noResults": "No roles found"
       },
+      "plates": {
+        "plate": "Plate",
+        "distinctGfCount": "Forest guides",
+        "empty": "No plates on forest guides linked to this AUTEF."
+      },
+      "related": {
+        "title": "Related AUTEFs",
+        "number": "Number",
+        "city": "City",
+        "sharedRole": "Shared role",
+        "person": "Person",
+        "empty": "No other AUTEFs share this owner or technical responsible."
+      },
       "errors": {
         "title": "Failed to load AUTEFs",
         "message": "An unexpected error occurred while loading data.",
@@ -633,7 +649,8 @@
         "type": "Type",
         "issuedAt": "Issued at",
         "plates": "Plates",
-        "permits": "Permit refs"
+        "permits": "Permit refs",
+        "permitMatch": "Reference match"
       },
       "tabs": {
         "species": "Species",
@@ -711,12 +728,30 @@
         "distinctAutefs": "{{count}} distinct AUTEF(s)",
         "distinctGfs": "{{count}} distinct forest guide(s)"
       },
+      "occurrences": {
+        "title": "Occurrences",
+        "overExtracted": "{{count}} over-extracted AUTEF(s) as owner or technical responsible",
+        "unitConflict": "{{count}} unit-conflict AUTEF(s) as owner or technical responsible",
+        "creditUseOver90": "{{count}} AUTEF(s) with credit use ≥ 90% as owner or technical responsible",
+        "recurrentDestination": "{{count}} forest guide(s) as destination linked to over-extracted AUTEFs",
+        "associatedPlates": "{{count}} distinct plate(s) on forest guides linked to over-extracted AUTEFs",
+        "clearFilter": "Clear filter",
+        "flags": {
+          "over_extracted": "Showing over-extracted AUTEFs",
+          "unit_conflict": "Showing AUTEFs with unit conflict",
+          "credit_use_over_90": "Showing AUTEFs with credit use ≥ 90%",
+          "destination_over_extracted": "Showing destination forest guides linked to over-extracted AUTEFs",
+          "associated_plates": "Showing forest guides with plates linked to over-extracted AUTEFs"
+        }
+      },
       "identity": {
         "limitationsTitle": "Identity limitations",
         "limitations": {
           "0": "Person ID is a hash of CPF/CNPJ.",
           "1": "Actors without a tax ID do not appear in this app.",
-          "2": "An incorrect tax ID splits the same actor into multiple profiles."
+          "2": "An incorrect tax ID splits the same actor into multiple profiles.",
+          "3": "Counts are discrepancies, not legal conclusions.",
+          "4": "GF3 volumes are outside the AUTEF credit balance."
         }
       },
       "autefs": {
@@ -756,6 +791,8 @@
         "selectedPeople": "Showing these people",
         "selectPlates": "Open matching plates",
         "selectedPlates": "Showing these plates",
+        "selectGfs": "Open matching forest guides",
+        "selectedGfs": "Showing these forest guides",
         "anyHint": "No indicator selected. The table lists AUTEFs that match any Phase 1 indicator."
       },
       "rule": {
@@ -794,7 +831,8 @@
         "noResults": "No AUTEFs match these indicators.",
         "noResultsWithFilters": "No records match the current filters.",
         "noPeople": "No people match this indicator.",
-        "noPlates": "No plates match this indicator."
+        "noPlates": "No plates match this indicator.",
+        "noForestGuides": "No forest guides match this indicator."
       },
       "table": {
         "number": "AUTEF",
@@ -808,7 +846,11 @@
         "taxId": "Tax ID",
         "plate": "Plate",
         "distinctAutefs": "AUTEFs",
-        "distinctGfs": "Forest guides"
+        "distinctGfs": "Forest guides",
+        "forestGuide": "Forest guide",
+        "type": "Type",
+        "matchStatuses": "Match status",
+        "rawReferences": "Original references"
       },
       "badges": {
         "creditUse": "≥ 90% credit"
@@ -873,7 +915,58 @@
             "0": "GF3 volumes are excluded from the balance.",
             "1": "Plates are compared after trim only; no further normalization."
           }
+        },
+        "gf_permit_unparseable": {
+          "name": "Unparseable AUTEF reference on a forest guide",
+          "rule": "GF has at least one declared AUTEF reference with match_status = unparseable",
+          "limitations": {
+            "0": "GFs with an empty autorizacoes array are not exploded and do not appear here.",
+            "1": "A reference is parseable only when it splits into number/year on a slash."
+          }
+        },
+        "gf_permit_unmatched": {
+          "name": "Unmatched AUTEF reference on a forest guide",
+          "rule": "GF has at least one parseable AUTEF reference with match_status = unmatched",
+          "limitations": {
+            "0": "GFs with an empty autorizacoes array are not exploded and do not appear here.",
+            "1": "A reference is parseable only when it splits into number/year on a slash."
+          }
         }
+      }
+    },
+    "permitReferences": {
+      "list": {
+        "title": "Documentary origin audit",
+        "subtitle": "Declared AUTEF references on forest guides. Statuses are discrepancies, not legal conclusions.",
+        "total": "{{count}} total",
+        "totalRows": "{{count}} row(s)",
+        "searchPlaceholder": "Search original reference...",
+        "empty": "No permit references match the current filters.",
+        "emptyNested": "This forest guide has no exploded AUTEF references."
+      },
+      "table": {
+        "forestGuide": "Forest guide",
+        "rawReference": "Original reference",
+        "status": "Status",
+        "parsed": "Parsed",
+        "autef": "AUTEF"
+      },
+      "filters": {
+        "status": "Status",
+        "anyStatus": "Any status",
+        "type": "GF type",
+        "issuedFrom": "Issued from",
+        "issuedTo": "Issued to",
+        "multiple": "Only forest guides with more than one reference"
+      },
+      "status": {
+        "unparseable": "Unparseable",
+        "unmatched": "No match",
+        "matched": "Matched",
+        "ambiguous": "Ambiguous"
+      },
+      "errors": {
+        "listTitle": "Failed to load permit references"
       }
     }
   }

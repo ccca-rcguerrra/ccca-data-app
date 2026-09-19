@@ -155,4 +155,67 @@ describe('IndicatorsService', () => {
       havings.some((sql) => sql.includes('COUNT(DISTINCT flagged.autef_id)')),
     ).toBe(true);
   });
+
+  it('queries forest-guide permit cases without a recurrence threshold', async () => {
+    const wheres: string[] = [];
+    const listQb: Record<string, unknown> = {};
+    const self = () => listQb;
+    listQb.innerJoin = jest.fn(self);
+    listQb.where = jest.fn((sql: string) => {
+      wheres.push(sql);
+      return listQb;
+    });
+    listQb.andWhere = jest.fn(self);
+    listQb.select = jest.fn(self);
+    listQb.addSelect = jest.fn(self);
+    listQb.groupBy = jest.fn(self);
+    listQb.addGroupBy = jest.fn(self);
+    listQb.orderBy = jest.fn(self);
+    listQb.addOrderBy = jest.fn(self);
+    listQb.offset = jest.fn(self);
+    listQb.limit = jest.fn(self);
+    listQb.getQuery = jest.fn(() => 'SELECT 1');
+    listQb.getParameters = jest.fn(() => ({ matchStatus: 'unparseable' }));
+    listQb.getRawMany = jest.fn().mockResolvedValue([
+      {
+        forestGuideId: 10,
+        number: '12345',
+        type: 'GF1',
+        matchStatuses: ['unparseable'],
+        rawReferences: ['20139-24?'],
+      },
+    ]);
+
+    const countQb: Record<string, unknown> = {};
+    const countSelf = () => countQb;
+    countQb.select = jest.fn(countSelf);
+    countQb.from = jest.fn(countSelf);
+    countQb.setParameters = jest.fn(countSelf);
+    countQb.getRawOne = jest.fn().mockResolvedValue({ count: 1 });
+
+    const personRepo = {
+      manager: { createQueryBuilder: jest.fn(() => countQb) },
+    };
+    const forestGuideRepo = {
+      createQueryBuilder: jest.fn(() => listQb),
+    };
+    const grouped = new IndicatorsService(
+      unused,
+      personRepo as never,
+      forestGuideRepo as never,
+    );
+
+    const result = await grouped.findCases(
+      INDICATOR_IDS.GF_PERMIT_UNPARSEABLE,
+      {},
+    );
+    expect(result.total).toBe(1);
+    expect(result.data[0]).toMatchObject({
+      entity: 'gf',
+      forestGuideId: 10,
+      rawReferences: ['20139-24?'],
+    });
+    expect(wheres.some((sql) => sql.includes('match_status'))).toBe(true);
+    expect(wheres.join('\n')).not.toContain('>= 2');
+  });
 });

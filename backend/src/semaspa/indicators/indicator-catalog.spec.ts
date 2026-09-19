@@ -12,6 +12,7 @@ import {
 } from './indicator-catalog';
 import {
   mapAutefCase,
+  mapGfCase,
   mapPersonCase,
   mapPlateCase,
   toRequiredCount,
@@ -26,6 +27,8 @@ describe('indicator catalog', () => {
       INDICATOR_IDS.PERSON_MULTIPLE_OVER_EXTRACTED_AUTEFS,
       INDICATOR_IDS.PERSON_RECURRENT_GF_DESTINATION,
       INDICATOR_IDS.PLATE_RECURRENT,
+      INDICATOR_IDS.GF_PERMIT_UNPARSEABLE,
+      INDICATOR_IDS.GF_PERMIT_UNMATCHED,
     ]);
   });
 
@@ -43,12 +46,21 @@ describe('indicator catalog', () => {
     expect(getCatalogIndicator(INDICATOR_IDS.PLATE_RECURRENT)?.entity).toBe(
       'plate',
     );
+    expect(getCatalogIndicator(INDICATOR_IDS.GF_PERMIT_UNPARSEABLE)?.entity).toBe(
+      'gf',
+    );
+    expect(getCatalogIndicator(INDICATOR_IDS.GF_PERMIT_UNMATCHED)?.entity).toBe(
+      'gf',
+    );
     expect(catalogEntity(ANY_INDICATOR_ID)).toBe('autef');
     expect(isVolumeIndicatorQuery(ANY_INDICATOR_ID)).toBe(true);
     expect(isVolumeIndicatorQuery(INDICATOR_IDS.OVER_EXTRACTED)).toBe(true);
     expect(
       isVolumeIndicatorQuery(INDICATOR_IDS.PERSON_MULTIPLE_OVER_EXTRACTED_AUTEFS),
     ).toBe(false);
+    expect(isVolumeIndicatorQuery(INDICATOR_IDS.GF_PERMIT_UNPARSEABLE)).toBe(
+      false,
+    );
   });
 
   it('keeps every catalog entry informational with rule version 1', () => {
@@ -129,6 +141,26 @@ describe('person and plate case mapping', () => {
     });
     expect(toRequiredCount('2') >= DISTINCT_CASE_THRESHOLD).toBe(true);
     expect(toRequiredCount(1) >= DISTINCT_CASE_THRESHOLD).toBe(false);
+  });
+
+  it('maps forest-guide permit cases with original references', () => {
+    expect(
+      mapGfCase({
+        forestGuideId: 10,
+        number: '12345',
+        type: 'GF1',
+        matchStatuses: ['unparseable', 'unmatched'],
+        rawReferences: ['20139-24?', '20139/2024'],
+      }),
+    ).toEqual({
+      entity: 'gf',
+      forestGuideId: 10,
+      number: '12345',
+      issuedAt: null,
+      type: 'GF1',
+      matchStatuses: ['unparseable', 'unmatched'],
+      rawReferences: ['20139-24?', '20139/2024'],
+    });
   });
 
   it('maps autef volume cases with entity autef', () => {

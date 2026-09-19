@@ -31,12 +31,43 @@ describe('mapPersonParticipation', () => {
       destinationGfCount: 0,
       distinctAutefCount: 14,
       distinctGfCount: 310,
+      overExtractedAutefCount: 0,
+      unitConflictAutefCount: 0,
+      creditUseOver90AutefCount: 0,
+      recurrentDestinationGfCount: 0,
+      associatedPlateCount: 0,
+      associatedPlateSample: null,
     });
   });
 });
 
 function unusedRepo(): never {
   return {} as never;
+}
+
+function createRoleQueryBuilder(selects: string[]) {
+  const qb: Record<string, unknown> = {};
+  const self = () => qb;
+  qb.select = jest.fn((sql: string) => {
+    selects.push(sql);
+    return qb;
+  });
+  qb.addSelect = jest.fn((sql: string) => {
+    selects.push(sql);
+    return qb;
+  });
+  qb.where = jest.fn(self);
+  qb.andWhere = jest.fn(self);
+  qb.groupBy = jest.fn(self);
+  qb.innerJoin = jest.fn(self);
+  qb.orderBy = jest.fn(self);
+  qb.addOrderBy = jest.fn(self);
+  qb.skip = jest.fn(self);
+  qb.take = jest.fn(self);
+  qb.getRawMany = jest.fn().mockResolvedValue([]);
+  qb.getRawOne = jest.fn().mockResolvedValue({ count: 0, sample: null });
+  qb.getMany = jest.fn().mockResolvedValue([]);
+  return qb;
 }
 
 describe('PeopleService', () => {
@@ -65,23 +96,7 @@ describe('PeopleService', () => {
     const personRepo = { exist: jest.fn().mockResolvedValue(true) };
     const selects: string[] = [];
     const personRoleRepo = {
-      createQueryBuilder: jest.fn(() => {
-        const qb: Record<string, unknown> = {};
-        const self = () => qb;
-        qb.select = jest.fn((sql: string) => {
-          selects.push(sql);
-          return qb;
-        });
-        qb.addSelect = jest.fn((sql: string) => {
-          selects.push(sql);
-          return qb;
-        });
-        qb.where = jest.fn(self);
-        qb.andWhere = jest.fn(self);
-        qb.groupBy = jest.fn(self);
-        qb.getRawMany = jest.fn().mockResolvedValue([]);
-        return qb;
-      }),
+      createQueryBuilder: jest.fn(() => createRoleQueryBuilder(selects)),
       findAndCount: jest.fn().mockResolvedValue([[], 0]),
     };
     const unused = unusedRepo();
@@ -105,5 +120,41 @@ describe('PeopleService', () => {
     expect(selects.some((sql) => sql.includes('COUNT(DISTINCT pr.entityId)'))).toBe(
       true,
     );
+    expect(selects.some((sql) => sql.includes('COUNT(DISTINCT pr.entity_id)'))).toBe(
+      true,
+    );
+    expect(selects.some((sql) => sql.includes('COUNT(DISTINCT plate_row.plate)'))).toBe(
+      true,
+    );
+  });
+
+  it('counts a single over-extracted AUTEF without a recurrence threshold', async () => {
+    const personRepo = { exist: jest.fn().mockResolvedValue(true) };
+    const selects: string[] = [];
+    const personRoleRepo = {
+      createQueryBuilder: jest.fn(() => {
+        const qb = createRoleQueryBuilder(selects);
+        (qb.getRawMany as jest.Mock).mockResolvedValue([]);
+        (qb.getRawOne as jest.Mock).mockImplementation(() => {
+          const lastSelect = selects[selects.length - 1] ?? '';
+          if (lastSelect.includes('COUNT(DISTINCT pr.entity_id)')) {
+            return Promise.resolve({ count: '1' });
+          }
+          return Promise.resolve({ count: 0, sample: null });
+        });
+        return qb;
+      }),
+    };
+
+    const service = new PeopleService(
+      personRepo as never,
+      personRoleRepo as never,
+      unusedRepo(),
+      unusedRepo(),
+    );
+
+    const participation = await service.findParticipation('person-1');
+    expect(participation.overExtractedAutefCount).toBe(1);
+    expect(selects.join('\n')).not.toContain('>= 2');
   });
 });

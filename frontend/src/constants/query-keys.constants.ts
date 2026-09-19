@@ -137,6 +137,9 @@ export const QUERY_KEYS = {
         ['semaspa', 'autefs', 'harvest-units', id, params] as const,
       roles: (id: number, params: unknown) =>
         ['semaspa', 'autefs', 'roles', id, params] as const,
+      plates: (id: number, params: unknown) =>
+        ['semaspa', 'autefs', 'plates', id, params] as const,
+      related: (id: number) => ['semaspa', 'autefs', 'related', id] as const,
     },
     people: {
       lists: () => ['semaspa', 'people', 'list'] as const,
@@ -164,6 +167,13 @@ export const QUERY_KEYS = {
         ['semaspa', 'forest-guides', 'roles', id, params] as const,
       autefs: (id: number, params: unknown) =>
         ['semaspa', 'forest-guides', 'autefs', id, params] as const,
+      permitReferences: (id: number, params: unknown) =>
+        ['semaspa', 'forest-guides', 'permit-references', id, params] as const,
+    },
+    permitReferences: {
+      lists: () => ['semaspa', 'permit-references', 'list'] as const,
+      list: (params: unknown) =>
+        ['semaspa', 'permit-references', 'list', params] as const,
     },
     indicators: {
       summary: (params: unknown) => ['semaspa', 'indicators', 'summary', params] as const,

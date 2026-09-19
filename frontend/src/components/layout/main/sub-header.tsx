@@ -32,6 +32,7 @@ export const SubHeader = () => {
     'autefs': 'navigation.autefs',
     'forest-guides': 'navigation.forestGuides',
     'people': 'navigation.people',
+    'permit-references': 'navigation.permitReferences',
   };
 
   const breadcrumbItems = useMemo(() => {

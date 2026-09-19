@@ -175,6 +175,13 @@ export function useIndicatorsController() {
     [navigate],
   );
 
+  const handleGfRowClick = useCallback(
+    (forestGuideId: number) => {
+      navigate(ROUTES.semaspa.forestGuideDetail.replace(':id', String(forestGuideId)));
+    },
+    [navigate],
+  );
+
   const handleExport = useCallback(async () => {
     setIsExporting(true);
     setExportError(null);
@@ -224,6 +231,7 @@ export function useIndicatorsController() {
       handleRowClick,
       handlePersonRowClick,
       handlePlateRowClick,
+      handleGfRowClick,
       handleExport,
       handleRefresh,
     },

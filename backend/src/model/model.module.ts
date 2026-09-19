@@ -24,6 +24,7 @@ import { SemaspaPersonRole } from './entities/semaspa-person-role.view.entity';
 import { SemaspaAutefVolumeBalance } from './entities/semaspa-autef-volume-balance.view.entity';
 import { SemaspaAutefForestGuide } from './entities/semaspa-autef-forest-guide.view.entity';
 import { SemaspaAutefHarvestUnit } from './entities/semaspa-autef-harvest-unit.view.entity';
+import { SemaspaForestGuidePermitReference } from './entities/semaspa-forest-guide-permit-reference.view.entity';
 
 const features = [
   User,
@@ -47,6 +48,7 @@ const features = [
   SemaspaAutefVolumeBalance,
   SemaspaAutefForestGuide,
   SemaspaAutefHarvestUnit,
+  SemaspaForestGuidePermitReference,
 ];
 
 const ModelFeatures = TypeOrmModule.forFeature(features);

@@ -95,3 +95,15 @@ export function mapPlateCase(row: Record<string, unknown>): IndicatorCaseRespons
     ),
   };
 }
+
+export function mapGfCase(row: Record<string, unknown>): IndicatorCaseResponseDto {
+  return {
+    entity: 'gf',
+    forestGuideId: Number(row.forestGuideId ?? row.forest_guide_id),
+    number: toNullableString(row.number),
+    issuedAt: (row.issuedAt ?? row.issued_at ?? null) as Date | string | null,
+    type: toNullableString(row.type),
+    matchStatuses: toStringArray(row.matchStatuses ?? row.match_statuses),
+    rawReferences: toStringArray(row.rawReferences ?? row.raw_references),
+  };
+}

@@ -14,6 +14,7 @@ import { AutefOverviewPanel } from './components/autef-overview-panel';
 import { AutefHarvestUnitsPanel } from './components/autef-harvest-units-panel';
 import { AutefForestGuidesTable } from './components/autef-forest-guides-table';
 import { AutefDossierHeader } from './components/autef-dossier-header';
+import { AutefPlatesTable } from './components/autef-plates-table';
 import { ForestGuideDetailSheet } from '../forest-guides/components/forest-guide-detail-sheet';
 
 export function AutefDetailPage() {
@@ -83,6 +84,7 @@ export function AutefDetailPage() {
           <TabsTrigger value="forestGuides">{t('semaspa.autefs.tabs.forestGuides')}</TabsTrigger>
           <TabsTrigger value="harvestUnits">{t('semaspa.autefs.tabs.harvestUnits')}</TabsTrigger>
           <TabsTrigger value="roles">{t('semaspa.autefs.tabs.roles')}</TabsTrigger>
+          <TabsTrigger value="plates">{t('semaspa.autefs.tabs.plates')}</TabsTrigger>
         </TabsList>
 
         <LazyTabsContent
@@ -119,6 +121,13 @@ export function AutefDetailPage() {
           className="flex-1 min-h-0 overflow-hidden mt-0 data-[state=inactive]:hidden"
         >
           <AutefRolesCards controller={controller} />
+        </LazyTabsContent>
+        <LazyTabsContent
+          value="plates"
+          activeValue={activeTab}
+          className="flex-1 min-h-0 overflow-hidden mt-0 data-[state=inactive]:hidden"
+        >
+          <AutefPlatesTable controller={controller} />
         </LazyTabsContent>
       </Tabs>
 

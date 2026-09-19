@@ -1,4 +1,4 @@
-import { Building2, FileText, Home, Trees, User, Users } from 'lucide-react';
+import { Building2, FileSearch, FileText, Home, Trees, User, Users } from 'lucide-react';
 import type { Permission } from '@/constants/permissions';
 
 export interface NavItem {
@@ -39,6 +39,12 @@ export const navigationData = {
       titleKey: 'navigation.people',
       url: '/semaspa/people',
       icon: Building2,
+    },
+    {
+      title: 'Permit references',
+      titleKey: 'navigation.permitReferences',
+      url: '/semaspa/permit-references',
+      icon: FileSearch,
     },
     {
       title: 'Users',

@@ -29,6 +29,11 @@ import {
 import { ForestGuideStatusBadge } from './components/forest-guide-status-badge';
 import { PlateChip } from './components/plate-chip';
 import { PersonLink } from '../people/components/person-link';
+import { PermitReferencesList } from '../permit-references/components/permit-references-list';
+import {
+  hasBrokenPermitRef,
+  PermitMatchStatusBadge,
+} from '../permit-references/components/permit-match-status-badge';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -39,7 +44,7 @@ function formatCurrency(value: number | null): string {
 
 function DetailSummary({ controller }: { controller: ForestGuideDetailController }) {
   const { t } = useTranslation();
-  const { forestGuide, isLoadingDetail } = controller.api;
+  const { forestGuide, isLoadingDetail, permitReferences } = controller.api;
 
   if (isLoadingDetail) {
     return (
@@ -67,6 +72,17 @@ function DetailSummary({ controller }: { controller: ForestGuideDetailController
           {t('semaspa.forestGuides.detail.eyebrow')}
         </p>
         <h2 className="mt-1 font-mono text-xl font-semibold tracking-tight">{title}</h2>
+        {hasBrokenPermitRef(permitReferences.data.map((row) => row.matchStatus)) ? (
+          <div className="mt-2">
+            <PermitMatchStatusBadge
+              status={
+                permitReferences.data.some((row) => row.matchStatus === 'unparseable')
+                  ? 'unparseable'
+                  : 'unmatched'
+              }
+            />
+          </div>
+        ) : null}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-t border-border pt-3 text-sm">
         <div>
@@ -99,6 +115,25 @@ function DetailSummary({ controller }: { controller: ForestGuideDetailController
           </p>
           <div className="mt-1">
             <PlateChip plates={forestGuide.vehiclePlates} />
+          </div>
+        </div>
+        <div className="col-span-2 md:col-span-4">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.forestGuides.detail.permits')}
+          </p>
+          <p className="font-mono text-[13px] font-medium">
+            {forestGuide.permitRefs?.length ? forestGuide.permitRefs.join(', ') : '—'}
+          </p>
+        </div>
+        <div className="col-span-2 md:col-span-4">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('semaspa.forestGuides.detail.permitMatch')}
+          </p>
+          <div className="mt-2">
+            <PermitReferencesList
+              rows={permitReferences.data}
+              emptyLabel={t('semaspa.permitReferences.list.emptyNested')}
+            />
           </div>
         </div>
       </div>

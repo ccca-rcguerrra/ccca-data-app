@@ -17,12 +17,14 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { ForestGuidesService } from './services/forest-guides.service';
+import { PermitReferencesService } from '../permit-references/services/permit-references.service';
 import { GetForestGuidesQueryDto } from './dto/get-forest-guides-query.dto';
 import { ForestGuideResponseDto } from './dto/forest-guide-response.dto';
 import { SemaspaPaginationQueryDto } from '../shared/semaspa-pagination.dto';
 import {
   GetForestGuidesResponseDto,
   GetForestGuideSpeciesResponseDto,
+  GetPermitReferencesResponseDto,
   GetPersonRolesResponseDto,
 } from '../shared/paginated-responses.dto';
 import { GetAutefsResponseDto } from '../autefs/dto/get-autefs-response.dto';
@@ -32,7 +34,10 @@ import { GetAutefsResponseDto } from '../autefs/dto/get-autefs-response.dto';
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class ForestGuidesController {
-  constructor(private readonly forestGuidesService: ForestGuidesService) {}
+  constructor(
+    private readonly forestGuidesService: ForestGuidesService,
+    private readonly permitReferencesService: PermitReferencesService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'List forest guides with pagination and filters' })
@@ -73,6 +78,19 @@ export class ForestGuidesController {
     @Query() query: SemaspaPaginationQueryDto,
   ): Promise<GetAutefsResponseDto> {
     return this.forestGuidesService.findAutefs(id, query);
+  }
+
+  @Get(':id/permit-references')
+  @ApiOperation({
+    summary: 'List declared AUTEF references for a forest guide',
+  })
+  @ApiOkResponse({ type: GetPermitReferencesResponseDto })
+  @ApiNotFoundResponse({ description: 'Forest guide not found' })
+  findPermitReferences(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: SemaspaPaginationQueryDto,
+  ): Promise<GetPermitReferencesResponseDto> {
+    return this.permitReferencesService.findByForestGuideId(id, query);
   }
 
   @Get(':id')

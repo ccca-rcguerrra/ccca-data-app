@@ -5,6 +5,7 @@ import type {
   ForestGuide,
   ForestGuideListParams,
   ForestGuideSpecies,
+  PermitReference,
   PersonRole,
   SemaspaPaginationParams,
 } from '@/types/semaspa';
@@ -95,6 +96,18 @@ export class ForestGuidesService {
     const { page = 1, limit = 20 } = params;
     const response = await api.get<ApiPaginatedResponse<Autef>>(
       `${ForestGuidesService.BASE_URL}/${id}/autefs`,
+      { params: { page, limit } },
+    );
+    return response.data;
+  }
+
+  static async findPermitReferences(
+    id: number,
+    params: SemaspaPaginationParams = {},
+  ): Promise<ApiPaginatedResponse<PermitReference>> {
+    const { page = 1, limit = 20 } = params;
+    const response = await api.get<ApiPaginatedResponse<PermitReference>>(
+      `${ForestGuidesService.BASE_URL}/${id}/permit-references`,
       { params: { page, limit } },
     );
     return response.data;

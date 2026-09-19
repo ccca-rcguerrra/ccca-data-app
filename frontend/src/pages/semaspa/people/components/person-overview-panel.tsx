@@ -4,11 +4,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/shadcn
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import type { PersonDetailController } from '../hooks/use-person-detail-controller';
 
-const LIMITATION_COUNT = 3;
+const LIMITATION_COUNT = 5;
+
+const OCCURRENCE_ITEMS = [
+  { key: 'overExtracted', countKey: 'overExtractedAutefCount' },
+  { key: 'unitConflict', countKey: 'unitConflictAutefCount' },
+  { key: 'creditUseOver90', countKey: 'creditUseOver90AutefCount' },
+  { key: 'recurrentDestination', countKey: 'recurrentDestinationGfCount' },
+  { key: 'associatedPlates', countKey: 'associatedPlateCount' },
+] as const;
 
 export function PersonOverviewPanel({ controller }: { controller: PersonDetailController }) {
   const { t } = useTranslation();
-  const { participation, isLoadingParticipation } = controller.api;
+  const {
+    api: { participation, isLoadingParticipation },
+    handlers: { handleOccurrenceClick },
+  } = controller;
 
   const items = [
     {
@@ -65,6 +76,41 @@ export function PersonOverviewPanel({ controller }: { controller: PersonDetailCo
                   count: participation.distinctGfCount,
                 })}
               </li>
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-semibold">
+            {t('semaspa.people.occurrences.title')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoadingParticipation ? (
+            <div className="space-y-2">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Skeleton key={index} className="h-5 w-72" />
+              ))}
+            </div>
+          ) : (
+            <ul className="space-y-1.5 text-sm">
+              {OCCURRENCE_ITEMS.map((item) => {
+                const count = participation[item.countKey];
+                return (
+                  <li key={item.key}>
+                    <button
+                      type="button"
+                      className="text-left hover:underline disabled:no-underline disabled:text-muted-foreground"
+                      disabled={count === 0}
+                      onClick={() => handleOccurrenceClick(item.key)}
+                    >
+                      {t(`semaspa.people.occurrences.${item.key}`, { count })}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </CardContent>

@@ -7,6 +7,8 @@ import type {
   PersonListParams,
   PersonParticipation,
   PersonRole,
+  PersonAutefOccurrenceFlag,
+  PersonGfOccurrenceFlag,
   SemaspaPaginationParams,
 } from '@/types/semaspa';
 
@@ -40,24 +42,28 @@ export class PeopleService {
 
   static async findAutefs(
     id: string,
-    params: SemaspaPaginationParams = {},
+    params: SemaspaPaginationParams & { flag?: PersonAutefOccurrenceFlag } = {},
   ): Promise<ApiPaginatedResponse<PersonLinkedAutef>> {
-    const { page = 1, limit = 20 } = params;
+    const { page = 1, limit = 20, flag } = params;
+    const queryParams: Record<string, string | number> = { page, limit };
+    if (flag) queryParams.flag = flag;
     const response = await api.get<ApiPaginatedResponse<PersonLinkedAutef>>(
       `${PeopleService.BASE_URL}/${id}/autefs`,
-      { params: { page, limit } },
+      { params: queryParams },
     );
     return response.data;
   }
 
   static async findForestGuides(
     id: string,
-    params: SemaspaPaginationParams = {},
+    params: SemaspaPaginationParams & { flag?: PersonGfOccurrenceFlag } = {},
   ): Promise<ApiPaginatedResponse<PersonLinkedForestGuide>> {
-    const { page = 1, limit = 20 } = params;
+    const { page = 1, limit = 20, flag } = params;
+    const queryParams: Record<string, string | number> = { page, limit };
+    if (flag) queryParams.flag = flag;
     const response = await api.get<ApiPaginatedResponse<PersonLinkedForestGuide>>(
       `${PeopleService.BASE_URL}/${id}/forest-guides`,
-      { params: { page, limit } },
+      { params: queryParams },
     );
     return response.data;
   }

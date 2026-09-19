@@ -15,6 +15,8 @@ import { AutefVolumeBalancesService } from './autef-volume-balances/services/aut
 import { IndicatorsController } from './indicators/indicators.controller';
 import { IndicatorsService } from './indicators/services/indicators.service';
 import { IndicatorSavedFiltersService } from './indicators/services/indicator-saved-filters.service';
+import { PermitReferencesController } from './permit-references/permit-references.controller';
+import { PermitReferencesService } from './permit-references/services/permit-references.service';
 
 @Module({
   imports: [ModelModule],
@@ -26,6 +28,7 @@ import { IndicatorSavedFiltersService } from './indicators/services/indicator-sa
     HarvestUnitsController,
     AutefVolumeBalancesController,
     IndicatorsController,
+    PermitReferencesController,
   ],
   providers: [
     AutefsService,
@@ -36,6 +39,7 @@ import { IndicatorSavedFiltersService } from './indicators/services/indicator-sa
     AutefVolumeBalancesService,
     IndicatorsService,
     IndicatorSavedFiltersService,
+    PermitReferencesService,
   ],
   exports: [
     AutefsService,
@@ -46,6 +50,7 @@ import { IndicatorSavedFiltersService } from './indicators/services/indicator-sa
     AutefVolumeBalancesService,
     IndicatorsService,
     IndicatorSavedFiltersService,
+    PermitReferencesService,
   ],
 })
 export class SemaspaModule {}

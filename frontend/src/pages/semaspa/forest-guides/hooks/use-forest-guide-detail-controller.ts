@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 
 import {
   useForestGuideAutefsQuery,
+  useForestGuidePermitReferencesQuery,
   useForestGuideQuery,
   useForestGuideRolesQuery,
   useForestGuideSpeciesQuery,
@@ -61,6 +62,11 @@ export function useForestGuideDetailController() {
   const autefsQuery = useForestGuideAutefsQuery(forestGuideId, autefsParams, {
     enabled: validId && activeTab === 'autefs',
   });
+  const permitReferencesQuery = useForestGuidePermitReferencesQuery(
+    forestGuideId,
+    { page: 1, limit: 100 },
+    { enabled: validId },
+  );
 
   const speciesProductIds = useMemo(
     () => (speciesQuery.data?.data ?? []).map((row) => row.speciesProductId),
@@ -96,6 +102,9 @@ export function useForestGuideDetailController() {
       isLoadingRoles: rolesQuery.isLoading || rolesQuery.isFetching,
       autefs: autefsQuery.data ?? emptyPagination(),
       isLoadingAutefs: autefsQuery.isLoading || autefsQuery.isFetching,
+      permitReferences: permitReferencesQuery.data ?? emptyPagination(),
+      isLoadingPermitReferences:
+        permitReferencesQuery.isLoading || permitReferencesQuery.isFetching,
       speciesProductsMap,
       peopleMap,
     },

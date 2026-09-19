@@ -12,6 +12,8 @@ import type {
   PersonRole,
   SemaspaPaginationParams,
   VolumeBalanceForestGuidesResponse,
+  AutefPlate,
+  AutefRelated,
 } from '@/types/semaspa';
 
 function appendDefined(
@@ -172,6 +174,25 @@ export class AutefsService {
     const response = await api.get<ApiPaginatedResponse<PersonRole>>(
       `${AutefsService.BASE_URL}/${id}/roles`,
       { params: { page, limit } },
+    );
+    return response.data;
+  }
+
+  static async findPlates(
+    id: number,
+    params: SemaspaPaginationParams = {},
+  ): Promise<ApiPaginatedResponse<AutefPlate>> {
+    const { page = 1, limit = 20 } = params;
+    const response = await api.get<ApiPaginatedResponse<AutefPlate>>(
+      `${AutefsService.BASE_URL}/${id}/plates`,
+      { params: { page, limit } },
+    );
+    return response.data;
+  }
+
+  static async findRelated(id: number): Promise<{ data: AutefRelated[] }> {
+    const response = await api.get<{ data: AutefRelated[] }>(
+      `${AutefsService.BASE_URL}/${id}/related`,
     );
     return response.data;
   }

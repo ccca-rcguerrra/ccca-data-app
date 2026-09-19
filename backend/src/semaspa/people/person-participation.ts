@@ -17,6 +17,12 @@ export function emptyPersonParticipation(): PersonParticipationResponseDto {
     destinationGfCount: 0,
     distinctAutefCount: 0,
     distinctGfCount: 0,
+    overExtractedAutefCount: 0,
+    unitConflictAutefCount: 0,
+    creditUseOver90AutefCount: 0,
+    recurrentDestinationGfCount: 0,
+    associatedPlateCount: 0,
+    associatedPlateSample: null,
   };
 }
 

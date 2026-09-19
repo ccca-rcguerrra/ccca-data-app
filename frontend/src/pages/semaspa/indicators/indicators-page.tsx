@@ -9,6 +9,7 @@ import { IndicatorFilters } from './components/indicator-filters';
 import { IndicatorCasesTable } from './components/indicator-cases-table';
 import { IndicatorPersonCasesTable } from './components/indicator-person-cases-table';
 import { IndicatorPlateCasesTable } from './components/indicator-plate-cases-table';
+import { IndicatorGfCasesTable } from './components/indicator-gf-cases-table';
 import { IndicatorCards } from './components/indicator-cards';
 
 export function IndicatorsPage() {
@@ -100,6 +101,8 @@ export function IndicatorsPage() {
           <IndicatorPersonCasesTable controller={controller} />
         ) : controller.api.selectedEntity === 'plate' ? (
           <IndicatorPlateCasesTable controller={controller} />
+        ) : controller.api.selectedEntity === 'gf' ? (
+          <IndicatorGfCasesTable controller={controller} />
         ) : (
           <IndicatorCasesTable controller={controller} />
         )}

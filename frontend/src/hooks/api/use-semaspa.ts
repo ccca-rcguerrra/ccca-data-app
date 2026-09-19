@@ -5,6 +5,7 @@ import { ForestGuidesService } from '@/services/semaspa/forest-guides.service';
 import { PeopleService } from '@/services/semaspa/people.service';
 import { SpeciesProductsService } from '@/services/semaspa/species-products.service';
 import { IndicatorsService } from '@/services/semaspa/indicators.service';
+import { PermitReferencesService } from '@/services/semaspa/permit-references.service';
 import { QUERY_KEYS } from '@/constants/query-keys.constants';
 import type {
   AutefListParams,
@@ -15,7 +16,10 @@ import type {
   IndicatorFilters,
   IndicatorQueryId,
   Person,
+  PersonAutefOccurrenceFlag,
+  PersonGfOccurrenceFlag,
   PersonListParams,
+  PermitReferenceListParams,
   SemaspaPaginationParams,
   SpeciesProduct,
   CreateIndicatorSavedFilterPayload,
@@ -135,6 +139,28 @@ export const useAutefRolesQuery = (
   });
 };
 
+export const useAutefPlatesQuery = (
+  id: number,
+  params: SemaspaPaginationParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.autefs.plates(id, params),
+    queryFn: () => AutefsService.findPlates(id, params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false && Number.isInteger(id) && id > 0,
+  });
+};
+
+export const useAutefRelatedQuery = (id: number, options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.autefs.related(id),
+    queryFn: () => AutefsService.findRelated(id),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false && Number.isInteger(id) && id > 0,
+  });
+};
+
 export const useForestGuidesQuery = (
   params: ForestGuideListParams = {},
   options?: { enabled?: boolean },
@@ -195,6 +221,31 @@ export const useForestGuideAutefsQuery = (
   });
 };
 
+export const useForestGuidePermitReferencesQuery = (
+  id: number,
+  params: SemaspaPaginationParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.forestGuides.permitReferences(id, params),
+    queryFn: () => ForestGuidesService.findPermitReferences(id, params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false && Number.isInteger(id) && id > 0,
+  });
+};
+
+export const usePermitReferencesQuery = (
+  params: PermitReferenceListParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.permitReferences.list(params),
+    queryFn: () => PermitReferencesService.findAll(params),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false,
+  });
+};
+
 export const usePeopleQuery = (
   params: PersonListParams = {},
   options?: { enabled?: boolean },
@@ -228,7 +279,7 @@ export const usePersonParticipationQuery = (id: string, enabled = true) => {
 
 export const usePersonAutefsQuery = (
   id: string,
-  params: SemaspaPaginationParams = {},
+  params: SemaspaPaginationParams & { flag?: PersonAutefOccurrenceFlag } = {},
   options?: { enabled?: boolean },
 ) => {
   return useQuery({
@@ -241,7 +292,7 @@ export const usePersonAutefsQuery = (
 
 export const usePersonForestGuidesQuery = (
   id: string,
-  params: SemaspaPaginationParams = {},
+  params: SemaspaPaginationParams & { flag?: PersonGfOccurrenceFlag } = {},
   options?: { enabled?: boolean },
 ) => {
   return useQuery({

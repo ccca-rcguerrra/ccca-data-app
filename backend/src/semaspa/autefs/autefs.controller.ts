@@ -28,6 +28,8 @@ import { GetAutefNestedVolumeBalancesQueryDto } from './dto/get-autef-nested-vol
 import { GetVolumeBalanceForestGuidesQueryDto } from './dto/get-volume-balance-forest-guides-query.dto';
 import { SemaspaPaginationQueryDto } from '../shared/semaspa-pagination.dto';
 import {
+  GetAutefPlatesResponseDto,
+  GetAutefRelatedResponseDto,
   GetAutefSpeciesResponseDto,
   GetAutefVolumeBalancesResponseDto,
   GetForestGuidesResponseDto,
@@ -179,6 +181,32 @@ export class AutefsController {
     @Query() query: SemaspaPaginationQueryDto,
   ): Promise<GetPersonRolesResponseDto> {
     return this.autefsService.findRoles(id, query);
+  }
+
+  @Get(':id/plates')
+  @ApiOperation({
+    summary: 'List distinct vehicle plates on forest guides linked to an AUTEF',
+  })
+  @ApiOkResponse({ type: GetAutefPlatesResponseDto })
+  @ApiNotFoundResponse({ description: 'AUTEF not found' })
+  findPlates(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: SemaspaPaginationQueryDto,
+  ): Promise<GetAutefPlatesResponseDto> {
+    return this.autefsService.findPlates(id, query);
+  }
+
+  @Get(':id/related')
+  @ApiOperation({
+    summary:
+      'List other AUTEFs that share the same owner or technical responsible',
+  })
+  @ApiOkResponse({ type: GetAutefRelatedResponseDto })
+  @ApiNotFoundResponse({ description: 'AUTEF not found' })
+  findRelated(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<GetAutefRelatedResponseDto> {
+    return this.autefsService.findRelated(id);
   }
 
   @Get(':id')

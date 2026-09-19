@@ -18,6 +18,7 @@ export { SemaspaPersonRole } from './entities/semaspa-person-role.view.entity';
 export { SemaspaAutefVolumeBalance } from './entities/semaspa-autef-volume-balance.view.entity';
 export { SemaspaAutefForestGuide } from './entities/semaspa-autef-forest-guide.view.entity';
 export { SemaspaAutefHarvestUnit } from './entities/semaspa-autef-harvest-unit.view.entity';
+export { SemaspaForestGuidePermitReference } from './entities/semaspa-forest-guide-permit-reference.view.entity';
 
 export { UserRole, NotificationType } from './model.enums';
 

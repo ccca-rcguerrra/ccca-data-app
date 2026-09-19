@@ -18,6 +18,11 @@ const ACTOR_CARD_ORDER: CatalogIndicatorId[] = [
   INDICATOR_IDS.PLATE_RECURRENT,
 ];
 
+const GF_CARD_ORDER: CatalogIndicatorId[] = [
+  INDICATOR_IDS.GF_PERMIT_UNPARSEABLE,
+  INDICATOR_IDS.GF_PERMIT_UNMATCHED,
+];
+
 interface IndicatorCardsProps {
   controller: IndicatorsController;
 }
@@ -40,6 +45,11 @@ export function IndicatorCards({ controller }: IndicatorCardsProps) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {ACTOR_CARD_ORDER.map((id) => (
+            <Skeleton key={id} className="h-[108px] rounded-lg" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {GF_CARD_ORDER.map((id) => (
             <Skeleton key={id} className="h-[108px] rounded-lg" />
           ))}
         </div>
@@ -100,6 +110,15 @@ export function IndicatorCards({ controller }: IndicatorCardsProps) {
             id === INDICATOR_IDS.PLATE_RECURRENT
               ? 'semaspa.indicators.cards.selectedPlates'
               : 'semaspa.indicators.cards.selectedPeople',
+          ),
+        )}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {GF_CARD_ORDER.map((id) =>
+          renderCard(
+            id,
+            'semaspa.indicators.cards.selectGfs',
+            'semaspa.indicators.cards.selectedGfs',
           ),
         )}
       </div>

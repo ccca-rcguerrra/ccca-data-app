@@ -1,6 +1,7 @@
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import { useCallback, useEffect, useMemo } from 'react';
 
+import { ROUTES } from '@/constants/routes.constants';
 import type { PersonParticipation } from '@/types/semaspa';
 import type { ApiPaginatedResponse } from '@/types/api';
 import {
@@ -35,27 +36,42 @@ const EMPTY_PARTICIPATION: PersonParticipation = {
   destinationGfCount: 0,
   distinctAutefCount: 0,
   distinctGfCount: 0,
+  overExtractedAutefCount: 0,
+  unitConflictAutefCount: 0,
+  creditUseOver90AutefCount: 0,
+  recurrentDestinationGfCount: 0,
+  associatedPlateCount: 0,
+  associatedPlateSample: null,
 };
 
 export function usePersonDetailController() {
   const params = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const personId = params.id ? decodeURIComponent(params.id) : '';
   const validId = personId.length > 0;
 
   const storeState = usePersonDetailState();
   const storeActions = usePersonDetailActions();
-  const { activeTab, tabs } = storeState;
+  const { activeTab, tabs, autefFlag, forestGuideFlag } = storeState;
 
   const personQuery = usePersonQuery(personId, validId);
   const participationQuery = usePersonParticipationQuery(personId, validId);
 
   const autefsParams = useMemo(
-    () => ({ page: tabs.autefs.page, limit: tabs.autefs.pageSize }),
-    [tabs.autefs.page, tabs.autefs.pageSize],
+    () => ({
+      page: tabs.autefs.page,
+      limit: tabs.autefs.pageSize,
+      flag: autefFlag ?? undefined,
+    }),
+    [tabs.autefs.page, tabs.autefs.pageSize, autefFlag],
   );
   const forestGuidesParams = useMemo(
-    () => ({ page: tabs.forestGuides.page, limit: tabs.forestGuides.pageSize }),
-    [tabs.forestGuides.page, tabs.forestGuides.pageSize],
+    () => ({
+      page: tabs.forestGuides.page,
+      limit: tabs.forestGuides.pageSize,
+      flag: forestGuideFlag ?? undefined,
+    }),
+    [tabs.forestGuides.page, tabs.forestGuides.pageSize, forestGuideFlag],
   );
 
   const autefsQuery = usePersonAutefsQuery(personId, autefsParams, {
@@ -77,6 +93,48 @@ export function usePersonDetailController() {
       storeActions.setActiveTab(tab as PersonDetailTabId);
     },
     [storeActions],
+  );
+
+  const handleOccurrenceClick = useCallback(
+    (
+      key:
+        | 'overExtracted'
+        | 'unitConflict'
+        | 'creditUseOver90'
+        | 'recurrentDestination'
+        | 'associatedPlates',
+    ) => {
+      if (key === 'overExtracted') {
+        storeActions.openAutefsWithFlag('over_extracted');
+        return;
+      }
+      if (key === 'unitConflict') {
+        storeActions.openAutefsWithFlag('unit_conflict');
+        return;
+      }
+      if (key === 'creditUseOver90') {
+        storeActions.openAutefsWithFlag('credit_use_over_90');
+        return;
+      }
+      if (key === 'recurrentDestination') {
+        storeActions.openForestGuidesWithFlag('destination_over_extracted');
+        return;
+      }
+      const participation = participationQuery.data ?? EMPTY_PARTICIPATION;
+      if (
+        participation.associatedPlateCount === 1 &&
+        participation.associatedPlateSample
+      ) {
+        navigate(
+          `${ROUTES.semaspa.forestGuides}?plate=${encodeURIComponent(
+            participation.associatedPlateSample,
+          )}`,
+        );
+        return;
+      }
+      storeActions.openForestGuidesWithFlag('associated_plates');
+    },
+    [navigate, participationQuery.data, storeActions],
   );
 
   return {
@@ -102,6 +160,7 @@ export function usePersonDetailController() {
       handleActiveTabChange,
       handleTabPageChange: storeActions.setTabPage,
       handleTabPageSizeChange: storeActions.setTabPageSize,
+      handleOccurrenceClick,
     },
   };
 }

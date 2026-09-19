@@ -10,6 +10,9 @@ import { VolumeBalanceForestGuideResponseDto } from '../autefs/dto/volume-balanc
 import { PersonResponseDto } from '../people/dto/person-response.dto';
 import { PersonLinkedAutefResponseDto } from '../people/dto/person-linked-autef-response.dto';
 import { PersonLinkedForestGuideResponseDto } from '../people/dto/person-linked-forest-guide-response.dto';
+import { AutefPlateResponseDto } from '../autefs/dto/autef-plate-response.dto';
+import { AutefRelatedResponseDto } from '../autefs/dto/autef-related-response.dto';
+import { PermitReferenceResponseDto } from '../permit-references/dto/permit-reference-response.dto';
 import { SpeciesProductResponseDto } from '../species-products/dto/species-product-response.dto';
 
 abstract class PaginatedBase {
@@ -190,6 +193,42 @@ export class GetSpeciesProductsResponseDto extends PaginatedBase {
   data: SpeciesProductResponseDto[];
 
   constructor(data: SpeciesProductResponseDto[], page: number, limit: number, total: number) {
+    super();
+    this.data = data;
+    this.assignPagination(page, limit, total);
+  }
+}
+
+export class GetAutefPlatesResponseDto extends PaginatedBase {
+  @ApiProperty({ type: [AutefPlateResponseDto] })
+  data: AutefPlateResponseDto[];
+
+  constructor(data: AutefPlateResponseDto[], page: number, limit: number, total: number) {
+    super();
+    this.data = data;
+    this.assignPagination(page, limit, total);
+  }
+}
+
+export class GetAutefRelatedResponseDto {
+  @ApiProperty({ type: [AutefRelatedResponseDto] })
+  data: AutefRelatedResponseDto[];
+
+  constructor(data: AutefRelatedResponseDto[]) {
+    this.data = data;
+  }
+}
+
+export class GetPermitReferencesResponseDto extends PaginatedBase {
+  @ApiProperty({ type: [PermitReferenceResponseDto] })
+  data: PermitReferenceResponseDto[];
+
+  constructor(
+    data: PermitReferenceResponseDto[],
+    page: number,
+    limit: number,
+    total: number,
+  ) {
     super();
     this.data = data;
     this.assignPagination(page, limit, total);

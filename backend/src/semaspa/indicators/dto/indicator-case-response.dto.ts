@@ -2,8 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { buildPaginatedResponse } from '../../shared/semaspa-pagination.dto';
 
 export class IndicatorCaseResponseDto {
-  @ApiProperty({ enum: ['autef', 'person', 'plate'], example: 'autef' })
-  entity: 'autef' | 'person' | 'plate';
+  @ApiProperty({ enum: ['autef', 'person', 'plate', 'gf'], example: 'autef' })
+  entity: 'autef' | 'person' | 'plate' | 'gf';
 
   @ApiPropertyOptional({ example: 1 })
   autefId?: number;
@@ -55,6 +55,18 @@ export class IndicatorCaseResponseDto {
 
   @ApiPropertyOptional({ example: 'ABC1D23' })
   plate?: string;
+
+  @ApiPropertyOptional({ example: 1717533 })
+  forestGuideId?: number;
+
+  @ApiPropertyOptional({ nullable: true, example: 'GF1' })
+  type?: string | null;
+
+  @ApiPropertyOptional({ type: [String] })
+  matchStatuses?: string[] | null;
+
+  @ApiPropertyOptional({ type: [String] })
+  rawReferences?: string[] | null;
 }
 
 export class GetIndicatorCasesResponseDto {

@@ -15,6 +15,10 @@ import { PersonResponseDto } from './dto/person-response.dto';
 import { PersonParticipationResponseDto } from './dto/person-participation-response.dto';
 import { SemaspaPaginationQueryDto } from '../shared/semaspa-pagination.dto';
 import {
+  GetPersonLinkedAutefsQueryDto,
+  GetPersonLinkedForestGuidesQueryDto,
+} from './dto/get-person-linked-query.dto';
+import {
   GetPeopleResponseDto,
   GetPersonLinkedAutefsResponseDto,
   GetPersonLinkedForestGuidesResponseDto,
@@ -54,7 +58,7 @@ export class PeopleController {
   @ApiNotFoundResponse({ description: 'Person not found' })
   findAutefs(
     @Param('id') id: string,
-    @Query() query: SemaspaPaginationQueryDto,
+    @Query() query: GetPersonLinkedAutefsQueryDto,
   ): Promise<GetPersonLinkedAutefsResponseDto> {
     return this.peopleService.findAutefs(id, query);
   }
@@ -65,7 +69,7 @@ export class PeopleController {
   @ApiNotFoundResponse({ description: 'Person not found' })
   findForestGuides(
     @Param('id') id: string,
-    @Query() query: SemaspaPaginationQueryDto,
+    @Query() query: GetPersonLinkedForestGuidesQueryDto,
   ): Promise<GetPersonLinkedForestGuidesResponseDto> {
     return this.peopleService.findForestGuides(id, query);
   }

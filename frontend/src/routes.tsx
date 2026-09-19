@@ -16,6 +16,7 @@ import { ForestGuidesListPage } from './pages/semaspa/forest-guides/forest-guide
 import { ForestGuideDetailPage } from './pages/semaspa/forest-guides/forest-guide-detail-page';
 import { PeopleListPage } from './pages/semaspa/people/people-list-page';
 import { PersonDetailPage } from './pages/semaspa/people/person-detail-page';
+import { PermitReferencesPage } from './pages/semaspa/permit-references/permit-references-page';
 
 const router = createBrowserRouter([
   {
@@ -135,6 +136,14 @@ const router = createBrowserRouter([
             element: (
               <MainLayout>
                 <PersonDetailPage />
+              </MainLayout>
+            ),
+          },
+          {
+            path: toChildPath(ROUTES.semaspa.permitReferences),
+            element: (
+              <MainLayout>
+                <PermitReferencesPage />
               </MainLayout>
             ),
           },

@@ -6,6 +6,7 @@ import { SemaspaPerson } from '../../../model/entities/semaspa-person.view.entit
 import { SemaspaPersonRole } from '../../../model/entities/semaspa-person-role.view.entity';
 import { SemaspaForestGuide } from '../../../model/entities/semaspa-forest-guide.view.entity';
 import { SemaspaAutefForestGuide } from '../../../model/entities/semaspa-autef-forest-guide.view.entity';
+import { SemaspaForestGuidePermitReference } from '../../../model/entities/semaspa-forest-guide-permit-reference.view.entity';
 import {
   ANY_INDICATOR_ID,
   DISTINCT_CASE_THRESHOLD,
@@ -15,6 +16,7 @@ import {
   type IndicatorQueryId,
   catalogEntity,
   getCatalogIndicator,
+  isGfIndicatorQuery,
   isIndicatorQueryId,
   isVolumeIndicatorQuery,
 } from '../indicator-catalog';
@@ -34,6 +36,7 @@ import {
 } from '../dto/indicator-case-response.dto';
 import {
   mapAutefCase,
+  mapGfCase,
   mapPersonCase,
   mapPlateCase,
 } from '../indicator-case-map';
@@ -199,7 +202,11 @@ export class IndicatorsService {
     ]);
 
     const mapper =
-      catalogEntity(indicatorId) === 'plate' ? mapPlateCase : mapPersonCase;
+      catalogEntity(indicatorId) === 'plate'
+        ? mapPlateCase
+        : catalogEntity(indicatorId) === 'gf'
+          ? mapGfCase
+          : mapPersonCase;
     return new GetIndicatorCasesResponseDto(
       rows.map((row) => mapper(row)),
       page,
@@ -242,7 +249,12 @@ export class IndicatorsService {
     this.applyGroupedSort(qb, id);
     qb.limit(INDICATOR_CSV_ROW_LIMIT);
     const rows = await qb.getRawMany<Record<string, unknown>>();
-    const mapper = catalogEntity(id) === 'plate' ? mapPlateCase : mapPersonCase;
+    const mapper =
+      catalogEntity(id) === 'plate'
+        ? mapPlateCase
+        : catalogEntity(id) === 'gf'
+          ? mapGfCase
+          : mapPersonCase;
     return rows.map((row) => mapper(row));
   }
 
@@ -250,6 +262,12 @@ export class IndicatorsService {
     indicatorId: IndicatorQueryId,
     filters: GetIndicatorFiltersDto,
   ): SelectQueryBuilder<SemaspaPerson> {
+    if (isGfIndicatorQuery(indicatorId)) {
+      return this.createGfPermitCasesQuery(
+        indicatorId,
+        filters,
+      ) as unknown as SelectQueryBuilder<SemaspaPerson>;
+    }
     if (indicatorId === INDICATOR_IDS.PLATE_RECURRENT) {
       return this.createPlateCasesQuery(filters) as unknown as SelectQueryBuilder<SemaspaPerson>;
     }
@@ -364,10 +382,66 @@ export class IndicatorsService {
       .setParameters(flagged.params);
   }
 
+  private createGfPermitCasesQuery(
+    indicatorId: IndicatorQueryId,
+    filters: GetIndicatorFiltersDto,
+  ): SelectQueryBuilder<SemaspaForestGuide> {
+    const matchStatus =
+      indicatorId === INDICATOR_IDS.GF_PERMIT_UNPARSEABLE
+        ? 'unparseable'
+        : 'unmatched';
+    const qb = this.forestGuideRepo
+      .createQueryBuilder('gf')
+      .innerJoin(
+        SemaspaForestGuidePermitReference,
+        'ref',
+        'ref.forest_guide_id = gf.id',
+      )
+      .where(
+        `EXISTS (
+          SELECT 1
+          FROM public_app.semaspa_forest_guide_permit_references flagged
+          WHERE flagged.forest_guide_id = gf.id
+            AND flagged.match_status = :matchStatus
+        )`,
+        { matchStatus },
+      )
+      .select('gf.id', 'forestGuideId')
+      .addSelect('gf.number', 'number')
+      .addSelect('gf.issuedAt', 'issuedAt')
+      .addSelect('gf.type', 'type')
+      .addSelect(
+        'array_agg(DISTINCT ref.match_status ORDER BY ref.match_status)',
+        'matchStatuses',
+      )
+      .addSelect(
+        'array_agg(DISTINCT ref.raw_reference ORDER BY ref.raw_reference)',
+        'rawReferences',
+      )
+      .groupBy('gf.id')
+      .addGroupBy('gf.number')
+      .addGroupBy('gf.issuedAt')
+      .addGroupBy('gf.type');
+    if (filters.issuedFrom) {
+      qb.andWhere('gf.issuedAt >= :issuedFrom', {
+        issuedFrom: filters.issuedFrom,
+      });
+    }
+    if (filters.issuedTo) {
+      qb.andWhere('gf.issuedAt <= :issuedTo', { issuedTo: filters.issuedTo });
+    }
+    return qb;
+  }
+
   private applyGroupedSort(
     qb: SelectQueryBuilder<ObjectLiteral>,
     indicatorId: IndicatorQueryId,
   ): void {
+    if (isGfIndicatorQuery(indicatorId)) {
+      qb.orderBy('gf.issuedAt', 'DESC', 'NULLS LAST');
+      qb.addOrderBy('gf.id', 'DESC');
+      return;
+    }
     if (indicatorId === INDICATOR_IDS.PLATE_RECURRENT) {
       qb.orderBy('COUNT(DISTINCT flagged.autef_id)', 'DESC');
       qb.addOrderBy('plate_row.plate', 'ASC');
@@ -571,7 +645,7 @@ export class IndicatorsService {
   }
 
   private buildCsvBody(
-    entity: 'autef' | 'person' | 'plate',
+    entity: 'autef' | 'person' | 'plate' | 'gf',
     cases: IndicatorCaseResponseDto[],
   ): { csvHeader: string; csvRows: string[] } {
     if (entity === 'person') {
@@ -604,6 +678,22 @@ export class IndicatorsService {
       return { csvHeader, csvRows };
     }
 
+    if (entity === 'gf') {
+      const csvHeader =
+        'forest_guide_id,number,issued_at,type,match_statuses,raw_references';
+      const csvRows = cases.map((item) =>
+        this.joinCsvRow([
+          item.forestGuideId,
+          item.number,
+          this.formatCsvDate(item.issuedAt ?? null),
+          item.type,
+          (item.matchStatuses ?? []).join('|'),
+          (item.rawReferences ?? []).join('|'),
+        ]),
+      );
+      return { csvHeader, csvRows };
+    }
+
     const csvHeader =
       'autef_id,number,city,state,issued_at,matched_indicator_ids,max_moved_ratio,max_excess_volume,has_unit_conflict';
     const csvRows = cases.map((item) =>
@@ -628,6 +718,12 @@ export class IndicatorsService {
     if (!value) return '';
     if (value instanceof Date) return value.toISOString();
     return value;
+  }
+
+  private joinCsvRow(
+    values: Array<string | number | boolean | null | undefined>,
+  ): string {
+    return values.map((value) => this.escapeCsv(value)).join(',');
   }
 
   private escapeCsv(

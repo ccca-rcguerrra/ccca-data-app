@@ -8,7 +8,8 @@ export type AutefDetailTabId =
   | 'species'
   | 'forestGuides'
   | 'harvestUnits'
-  | 'roles';
+  | 'roles'
+  | 'plates';
 
 export interface AutefDetailTabPagination {
   page: number;
@@ -49,6 +50,7 @@ const TAB_IDS: AutefDetailTabId[] = [
   'forestGuides',
   'harvestUnits',
   'roles',
+  'plates',
 ];
 
 function createInitialTabs(): Record<AutefDetailTabId, AutefDetailTabPagination> {
