@@ -228,12 +228,16 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         try {
             const redisHost = this.configService.get<string>('APP_REDIS_HOST', 'localhost');
             const redisPort = this.configService.get<string>('APP_REDIS_PORT', '6379');
+            const redisPassword = this.configService.get<string>('APP_REDIS_PASSWORD');
             const redisDb = Number.parseInt(
                 this.configService.get<string>('APP_REDIS_DB', '0'),
                 10,
             );
 
-            const redisUrl = `redis://${redisHost}:${redisPort}`;
+            const auth = redisPassword
+                ? `:${encodeURIComponent(redisPassword)}@`
+                : '';
+            const redisUrl = `redis://${auth}${redisHost}:${redisPort}`;
 
             this.client = createClient({
                 url: redisUrl,

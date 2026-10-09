@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ModelModule } from '../model/model.module';
+import { EtlModule } from '../etl/etl.module';
+import { ColetasController } from './coletas/coletas.controller';
 import { AutefsController } from './autefs/autefs.controller';
 import { AutefsService } from './autefs/services/autefs.service';
 import { ForestGuidesController } from './forest-guides/forest-guides.controller';
@@ -14,13 +16,15 @@ import { AutefVolumeBalancesController } from './autef-volume-balances/autef-vol
 import { AutefVolumeBalancesService } from './autef-volume-balances/services/autef-volume-balances.service';
 import { IndicatorsController } from './indicators/indicators.controller';
 import { IndicatorsService } from './indicators/services/indicators.service';
-import { IndicatorSavedFiltersService } from './indicators/services/indicator-saved-filters.service';
 import { PermitReferencesController } from './permit-references/permit-references.controller';
 import { PermitReferencesService } from './permit-references/services/permit-references.service';
+import { StatisticsController } from './statistics/statistics.controller';
+import { StatisticsService } from './statistics/services/statistics.service';
 
 @Module({
-  imports: [ModelModule],
+  imports: [ModelModule, EtlModule],
   controllers: [
+    ColetasController,
     AutefsController,
     ForestGuidesController,
     PeopleController,
@@ -29,6 +33,7 @@ import { PermitReferencesService } from './permit-references/services/permit-ref
     AutefVolumeBalancesController,
     IndicatorsController,
     PermitReferencesController,
+    StatisticsController,
   ],
   providers: [
     AutefsService,
@@ -38,8 +43,8 @@ import { PermitReferencesService } from './permit-references/services/permit-ref
     HarvestUnitsService,
     AutefVolumeBalancesService,
     IndicatorsService,
-    IndicatorSavedFiltersService,
     PermitReferencesService,
+    StatisticsService,
   ],
   exports: [
     AutefsService,
@@ -49,8 +54,8 @@ import { PermitReferencesService } from './permit-references/services/permit-ref
     HarvestUnitsService,
     AutefVolumeBalancesService,
     IndicatorsService,
-    IndicatorSavedFiltersService,
     PermitReferencesService,
+    StatisticsService,
   ],
 })
 export class SemaspaModule {}

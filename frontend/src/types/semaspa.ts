@@ -1,4 +1,5 @@
 import type { MultiPolygon } from 'geojson';
+
 import type { ApiPaginatedResponse } from '@/types/api';
 
 export interface SemaspaPaginationParams {
@@ -416,23 +417,101 @@ export function isGfIndicatorCase(row: IndicatorCase): row is GfIndicatorCase {
   return row.entity === 'gf';
 }
 
-export interface IndicatorSavedFilter {
+export interface GeneralStatisticsTotals {
+  autefs: number;
+  gfs: number;
+  autefsSemGf: number;
+  coveragePct: number;
+}
+
+export interface GeneralStatisticsYearItem {
+  year: number;
+  autefs: number;
+  gfs: number;
+  autefsSemGf: number;
+}
+
+export interface GeneralStatisticsSummary {
+  generatedAt: string;
+  totals: GeneralStatisticsTotals;
+  byYear: GeneralStatisticsYearItem[];
+}
+
+export interface GeneralStatisticsMonthItem {
+  month: number;
+  autefs: number;
+  gfs: number;
+  autefsSemGf: number;
+}
+
+export interface GeneralStatisticsByMonth {
+  year: number;
+  months: GeneralStatisticsMonthItem[];
+}
+
+export type ColetaBase = 'autef' | 'gf';
+
+export type ColetaStatus =
+  | 'queued'
+  | 'running'
+  | 'completed'
+  | 'completed_with_issues'
+  | 'failed'
+  | 'cancelled';
+
+export type ColetaDocumentoResultado =
+  | 'aguardando'
+  | 'em_andamento'
+  | 'gravado'
+  | 'falha'
+  | 'ja_existente'
+  | 'sem_pdf';
+
+export interface ColetaContadores {
+  encontrados: number;
+  jaExistentes: number;
+  aguardando: number;
+  emAndamento: number;
+  gravados: number;
+  falhas: number;
+  semPdf: number;
+}
+
+export interface ColetaDocumento {
+  identificacao: string;
+  etapa: string | null;
+  resultado: ColetaDocumentoResultado;
+  mensagem: string | null;
+}
+
+export interface ColetaSolicitante {
   id: number;
   name: string;
-  indicatorId: CatalogIndicatorId | typeof ANY_INDICATOR_ID | null;
-  filters: IndicatorFilters;
-  createdAt: string;
-  updatedAt: string;
+  email: string;
 }
 
-export interface CreateIndicatorSavedFilterPayload {
-  name: string;
-  indicatorId?: CatalogIndicatorId | typeof ANY_INDICATOR_ID | null;
-  filters: IndicatorFilters;
+export interface Coleta {
+  taskId: string;
+  base: ColetaBase | null;
+  filtros: Record<string, unknown>;
+  solicitante: ColetaSolicitante | null;
+  status: ColetaStatus;
+  inicioEm: string | null;
+  concluidoEm: string | null;
+  contadores: ColetaContadores;
+  documentos?: ColetaDocumento[];
 }
 
-export interface UpdateIndicatorSavedFilterPayload {
-  name?: string;
-  indicatorId?: CatalogIndicatorId | typeof ANY_INDICATOR_ID | null;
-  filters?: IndicatorFilters;
+export interface ColetaListParams {
+  limit?: number;
+  offset?: number;
+}
+
+export interface CreateColetaPayload {
+  base: ColetaBase;
+  filtros: Record<string, unknown>;
+  pageStart?: number;
+  pageEnd?: number;
+  forceRestart?: boolean;
+  limit?: number;
 }

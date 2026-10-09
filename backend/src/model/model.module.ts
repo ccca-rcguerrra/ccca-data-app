@@ -12,7 +12,6 @@ import { Territory } from './entities/territory.entity';
 import { CurrentTerritoryView } from './entities/current-territory.view.entity';
 import { Comment } from './entities/comment.entity';
 import { Notification } from './entities/notification.entity';
-import { IndicatorSavedFilter } from './entities/indicator-saved-filter.entity';
 import { SemaspaAutef } from './entities/semaspa-autef.view.entity';
 import { SemaspaForestGuide } from './entities/semaspa-forest-guide.view.entity';
 import { SemaspaPerson } from './entities/semaspa-person.view.entity';
@@ -36,7 +35,6 @@ const features = [
   CurrentTerritoryView,
   Comment,
   Notification,
-  IndicatorSavedFilter,
   SemaspaAutef,
   SemaspaForestGuide,
   SemaspaPerson,

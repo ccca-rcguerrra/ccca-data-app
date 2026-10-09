@@ -1,15 +1,11 @@
 import { useMemo } from 'react';
-import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { AutefsService } from '@/services/semaspa/autefs.service';
-import { ForestGuidesService } from '@/services/semaspa/forest-guides.service';
-import { PeopleService } from '@/services/semaspa/people.service';
-import { SpeciesProductsService } from '@/services/semaspa/species-products.service';
-import { IndicatorsService } from '@/services/semaspa/indicators.service';
-import { PermitReferencesService } from '@/services/semaspa/permit-references.service';
-import { QUERY_KEYS } from '@/constants/query-keys.constants';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import type {
   AutefListParams,
   AutefVolumeBalanceParams,
+  ColetaListParams,
+  CreateColetaPayload,
   ForestGuideListParams,
   HarvestUnitsParams,
   IndicatorCasesParams,
@@ -22,8 +18,16 @@ import type {
   PermitReferenceListParams,
   SemaspaPaginationParams,
   SpeciesProduct,
-  CreateIndicatorSavedFilterPayload,
 } from '@/types/semaspa';
+import { StatisticsService } from '@/services/semaspa/statistics.service';
+import { SpeciesProductsService } from '@/services/semaspa/species-products.service';
+import { PermitReferencesService } from '@/services/semaspa/permit-references.service';
+import { PeopleService } from '@/services/semaspa/people.service';
+import { IndicatorsService } from '@/services/semaspa/indicators.service';
+import { ForestGuidesService } from '@/services/semaspa/forest-guides.service';
+import { ColetasService } from '@/services/semaspa/coletas.service';
+import { AutefsService } from '@/services/semaspa/autefs.service';
+import { QUERY_KEYS } from '@/constants/query-keys.constants';
 
 const LIST_STALE_MS = 1000 * 60 * 2;
 const DETAIL_STALE_MS = 1000 * 60 * 5;
@@ -382,35 +386,86 @@ export const useIndicatorCasesQuery = (
   });
 };
 
-export const useIndicatorSavedFiltersQuery = (options?: { enabled?: boolean }) => {
+export const useStatisticsSummaryQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: QUERY_KEYS.semaspa.indicators.savedFilters(),
-    queryFn: () => IndicatorsService.listSavedFilters(),
+    queryKey: QUERY_KEYS.semaspa.statistics.summary(),
+    queryFn: () => StatisticsService.getSummary(),
     staleTime: LIST_STALE_MS,
     enabled: options?.enabled !== false,
   });
 };
 
-export const useCreateIndicatorSavedFilterMutation = () => {
+export const useStatisticsByMonthQuery = (
+  year: number,
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.statistics.byMonth(year),
+    queryFn: () => StatisticsService.getByMonth(year),
+    staleTime: LIST_STALE_MS,
+    enabled: options?.enabled !== false && Number.isInteger(year) && year > 0,
+  });
+};
+
+export const useColetasQuery = (
+  params: ColetaListParams = {},
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.coletas.list(params),
+    queryFn: () => ColetasService.list(params),
+    staleTime: 5000,
+    refetchInterval: 10000,
+    enabled: options?.enabled !== false,
+  });
+};
+
+export const useColetaQuery = (
+  taskId: string,
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.semaspa.coletas.detail(taskId),
+    queryFn: () => ColetasService.findOne(taskId),
+    enabled: options?.enabled !== false && taskId.length > 0,
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      return status === 'queued' || status === 'running' ? 3000 : false;
+    },
+  });
+};
+
+export const useCreateColetaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: CreateIndicatorSavedFilterPayload) =>
-      IndicatorsService.createSavedFilter(payload),
+    mutationFn: (payload: CreateColetaPayload) => ColetasService.create(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.semaspa.indicators.savedFilters(),
+        queryKey: QUERY_KEYS.semaspa.coletas.lists(),
       });
     },
   });
 };
 
-export const useDeleteIndicatorSavedFilterMutation = () => {
+export const useReprocessColetaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => IndicatorsService.deleteSavedFilter(id),
+    mutationFn: (taskId: string) => ColetasService.reprocess(taskId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.semaspa.indicators.savedFilters(),
+        queryKey: QUERY_KEYS.semaspa.coletas.lists(),
+      });
+    },
+  });
+};
+
+export const useCancelColetaMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (taskId: string) => ColetasService.cancel(taskId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.semaspa.coletas.lists(),
       });
     },
   });

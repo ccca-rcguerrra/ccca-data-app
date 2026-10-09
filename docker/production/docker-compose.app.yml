@@ -1,0 +1,49 @@
+services:
+
+  ccca-data-app-backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    image: ccca-data-app-backend
+    container_name: ccca-data-app-backend
+    hostname: ccca-data-app-backend
+    restart: always
+    env_file:
+      - ./docker-compose.app.env
+    environment:
+      NODE_ENV: production
+      APP_PORT: "3000"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - ccca-data
+      - ccca-lighthouse
+
+  ccca-data-app-frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: https://aoitimber.cccabrasil.org
+        VITE_WS_URL: https://aoitimber.cccabrasil.org
+        VITE_APP_TITLE: AOI Timber
+    image: ccca-data-app-frontend
+    container_name: ccca-data-app-frontend
+    hostname: ccca-data-app-frontend
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - ccca-lighthouse
+
+networks:
+  ccca-data:
+    external: true
+    name: ccca-data
+  ccca-lighthouse:
+    external: true
+    name: ccca-lighthouse_lighthouse

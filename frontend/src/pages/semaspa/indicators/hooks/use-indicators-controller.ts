@@ -13,25 +13,14 @@ import {
   useIndicatorSummaryQuery,
 } from '@/hooks/api/use-semaspa';
 import { ROUTES } from '@/constants/routes.constants';
-import { personDetailPath } from '../../people/components/person-link';
+
 
 import {
   useIndicatorsActions,
   useIndicatorsState,
-  type IndicatorCenterFilters,
 } from '../store/use-indicators-store';
-import {
-  buildIndicatorSearchParams,
-  indicatorSearchParamsEqual,
-  parseIndicatorSearchParams,
-  toApiFilters,
-} from '../lib/indicator-url-state';
-
-const SEARCH_DEBOUNCE_MS = 350;
-
-function hasFilterValues(filters: IndicatorCenterFilters): boolean {
-  return Object.values(filters).some((value) => value.trim().length > 0);
-}
+import { parseIndicatorSearchParams } from '../lib/indicator-url-state';
+import { personDetailPath } from '../../people/components/person-link';
 
 export function useIndicatorsController() {
   const storeState = useIndicatorsState();
@@ -53,47 +42,33 @@ export function useIndicatorsController() {
 
   useEffect(() => {
     if (!hydratedRef.current) return;
-    const next = buildIndicatorSearchParams(
-      storeState.selectedIndicatorId,
-      storeState.filters,
-    );
-    if (!indicatorSearchParamsEqual(next, searchParams)) {
-      setSearchParams(next, { replace: true });
+    const merged = new URLSearchParams(searchParams);
+    if (storeState.selectedIndicatorId) {
+      merged.set('indicator', storeState.selectedIndicatorId);
+    } else {
+      merged.delete('indicator');
     }
-  }, [
-    searchParams,
-    setSearchParams,
-    storeState.filters,
-    storeState.selectedIndicatorId,
-  ]);
-
-  const apiFilters = useMemo(
-    () => toApiFilters(storeState.filters),
-    [storeState.filters],
-  );
-
-  const [debouncedFilters, setDebouncedFilters] = useState(apiFilters);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedFilters(apiFilters), SEARCH_DEBOUNCE_MS);
-    return () => clearTimeout(timer);
-  }, [apiFilters]);
+    if (merged.toString() !== searchParams.toString()) {
+      setSearchParams(merged, { replace: true });
+    }
+  }, [searchParams, setSearchParams, storeState.selectedIndicatorId]);
 
   const queryId: IndicatorQueryId = storeState.selectedIndicatorId ?? ANY_INDICATOR_ID;
 
   const casesParams = useMemo(
     (): IndicatorCasesParams => ({
-      ...debouncedFilters,
       page: storeState.currentPage,
       limit: storeState.pageSize,
       sortBy: 'issuedAt',
       sortOrder: 'DESC',
     }),
-    [debouncedFilters, storeState.currentPage, storeState.pageSize],
+    [storeState.currentPage, storeState.pageSize],
   );
 
-  const summaryQuery = useIndicatorSummaryQuery(debouncedFilters);
-  const casesQuery = useIndicatorCasesQuery(queryId, casesParams);
+  const summaryQuery = useIndicatorSummaryQuery();
+  const casesQuery = useIndicatorCasesQuery(queryId, casesParams, {
+    enabled: storeState.isCasesDialogOpen,
+  });
 
   const pagination = casesQuery.data
     ? {
@@ -115,29 +90,20 @@ export function useIndicatorsController() {
     );
   }, [storeState.selectedIndicatorId, summaryQuery.data?.indicators]);
 
-  const hasActiveFilters = useMemo(
-    () => hasFilterValues(storeState.filters),
-    [storeState.filters],
-  );
-
   const handleSelectIndicator = useCallback(
     (id: CatalogIndicatorId) => {
-      storeActions.setSelectedIndicatorId(
-        storeState.selectedIndicatorId === id ? null : id,
-      );
-    },
-    [storeActions, storeState.selectedIndicatorId],
-  );
-
-  const handleFilterChange = useCallback(
-    (filters: Partial<IndicatorCenterFilters>) => {
-      storeActions.setFilters(filters);
+      storeActions.setSelectedIndicatorId(id);
+      storeActions.setCasesDialogOpen(true);
     },
     [storeActions],
   );
 
-  const handleClearFilters = useCallback(() => {
-    storeActions.clearFilters();
+  const handleCloseCasesDialog = useCallback(() => {
+    storeActions.setCasesDialogOpen(false);
+  }, [storeActions]);
+
+  const handleOpenCasesDialog = useCallback(() => {
+    storeActions.setCasesDialogOpen(true);
   }, [storeActions]);
 
   const handlePageChange = useCallback(
@@ -186,13 +152,15 @@ export function useIndicatorsController() {
     setIsExporting(true);
     setExportError(null);
     try {
-      await IndicatorsService.exportCasesCsv(queryId, debouncedFilters);
+      await IndicatorsService.exportCasesCsv(queryId, {});
+      return true;
     } catch {
       setExportError('exportFailed');
+      return false;
     } finally {
       setIsExporting(false);
     }
-  }, [debouncedFilters, queryId]);
+  }, [queryId]);
 
   const handleRefresh = useCallback(() => {
     void summaryQuery.refetch();
@@ -210,7 +178,6 @@ export function useIndicatorsController() {
       isCasesFetching: casesQuery.isFetching,
       isError: summaryQuery.isError || casesQuery.isError,
       error: summaryQuery.error ?? casesQuery.error,
-      hasActiveFilters,
       selectedIndicator,
       selectedEntity: selectedIndicator?.entity ?? 'autef',
       queryId,
@@ -224,8 +191,8 @@ export function useIndicatorsController() {
     },
     handlers: {
       handleSelectIndicator,
-      handleFilterChange,
-      handleClearFilters,
+      handleCloseCasesDialog,
+      handleOpenCasesDialog,
       handlePageChange,
       handlePageSizeChange,
       handleRowClick,

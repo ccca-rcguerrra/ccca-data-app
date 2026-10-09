@@ -1,22 +1,25 @@
 import { createBrowserRouter, Outlet } from 'react-router';
-import { ROUTES, toChildPath } from '@/constants/routes.constants';
 
+import { ROUTES, toChildPath } from '@/constants/routes.constants';
 import { MainLayout } from '@/components/layout/main/layout';
-import LoginPage from './pages/auth/login-page';
-import ForgotPasswordPage from './pages/auth/forgot-password-page';
-import ResetPasswordPage from './pages/auth/reset-password-page';
-import { ErrorPage } from './pages/error/error-page';
+
 import ProtectedRoute from './routes/protected-route';
-import { IndicatorsPage } from './pages/semaspa/indicators/indicators-page';
 import { UsersManagementPage } from './pages/users/management/users-management-page';
 import { TeamsManagementPage } from './pages/teams/management/teams-management-page';
-import { AutefsListPage } from './pages/semaspa/autefs/autefs-list-page';
-import { AutefDetailPage } from './pages/semaspa/autefs/autef-detail-page';
+import { PermitReferencesPage } from './pages/semaspa/permit-references/permit-references-page';
+import { PersonDetailPage } from './pages/semaspa/people/person-detail-page';
+import { PeopleListPage } from './pages/semaspa/people/people-list-page';
+import { IndicatorsPage } from './pages/semaspa/indicators/indicators-page';
 import { ForestGuidesListPage } from './pages/semaspa/forest-guides/forest-guides-list-page';
 import { ForestGuideDetailPage } from './pages/semaspa/forest-guides/forest-guide-detail-page';
-import { PeopleListPage } from './pages/semaspa/people/people-list-page';
-import { PersonDetailPage } from './pages/semaspa/people/person-detail-page';
-import { PermitReferencesPage } from './pages/semaspa/permit-references/permit-references-page';
+import { ColetasListPage } from './pages/semaspa/coletas/coletas-list-page';
+import { ColetaDetailPage } from './pages/semaspa/coletas/coleta-detail-page';
+import { AutefsListPage } from './pages/semaspa/autefs/autefs-list-page';
+import { AutefDetailPage } from './pages/semaspa/autefs/autef-detail-page';
+import { ErrorPage } from './pages/error/error-page';
+import ResetPasswordPage from './pages/auth/reset-password-page';
+import LoginPage from './pages/auth/login-page';
+import ForgotPasswordPage from './pages/auth/forgot-password-page';
 
 const router = createBrowserRouter([
   {
@@ -144,6 +147,22 @@ const router = createBrowserRouter([
             element: (
               <MainLayout>
                 <PermitReferencesPage />
+              </MainLayout>
+            ),
+          },
+          {
+            path: toChildPath(ROUTES.semaspa.coletas),
+            element: (
+              <MainLayout>
+                <ColetasListPage />
+              </MainLayout>
+            ),
+          },
+          {
+            path: toChildPath(ROUTES.semaspa.coletaDetail),
+            element: (
+              <MainLayout>
+                <ColetaDetailPage />
               </MainLayout>
             ),
           },

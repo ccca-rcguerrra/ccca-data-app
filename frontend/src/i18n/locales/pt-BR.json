@@ -67,6 +67,8 @@
     "forestGuides": "Guias florestais",
     "people": "Pessoas",
     "permitReferences": "Referências de AUTEF",
+    "externalBases": "Bases externas",
+    "semaspaColetas": "SEMAS-PA",
     "alerts": "Alertas",
     "audit": "Auditoria"
   },
@@ -828,6 +830,10 @@
       "list": {
         "title": "Casos",
         "totalRows": "{{count}} linha(s)",
+        "matchingAutefs": "{{count}} AUTEFs correspondentes",
+        "matchingPeople": "{{count}} pessoas correspondentes",
+        "matchingPlates": "{{count}} placas correspondentes",
+        "matchingGfs": "{{count}} guias florestais correspondentes",
         "noResults": "Nenhuma AUTEF corresponde a estes indicadores.",
         "noResultsWithFilters": "Nenhum registro corresponde aos filtros atuais.",
         "noPeople": "Nenhuma pessoa corresponde a este indicador.",
@@ -932,6 +938,15 @@
             "1": "A referência só é parseável quando se divide em número/ano por uma barra."
           }
         }
+      },
+      "groups": {
+        "volume": "Volume",
+        "actors": "Pessoas e veículos",
+        "guides": "Guias florestais"
+      },
+      "tabs": {
+        "indicadores": "Indicadores",
+        "estatisticas": "Estatísticas"
       }
     },
     "permitReferences": {
@@ -967,6 +982,163 @@
       },
       "errors": {
         "listTitle": "Falha ao carregar referências de autorização"
+      }
+    },
+    "statistics": {
+      "title": "Indicadores gerais",
+      "subtitle": "Rastreabilidade e volume das autorizações de exploração florestal, por ano e por mês.",
+      "totals": {
+        "autefs": "Total de AUTEFs",
+        "gfs": "Guias florestais",
+        "autefsSemGf": "AUTEFs sem GF",
+        "coverage": "Cobertura de GF"
+      },
+      "byYear": {
+        "title": "Por ano",
+        "autefs": "AUTEFs",
+        "gfs": "Guias florestais"
+      },
+      "byMonth": {
+        "title": "Por mês",
+        "month": "Mês",
+        "autefs": "AUTEFs",
+        "gfs": "Guias florestais",
+        "semGf": "Sem GF"
+      }
+    },
+    "coletas": {
+      "list": {
+        "title": "SEMAS-PA",
+        "subtitle": "Coletas de AUTEFs e guias florestais.",
+        "nova": "Nova coleta",
+        "empty": "Nenhuma coleta encontrada",
+        "total": "{{count}} execuções",
+        "allBases": "Todas as bases",
+        "allStatuses": "Todas as situações"
+      },
+      "columns": {
+        "base": "Base",
+        "recorte": "Recorte",
+        "situacao": "Situação",
+        "gravados": "Gravados",
+        "jaExistentes": "Já existentes",
+        "falhas": "Falhas",
+        "inicio": "Início",
+        "solicitante": "Solicitante"
+      },
+      "base": {
+        "autef": "AUTEFs",
+        "gf": "Guias florestais",
+        "gfShort": "GFs"
+      },
+      "status": {
+        "queued": "Na fila",
+        "running": "Em processamento",
+        "completed": "Concluída",
+        "completed_with_issues": "Concluída com pendências",
+        "failed": "Falhou",
+        "cancelled": "Cancelada"
+      },
+      "nova": {
+        "title": "Nova coleta",
+        "subtitle": "Os filtros são os parâmetros da task de coleta.",
+        "base": "Base",
+        "iniciar": "Iniciar coleta",
+        "aviso": "Documentos já cadastrados serão ignorados.",
+        "resumoPeriodo": "Coletar {{base}} de {{start}} a {{end}}. Documentos já cadastrados serão ignorados.",
+        "limit": "Limite",
+        "dates": {
+          "missing": "Informe a data inicial e a data final.",
+          "order": "A data final deve ser igual ou posterior à data inicial.",
+          "span": "O período pode ter no máximo 2 anos."
+        },
+        "advanced": "Opções avançadas",
+        "pageStart": "Página inicial",
+        "pageEnd": "Página final",
+        "forceRestart": "Ignorar o progresso salvo e recomeçar",
+        "fields": {
+          "numero_processo": "Número do processo",
+          "numero_titulo": "Número do título",
+          "cpf_cnpj_detentor": "CPF/CNPJ do detentor",
+          "nome_razaosocial_detentor": "Nome do detentor",
+          "cpf_cnpj_proprietario": "CPF/CNPJ do proprietário",
+          "nome_razaosocial_proprietario": "Nome do proprietário",
+          "cnpj_propriedade": "CNPJ da propriedade",
+          "razaosocial_propriedade": "Razão social da propriedade",
+          "data_inicio": "Data inicial",
+          "data_fim": "Data final",
+          "situacao": "Situação",
+          "tipo_guia": "Tipo de guia",
+          "numero": "Número",
+          "codigo_controle": "Código de controle",
+          "cpf_cnpj_procedencia": "CPF/CNPJ da procedência",
+          "nome_procedencia": "Nome da procedência",
+          "ceprof_procedencia": "CEPROF da procedência",
+          "uf_procedencia": "UF da procedência",
+          "municipio_procedencia": "Município da procedência",
+          "cpf_cnpj_destino": "CPF/CNPJ do destino",
+          "nome_destino": "Nome do destino",
+          "ceprof_destino": "CEPROF do destino",
+          "uf_destino": "UF do destino",
+          "municipio_destino": "Município do destino"
+        }
+      },
+      "detail": {
+        "title": "Detalhes da coleta",
+        "back": "Voltar para SEMAS-PA",
+        "heading": "{{base}} · {{year}}",
+        "meta": "Iniciada em {{started}} por {{name}} · duração {{duration}}",
+        "metaNoName": "Iniciada em {{started}} · duração {{duration}}",
+        "duration": "{{count}} min",
+        "copy": "Copiar configuração",
+        "export": "Exportar",
+        "copied": "Configuração copiada",
+        "cancel": "Cancelar coleta",
+        "cancelling": "Cancelando…",
+        "cancelSuccess": "Coleta cancelada.",
+        "cancelError": "Não foi possível cancelar a coleta.",
+        "reprocess": "Reprocessar",
+        "reprocessing": "Reprocessando…",
+        "reprocessSuccess": "Coleta reiniciada. Documentos já gravados são ignorados.",
+        "reprocessError": "Não foi possível reprocessar a coleta.",
+        "base": "Base",
+        "solicitante": "Solicitante",
+        "inicio": "Início",
+        "concluido": "Concluído",
+        "encontrados": "Encontradas",
+        "aguardando": "Aguardando",
+        "emAndamento": "Em andamento",
+        "gravados": "Gravadas",
+        "jaExistentes": "Já existentes",
+        "falhas": "Falhas",
+        "semPdf": "Sem PDF",
+        "documentos": "Resultado por documento",
+        "searchTitle": "Busca na fonte",
+        "searchProgress": "{{done}} de {{total}} documentos processados · {{found}} {{base}} encontradas",
+        "searchPending": "Aguardando a busca na fonte.",
+        "docIdentificacao": "Identificação",
+        "docDocumento": "Documento",
+        "docEtapa": "Etapa",
+        "docResultado": "Resultado",
+        "docMensagem": "Mensagem"
+      },
+      "etapa": {
+        "gravacao": "Gravação",
+        "leitura": "Leitura do PDF",
+        "download": "Download do PDF",
+        "fila": "Na fila"
+      },
+      "resultado": {
+        "aguardando": "Aguardando",
+        "em_andamento": "Em andamento",
+        "gravado": "Gravado",
+        "falha": "Falha",
+        "ja_existente": "Já existente",
+        "sem_pdf": "Sem PDF"
+      },
+      "errors": {
+        "title": "Falha ao carregar coletas",
+        "message": "Não foi possível carregar as coletas. Tente novamente."
       }
     }
   }

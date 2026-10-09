@@ -9,7 +9,6 @@ import {
   TableRow,
 } from '@/components/ui/shadcn/table';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
-import { Button } from '@/components/ui/shadcn/button';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
 import { isPlateIndicatorCase } from '@/types/semaspa';
 
@@ -25,14 +24,9 @@ interface IndicatorPlateCasesTableProps {
 export function IndicatorPlateCasesTable({ controller }: IndicatorPlateCasesTableProps) {
   const { t } = useTranslation();
   const {
-    api: { rows, pagination, isCasesLoading, totalPages, hasActiveFilters },
+    api: { rows, pagination, isCasesLoading, totalPages },
     store: { state },
-    handlers: {
-      handlePageChange,
-      handlePageSizeChange,
-      handlePlateRowClick,
-      handleClearFilters,
-    },
+    handlers: { handlePageChange, handlePageSizeChange, handlePlateRowClick },
   } = controller;
 
   const currentPage = pagination?.page ?? state.currentPage;
@@ -71,15 +65,8 @@ export function IndicatorPlateCasesTable({ controller }: IndicatorPlateCasesTabl
                   <TableCell colSpan={COL_COUNT} className="h-32">
                     <div className="flex flex-col items-center justify-center gap-2 text-center">
                       <p className="text-sm text-muted-foreground">
-                        {hasActiveFilters
-                          ? t('semaspa.indicators.list.noResultsWithFilters')
-                          : t('semaspa.indicators.list.noPlates')}
+                        {t('semaspa.indicators.list.noPlates')}
                       </p>
-                      {hasActiveFilters ? (
-                        <Button variant="outline" size="sm" onClick={handleClearFilters}>
-                          {t('semaspa.indicators.filters.clear')}
-                        </Button>
-                      ) : null}
                     </div>
                   </TableCell>
                 </TableRow>

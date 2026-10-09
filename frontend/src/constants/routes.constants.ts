@@ -25,6 +25,8 @@ export const ROUTES = {
     people: '/semaspa/people',
     personDetail: '/semaspa/people/:id',
     permitReferences: '/semaspa/permit-references',
+    coletas: '/semaspa/coletas',
+    coletaDetail: '/semaspa/coletas/:id',
   },
 } as const;
 

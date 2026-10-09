@@ -11,7 +11,6 @@ import {
   TableRow,
 } from '@/components/ui/shadcn/table';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
-import { Button } from '@/components/ui/shadcn/button';
 import { ListPaginationFooter } from '@/components/ui/list-pagination-footer';
 import type { IndicatorsController } from '../hooks/use-indicators-controller';
 import { PermitMatchStatusBadge } from '../../permit-references/components/permit-match-status-badge';
@@ -26,9 +25,9 @@ interface IndicatorGfCasesTableProps {
 export function IndicatorGfCasesTable({ controller }: IndicatorGfCasesTableProps) {
   const { t } = useTranslation();
   const {
-    api: { rows, isCasesLoading, pagination, hasActiveFilters, totalPages },
+    api: { rows, isCasesLoading, pagination, totalPages },
     store: { state },
-    handlers: { handlePageChange, handlePageSizeChange, handleClearFilters, handleGfRowClick },
+    handlers: { handlePageChange, handlePageSizeChange, handleGfRowClick },
   } = controller;
   const guides = rows.filter(isGfIndicatorCase);
 
@@ -61,19 +60,7 @@ export function IndicatorGfCasesTable({ controller }: IndicatorGfCasesTableProps
               {!isCasesLoading && guides.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={COL_COUNT} className="h-24 text-center text-muted-foreground">
-                    {hasActiveFilters
-                      ? t('semaspa.indicators.list.noResultsWithFilters')
-                      : t('semaspa.indicators.list.noForestGuides')}
-                    {hasActiveFilters ? (
-                      <Button
-                        variant="link"
-                        size="sm"
-                        className="ml-2"
-                        onClick={handleClearFilters}
-                      >
-                        {t('semaspa.indicators.filters.clear')}
-                      </Button>
-                    ) : null}
+                    {t('semaspa.indicators.list.noForestGuides')}
                   </TableCell>
                 </TableRow>
               ) : null}

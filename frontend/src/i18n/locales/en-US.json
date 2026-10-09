@@ -67,6 +67,8 @@
     "forestGuides": "Forest Guides",
     "people": "People",
     "permitReferences": "Permit references",
+    "externalBases": "External bases",
+    "semaspaColetas": "SEMAS-PA",
     "alerts": "Alerts",
     "audit": "Audit"
   },
@@ -828,6 +830,10 @@
       "list": {
         "title": "Cases",
         "totalRows": "{{count}} row(s)",
+        "matchingAutefs": "{{count}} matching AUTEFs",
+        "matchingPeople": "{{count}} matching people",
+        "matchingPlates": "{{count}} matching plates",
+        "matchingGfs": "{{count}} matching forest guides",
         "noResults": "No AUTEFs match these indicators.",
         "noResultsWithFilters": "No records match the current filters.",
         "noPeople": "No people match this indicator.",
@@ -932,6 +938,15 @@
             "1": "A reference is parseable only when it splits into number/year on a slash."
           }
         }
+      },
+      "groups": {
+        "volume": "Volume",
+        "actors": "People and vehicles",
+        "guides": "Forest guides"
+      },
+      "tabs": {
+        "indicadores": "Indicators",
+        "estatisticas": "Statistics"
       }
     },
     "permitReferences": {
@@ -967,6 +982,163 @@
       },
       "errors": {
         "listTitle": "Failed to load permit references"
+      }
+    },
+    "statistics": {
+      "title": "General indicators",
+      "subtitle": "Traceability and volume of forest exploitation permits, by year and by month.",
+      "totals": {
+        "autefs": "Total AUTEFs",
+        "gfs": "Forest guides",
+        "autefsSemGf": "AUTEFs without GF",
+        "coverage": "GF coverage"
+      },
+      "byYear": {
+        "title": "By year",
+        "autefs": "AUTEFs",
+        "gfs": "Forest guides"
+      },
+      "byMonth": {
+        "title": "By month",
+        "month": "Month",
+        "autefs": "AUTEFs",
+        "gfs": "Forest guides",
+        "semGf": "Without GF"
+      }
+    },
+    "coletas": {
+      "list": {
+        "title": "SEMAS-PA",
+        "subtitle": "Collection of AUTEFs and forest guides.",
+        "nova": "New collection",
+        "empty": "No collections found",
+        "total": "{{count}} runs",
+        "allBases": "All bases",
+        "allStatuses": "All statuses"
+      },
+      "columns": {
+        "base": "Base",
+        "recorte": "Scope",
+        "situacao": "Status",
+        "gravados": "Saved",
+        "jaExistentes": "Already existing",
+        "falhas": "Failures",
+        "inicio": "Started",
+        "solicitante": "Requested by"
+      },
+      "base": {
+        "autef": "AUTEFs",
+        "gf": "Forest guides",
+        "gfShort": "GFs"
+      },
+      "status": {
+        "queued": "Queued",
+        "running": "Processing",
+        "completed": "Completed",
+        "completed_with_issues": "Completed with issues",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "nova": {
+        "title": "New collection",
+        "subtitle": "Filters match the collection task parameters.",
+        "base": "Base",
+        "iniciar": "Start collection",
+        "aviso": "Already registered documents will be ignored.",
+        "resumoPeriodo": "Collect {{base}} from {{start}} to {{end}}. Already registered documents will be ignored.",
+        "limit": "Limit",
+        "dates": {
+          "missing": "Enter the start date and the end date.",
+          "order": "The end date must be on or after the start date.",
+          "span": "The period can be at most 2 years."
+        },
+        "advanced": "Advanced options",
+        "pageStart": "Start page",
+        "pageEnd": "End page",
+        "forceRestart": "Ignore saved progress and start over",
+        "fields": {
+          "numero_processo": "Process number",
+          "numero_titulo": "Title number",
+          "cpf_cnpj_detentor": "Holder tax ID",
+          "nome_razaosocial_detentor": "Holder name",
+          "cpf_cnpj_proprietario": "Owner tax ID",
+          "nome_razaosocial_proprietario": "Owner name",
+          "cnpj_propriedade": "Property tax ID",
+          "razaosocial_propriedade": "Property name",
+          "data_inicio": "Start date",
+          "data_fim": "End date",
+          "situacao": "Status",
+          "tipo_guia": "Guide type",
+          "numero": "Number",
+          "codigo_controle": "Control code",
+          "cpf_cnpj_procedencia": "Origin tax ID",
+          "nome_procedencia": "Origin name",
+          "ceprof_procedencia": "Origin CEPROF",
+          "uf_procedencia": "Origin state",
+          "municipio_procedencia": "Origin municipality",
+          "cpf_cnpj_destino": "Destination tax ID",
+          "nome_destino": "Destination name",
+          "ceprof_destino": "Destination CEPROF",
+          "uf_destino": "Destination state",
+          "municipio_destino": "Destination municipality"
+        }
+      },
+      "detail": {
+        "title": "Collection details",
+        "back": "Back to SEMAS-PA",
+        "heading": "{{base}} · {{year}}",
+        "meta": "Started on {{started}} by {{name}} · duration {{duration}}",
+        "metaNoName": "Started on {{started}} · duration {{duration}}",
+        "duration": "{{count}} min",
+        "copy": "Copy configuration",
+        "export": "Export",
+        "copied": "Configuration copied",
+        "cancel": "Cancel collection",
+        "cancelling": "Cancelling…",
+        "cancelSuccess": "Collection cancelled.",
+        "cancelError": "Could not cancel the collection.",
+        "reprocess": "Reprocess",
+        "reprocessing": "Reprocessing…",
+        "reprocessSuccess": "Collection restarted. Documents already saved are skipped.",
+        "reprocessError": "Could not reprocess the collection.",
+        "base": "Base",
+        "solicitante": "Requested by",
+        "inicio": "Started",
+        "concluido": "Finished",
+        "encontrados": "Found",
+        "aguardando": "Waiting",
+        "emAndamento": "In progress",
+        "gravados": "Saved",
+        "jaExistentes": "Already existing",
+        "falhas": "Failures",
+        "semPdf": "Missing PDF",
+        "documentos": "Result by document",
+        "searchTitle": "Source search",
+        "searchProgress": "{{done}} of {{total}} documents processed · {{found}} {{base}} found",
+        "searchPending": "Waiting for the source search.",
+        "docIdentificacao": "Identification",
+        "docDocumento": "Document",
+        "docEtapa": "Stage",
+        "docResultado": "Result",
+        "docMensagem": "Message"
+      },
+      "etapa": {
+        "gravacao": "Save",
+        "leitura": "PDF reading",
+        "download": "PDF download",
+        "fila": "Queued"
+      },
+      "resultado": {
+        "aguardando": "Waiting",
+        "em_andamento": "In progress",
+        "gravado": "Saved",
+        "falha": "Failed",
+        "ja_existente": "Already existing",
+        "sem_pdf": "Missing PDF"
+      },
+      "errors": {
+        "title": "Failed to load collections",
+        "message": "Could not load collections. Please try again."
       }
     }
   }

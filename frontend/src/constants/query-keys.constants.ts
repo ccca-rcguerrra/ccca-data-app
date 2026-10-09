@@ -179,7 +179,15 @@ export const QUERY_KEYS = {
       summary: (params: unknown) => ['semaspa', 'indicators', 'summary', params] as const,
       cases: (id: string, params: unknown) =>
         ['semaspa', 'indicators', 'cases', id, params] as const,
-      savedFilters: () => ['semaspa', 'indicators', 'saved-filters'] as const,
+    },
+    statistics: {
+      summary: () => ['semaspa', 'statistics', 'summary'] as const,
+      byMonth: (year: number) => ['semaspa', 'statistics', 'by-month', year] as const,
+    },
+    coletas: {
+      lists: () => ['semaspa', 'coletas', 'list'] as const,
+      list: (params: unknown) => ['semaspa', 'coletas', 'list', params] as const,
+      detail: (taskId: string) => ['semaspa', 'coletas', 'detail', taskId] as const,
     },
   },
 } as const;

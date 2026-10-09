@@ -1,4 +1,5 @@
-import { Building2, FileSearch, FileText, Home, Trees, User, Users } from 'lucide-react';
+import { Building2, Database, FileSearch, FileText, Home, Trees, User, Users } from 'lucide-react';
+
 import type { Permission } from '@/constants/permissions';
 
 export interface NavItem {
@@ -9,7 +10,7 @@ export interface NavItem {
   iconColor?: string;
   isActive?: boolean;
   permission?: Permission;
-  items?: { title: string; url: string }[];
+  items?: { title: string; titleKey?: string; url: string }[];
 }
 
 export const navigationData = {
@@ -45,6 +46,19 @@ export const navigationData = {
       titleKey: 'navigation.permitReferences',
       url: '/semaspa/permit-references',
       icon: FileSearch,
+    },
+    {
+      title: 'External Bases',
+      titleKey: 'navigation.externalBases',
+      url: '/semaspa/coletas',
+      icon: Database,
+      items: [
+        {
+          title: 'SEMAS-PA',
+          titleKey: 'navigation.semaspaColetas',
+          url: '/semaspa/coletas',
+        },
+      ],
     },
     {
       title: 'Users',

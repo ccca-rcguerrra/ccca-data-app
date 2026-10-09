@@ -11,6 +11,7 @@ export const BullRootModule = BullModule.forRootAsync({
         host: configService.get<string>('APP_REDIS_HOST', 'localhost'),
         port: configService.get<number>('APP_REDIS_PORT', 6379),
         db: configService.get<number>('APP_REDIS_DB', 0),
+        password: configService.get<string>('APP_REDIS_PASSWORD') || undefined,
       },
     };
   },

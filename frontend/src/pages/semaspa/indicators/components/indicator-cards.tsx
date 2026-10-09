@@ -76,7 +76,7 @@ export function IndicatorCards({ controller }: IndicatorCardsProps) {
             : 'border-border hover:bg-muted/40',
         )}
       >
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <p className="text-sm font-medium text-foreground">
           {t(`semaspa.indicators.catalog.${id}.name`)}
         </p>
         <p className="mt-2 font-mono text-3xl font-semibold tabular-nums tracking-tight">
@@ -89,39 +89,54 @@ export function IndicatorCards({ controller }: IndicatorCardsProps) {
     );
   };
 
+  const groups: Array<{
+    label: string;
+    ids: CatalogIndicatorId[];
+    columns: string;
+    selectKey: (id: CatalogIndicatorId) => string;
+    selectedKey: (id: CatalogIndicatorId) => string;
+  }> = [
+    {
+      label: t('semaspa.indicators.groups.volume'),
+      ids: VOLUME_CARD_ORDER,
+      columns: 'sm:grid-cols-3',
+      selectKey: () => 'semaspa.indicators.cards.select',
+      selectedKey: () => 'semaspa.indicators.cards.selected',
+    },
+    {
+      label: t('semaspa.indicators.groups.actors'),
+      ids: ACTOR_CARD_ORDER,
+      columns: 'sm:grid-cols-3',
+      selectKey: (id) =>
+        id === INDICATOR_IDS.PLATE_RECURRENT
+          ? 'semaspa.indicators.cards.selectPlates'
+          : 'semaspa.indicators.cards.selectPeople',
+      selectedKey: (id) =>
+        id === INDICATOR_IDS.PLATE_RECURRENT
+          ? 'semaspa.indicators.cards.selectedPlates'
+          : 'semaspa.indicators.cards.selectedPeople',
+    },
+    {
+      label: t('semaspa.indicators.groups.guides'),
+      ids: GF_CARD_ORDER,
+      columns: 'sm:grid-cols-2',
+      selectKey: () => 'semaspa.indicators.cards.selectGfs',
+      selectedKey: () => 'semaspa.indicators.cards.selectedGfs',
+    },
+  ];
+
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {VOLUME_CARD_ORDER.map((id) =>
-          renderCard(
-            id,
-            'semaspa.indicators.cards.select',
-            'semaspa.indicators.cards.selected',
-          ),
-        )}
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {ACTOR_CARD_ORDER.map((id) =>
-          renderCard(
-            id,
-            id === INDICATOR_IDS.PLATE_RECURRENT
-              ? 'semaspa.indicators.cards.selectPlates'
-              : 'semaspa.indicators.cards.selectPeople',
-            id === INDICATOR_IDS.PLATE_RECURRENT
-              ? 'semaspa.indicators.cards.selectedPlates'
-              : 'semaspa.indicators.cards.selectedPeople',
-          ),
-        )}
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {GF_CARD_ORDER.map((id) =>
-          renderCard(
-            id,
-            'semaspa.indicators.cards.selectGfs',
-            'semaspa.indicators.cards.selectedGfs',
-          ),
-        )}
-      </div>
+    <div className="space-y-5">
+      {groups.map((group) => (
+        <section key={group.label} className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            {group.label}
+          </p>
+          <div className={cn('grid grid-cols-1 gap-3', group.columns)}>
+            {group.ids.map((id) => renderCard(id, group.selectKey(id), group.selectedKey(id)))}
+          </div>
+        </section>
+      ))}
       {selectedIndicator ? null : (
         <span className="sr-only">{t('semaspa.indicators.cards.anyHint')}</span>
       )}

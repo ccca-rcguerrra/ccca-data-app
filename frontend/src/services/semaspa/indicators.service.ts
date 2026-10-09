@@ -1,12 +1,9 @@
 import type {
-  CreateIndicatorSavedFilterPayload,
   IndicatorCase,
   IndicatorCasesParams,
   IndicatorFilters,
   IndicatorQueryId,
-  IndicatorSavedFilter,
   IndicatorSummary,
-  UpdateIndicatorSavedFilterPayload,
 } from '@/types/semaspa';
 import type { ApiPaginatedResponse } from '@/types/api';
 import { api } from '@/services/api';
@@ -98,37 +95,5 @@ export class IndicatorsService {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-  }
-
-  static async listSavedFilters(): Promise<IndicatorSavedFilter[]> {
-    const response = await api.get<IndicatorSavedFilter[]>(
-      `${IndicatorsService.BASE_URL}/saved-filters`,
-    );
-    return response.data;
-  }
-
-  static async createSavedFilter(
-    payload: CreateIndicatorSavedFilterPayload,
-  ): Promise<IndicatorSavedFilter> {
-    const response = await api.post<IndicatorSavedFilter>(
-      `${IndicatorsService.BASE_URL}/saved-filters`,
-      payload,
-    );
-    return response.data;
-  }
-
-  static async updateSavedFilter(
-    id: number,
-    payload: UpdateIndicatorSavedFilterPayload,
-  ): Promise<IndicatorSavedFilter> {
-    const response = await api.patch<IndicatorSavedFilter>(
-      `${IndicatorsService.BASE_URL}/saved-filters/${id}`,
-      payload,
-    );
-    return response.data;
-  }
-
-  static async deleteSavedFilter(id: number): Promise<void> {
-    await api.delete(`${IndicatorsService.BASE_URL}/saved-filters/${id}`);
   }
 }
